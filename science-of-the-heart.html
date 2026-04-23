@@ -1,18 +1,13 @@
-<header class="site-header">
-  <a class="brand" href="/">Yasir Bilgin</a>
+<div id="menu"></div>
+<script>
+fetch('/menu.html')
+  .then(res => res.text())
+  .then(data => {
+    document.getElementById('menu').innerHTML = data;
+  })
+  .catch(err => console.error('Menu load error:', err));
+</script>
 
-  <nav class="global-nav">
-    <a href="/reflections/">Reflections</a>
-    <a href="/mbti/">MBTI</a>
-    <a href="/quran/">Quran</a>
-    <a href="/devops/">DevOps</a>
-    <a href="/travel/">Travel</a>
-  </nav>
-
-  <div class="right">
-    <a href="/">Home</a>
-  </div>
-</header>
 <!DOCTYPE html>
 <html lang="en">
 <head>
