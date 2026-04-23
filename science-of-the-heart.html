@@ -365,7 +365,7 @@ footer{
 </style>
 </head>
 <body>
-<div id="menu"></div>
+<nav id="menu" class="main-nav"></nav>
 <div class="progress-bar" id="progressBar"></div>
 
 <!-- STICKY HEADER -->
@@ -1093,7 +1093,7 @@ fetch('/sitemap.xml')
     });
 
     // BUILD NAV
-    let html = '<nav class="dynamic-nav">';
+    let html = '';
 
     // Home
     html += '<a class="nav-home" href="/">Home</a>';
