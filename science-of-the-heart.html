@@ -1091,10 +1091,11 @@ fetch('/sitemap.xml')
       menu[section].push(path);
     });
 
-    let html = '<nav><a href="/">Home</a>';
+    let html = '<nav style="padding:20px;border-bottom:1px solid #ddd;">';
+    html += '<a href="/">Home</a>';
 
     Object.keys(menu).forEach(section => {
-      html += `<h3>${section}</h3><ul>`;
+      html += `<h3 style="margin-top:15px">${section}</h3><ul>`;
       
       menu[section].forEach(path => {
         const name = path.split('/').pop().replace('.html','').replace('-', ' ');
@@ -1107,7 +1108,8 @@ fetch('/sitemap.xml')
     html += '</nav>';
 
     document.getElementById('menu').innerHTML = html;
-  });
+  })
+  .catch(err => console.error('Menu error:', err));
 </script>
 </body>
 </html>
