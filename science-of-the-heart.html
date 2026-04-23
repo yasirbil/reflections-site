@@ -1069,13 +1069,14 @@ window.addEventListener('scroll', () => {
 </script>
 <script>
 fetch('/sitemap.xml')
-  .then(response => response.text())
-  .then(str => (new window.DOMParser()).parseFromString(str, "text/xml"))
+  .then(res => res.text())
+  .then(str => new DOMParser().parseFromString(str, "text/xml"))
   .then(data => {
-    const urls = [...data.querySelectorAll("url loc")].map(el => el.textContent);
+    const urls = [...data.querySelectorAll("url loc")]
+      .map(el => el.textContent);
 
     const menu = {};
-    
+
     urls.forEach(url => {
       const path = new URL(url).pathname;
       const parts = path.split('/').filter(Boolean);
@@ -1091,25 +1092,46 @@ fetch('/sitemap.xml')
       menu[section].push(path);
     });
 
-    let html = '<nav style="padding:20px;border-bottom:1px solid #ddd;">';
-    html += '<a href="/">Home</a>';
+    // BUILD NAV
+    let html = '<nav class="dynamic-nav">';
 
+    // Home
+    html += '<a class="nav-home" href="/">Home</a>';
+
+    // Sections
     Object.keys(menu).forEach(section => {
-      html += `<h3 style="margin-top:15px">${section}</h3><ul>`;
-      
+      html += `<div class="dropdown">`;
+      html += `<a href="/${section}/">${capitalize(section)}</a>`;
+      html += `<div class="dropdown-menu">`;
+
       menu[section].forEach(path => {
-        const name = path.split('/').pop().replace('.html','').replace('-', ' ');
-        html += `<li><a href="${path}">${name}</a></li>`;
+        const name = formatName(path);
+        html += `<a href="${path}">${name}</a>`;
       });
 
-      html += '</ul>';
+      html += '</div></div>';
     });
 
     html += '</nav>';
 
     document.getElementById('menu').innerHTML = html;
+
+    // helpers
+    function formatName(path) {
+      return path
+        .split('/')
+        .pop()
+        .replace('.html','')
+        .replace(/-/g, ' ')
+        .replace(/\b\w/g, c => c.toUpperCase());
+    }
+
+    function capitalize(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
   })
-  .catch(err => console.error('Menu error:', err));
+  .catch(err => console.error("Menu error:", err));
 </script>
 </body>
 </html>

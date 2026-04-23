@@ -1,21 +1,59 @@
-/* GLOBAL NAV */
-.global-nav {
+/* ===== TOP NAV ===== */
+.dynamic-nav {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 12px 24px;
-  border-bottom: 1px solid #ddd;
+  justify-content: center;
+  gap: 28px;
+  padding: 16px 0;
+  border-bottom: 1px solid #e5dfd6;
   background: #faf8f4;
   font-family: 'Source Serif 4', serif;
 }
 
-.global-nav a {
+.dynamic-nav a {
   text-decoration: none;
   color: #1a1410;
-  margin-right: 16px;
-  font-size: 14px;
+  font-size: 15px;
+  position: relative;
 }
 
-.menu-links a:hover {
-  color: #c0392b;
+/* ===== DROPDOWN ===== */
+.dropdown {
+  position: relative;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 30px;
+  left: 0;
+  background: white;
+  border: 1px solid #e5dfd6;
+  padding: 12px 16px;
+  min-width: 220px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+  z-index: 100;
+}
+
+.dropdown-menu a {
+  display: block;
+  padding: 6px 0;
+  font-size: 14px;
+  color: #333;
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+/* ===== SECTION TITLE ===== */
+.dropdown > a::after {
+  content: " ▾";
+  font-size: 12px;
+}
+
+/* ===== HOME LINK ===== */
+.nav-home {
+  margin-right: 40px;
+  font-weight: 500;
 }
