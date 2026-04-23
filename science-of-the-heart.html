@@ -380,48 +380,6 @@ footer{
 }
 </style>
 </head>
-<script>
-fetch('/sitemap.xml')
-  .then(response => response.text())
-  .then(str => (new window.DOMParser()).parseFromString(str, "text/xml"))
-  .then(data => {
-    const urls = [...data.querySelectorAll("url loc")].map(el => el.textContent);
-
-    const menu = {};
-    
-    urls.forEach(url => {
-      const path = new URL(url).pathname;
-      const parts = path.split('/').filter(Boolean);
-
-      if (parts.length === 0) return;
-
-      const section = parts[0];
-
-      if (!menu[section]) {
-        menu[section] = [];
-      }
-
-      menu[section].push(path);
-    });
-
-    let html = '<nav><a href="/">Home</a>';
-
-    Object.keys(menu).forEach(section => {
-      html += `<h3>${section}</h3><ul>`;
-      
-      menu[section].forEach(path => {
-        const name = path.split('/').pop().replace('.html','').replace('-', ' ');
-        html += `<li><a href="${path}">${name}</a></li>`;
-      });
-
-      html += '</ul>';
-    });
-
-    html += '</nav>';
-
-    document.getElementById('menu').innerHTML = html;
-  });
-</script>
 <body>
 <div id="menu"></div>
 <div class="progress-bar" id="progressBar"></div>
@@ -1124,6 +1082,48 @@ window.addEventListener('scroll', () => {
   const docH = document.documentElement.scrollHeight - window.innerHeight;
   bar.style.width = (scrollTop / docH * 100) + '%';
 }, { passive: true });
+</script>
+<script>
+fetch('/sitemap.xml')
+  .then(response => response.text())
+  .then(str => (new window.DOMParser()).parseFromString(str, "text/xml"))
+  .then(data => {
+    const urls = [...data.querySelectorAll("url loc")].map(el => el.textContent);
+
+    const menu = {};
+    
+    urls.forEach(url => {
+      const path = new URL(url).pathname;
+      const parts = path.split('/').filter(Boolean);
+
+      if (parts.length === 0) return;
+
+      const section = parts[0];
+
+      if (!menu[section]) {
+        menu[section] = [];
+      }
+
+      menu[section].push(path);
+    });
+
+    let html = '<nav><a href="/">Home</a>';
+
+    Object.keys(menu).forEach(section => {
+      html += `<h3>${section}</h3><ul>`;
+      
+      menu[section].forEach(path => {
+        const name = path.split('/').pop().replace('.html','').replace('-', ' ');
+        html += `<li><a href="${path}">${name}</a></li>`;
+      });
+
+      html += '</ul>';
+    });
+
+    html += '</nav>';
+
+    document.getElementById('menu').innerHTML = html;
+  });
 </script>
 </body>
 </html>
