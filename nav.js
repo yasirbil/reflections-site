@@ -6,12 +6,12 @@
 (function () {
   'use strict';
 
-  const SITE      = 'https://test.yasirbilgin.com';
-  const SITEMAP   = SITE + '/sitemap.xml';
-  const NAV_H     = 62; // px — keep in sync with CSS
+  const SITE    = 'https://test.yasirbilgin.com';
+  const SITEMAP = SITE + '/sitemap.xml';
+  const NAV_H   = 62;
 
   /* ─────────────────────────────────────────────
-     1. STYLES  (scoped under .ynb- prefix)
+     1. STYLES
   ───────────────────────────────────────────── */
   const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=Lato:wght@700&family=Lora:wght@400;600&display=swap');
@@ -23,22 +23,17 @@
 .ynb-nav {
   position: fixed;
   top: 0; left: 0; right: 0;
-  z-index: 999999;
+  z-index: 2147483646;
   height: ${NAV_H}px;
-  background: rgba(247,243,236,0.97);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: #f7f3ec;
   border-bottom: 1px solid #d5c9b5;
   display: flex;
   align-items: center;
   padding: 0 2rem;
   font-family: 'Lato', sans-serif;
   -webkit-font-smoothing: antialiased;
-  overflow: visible !important;
-  isolation: isolate;
 }
 
-/* Brand */
 .ynb-brand {
   font-family: 'Cinzel', serif;
   font-size: 0.78rem;
@@ -53,7 +48,6 @@
 }
 .ynb-brand:hover { color: #8B4513; }
 
-/* Divider */
 .ynb-divider {
   width: 1px;
   height: 24px;
@@ -62,21 +56,15 @@
   flex-shrink: 0;
 }
 
-/* Nav list */
 .ynb-list {
   display: flex;
   align-items: center;
   list-style: none;
   flex: 1;
-  overflow: hidden;
 }
 
-/* Nav item */
-.ynb-item {
-  position: relative;
-}
+.ynb-item { position: relative; }
 
-/* Trigger (button or plain link) */
 .ynb-trigger {
   display: flex;
   align-items: center;
@@ -109,43 +97,22 @@
   transition: transform 0.2s ease;
 }
 .ynb-trigger:hover,
-.ynb-item.ynb-open .ynb-trigger {
-  color: #8B4513;
-}
+.ynb-item.ynb-open .ynb-trigger { color: #8B4513; }
 .ynb-trigger:hover::after,
-.ynb-item.ynb-open .ynb-trigger::after {
-  transform: scaleX(1);
-}
+.ynb-item.ynb-open .ynb-trigger::after { transform: scaleX(1); }
 
-/* Chevron icon */
 .ynb-chevron {
-  width: 10px;
-  height: 10px;
+  width: 10px; height: 10px;
   transition: transform 0.25s ease;
-  opacity: 0.6;
-  flex-shrink: 0;
+  opacity: 0.6; flex-shrink: 0;
 }
-.ynb-item.ynb-open .ynb-chevron {
-  transform: rotate(180deg);
-  opacity: 1;
-}
+.ynb-item.ynb-open .ynb-chevron { transform: rotate(180deg); opacity: 1; }
 
-/* ── Shimmer skeleton ── */
-.ynb-skeleton {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  flex: 1;
-}
+/* Shimmer */
+.ynb-skeleton { display: flex; align-items: center; gap: 1rem; flex: 1; }
 .ynb-skel-pill {
-  height: 12px;
-  border-radius: 6px;
-  background: linear-gradient(
-    90deg,
-    #d5c9b5 25%,
-    #efe8db 50%,
-    #d5c9b5 75%
-  );
+  height: 12px; border-radius: 6px;
+  background: linear-gradient(90deg, #d5c9b5 25%, #efe8db 50%, #d5c9b5 75%);
   background-size: 200% 100%;
   animation: ynb-shimmer 1.4s infinite;
 }
@@ -154,43 +121,29 @@
   100% { background-position: -200% 0; }
 }
 
-/* ── Mega dropdown ── */
+/* ── Dropdown — portaled to <html>, position:absolute with JS-set top ── */
 .ynb-dropdown {
-  position: fixed;
-  top: ${NAV_H}px;
-  left: 0; /* overridden inline by JS */
-  min-width: 480px;
+  display: none;
+  position: absolute;
+  min-width: 360px;
   max-width: 720px;
-  background: rgba(247,243,236,0.99);
+  background: #f7f3ec;
   border: 1px solid #d5c9b5;
-  border-top: 2px solid #8B4513;
-  box-shadow: 0 12px 40px rgba(28,24,18,0.12), 0 2px 8px rgba(28,24,18,0.06);
+  border-top: 3px solid #8B4513;
+  box-shadow: 0 8px 32px rgba(28,24,18,0.18);
   padding: 1.4rem 1.6rem 0;
-  border-radius: 0 0 4px 4px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.18s ease, transform 0.18s ease;
-  transform: translateY(-6px);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  z-index: 1000000;
+  border-radius: 0 0 6px 6px;
+  z-index: 2147483647;
 }
-.ynb-item.ynb-open .ynb-dropdown {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateY(0);
-}
+.ynb-dropdown.ynb-visible { display: block; }
 
-/* Column grid — --ynb-cols set inline */
 .ynb-cols {
   display: grid;
   grid-template-columns: repeat(var(--ynb-cols, 2), 1fr);
   gap: 0 2rem;
 }
-
 .ynb-col { padding-bottom: 1rem; }
 
-/* Category label inside dropdown */
 .ynb-cat-label {
   display: block;
   font-family: 'Cinzel', serif;
@@ -202,27 +155,22 @@
   margin-bottom: 0.5rem;
 }
 
-/* Sub-page links */
 .ynb-col-links { display: flex; flex-direction: column; }
 
 .ynb-link {
   display: block;
   font-family: 'Lora', Georgia, serif;
-  font-size: 0.82rem;
+  font-size: 0.84rem;
   color: #38322a;
   text-decoration: none;
-  padding: 0.28rem 0 0.28rem 0.5rem;
+  padding: 0.3rem 0 0.3rem 0.5rem;
   margin-left: -0.5rem;
-  line-height: 1.35;
+  line-height: 1.4;
   border-left: 2px solid transparent;
   transition: color 0.15s, border-color 0.15s;
 }
-.ynb-link:hover {
-  color: #8B4513;
-  border-left-color: #8B4513;
-}
+.ynb-link:hover { color: #8B4513; border-left-color: #8B4513; }
 
-/* Footer "view all" strip */
 .ynb-drop-footer {
   border-top: 1px solid #d5c9b5;
   margin: 0 -1.6rem;
@@ -242,14 +190,9 @@
 }
 .ynb-drop-footer a:hover { color: #8B4513; }
 
-/* ── Responsive ── */
 @media (max-width: 720px) {
   .ynb-nav { padding: 0 1rem; }
-  .ynb-dropdown {
-    min-width: calc(100vw - 16px) !important;
-    width: calc(100vw - 16px) !important;
-    left: 8px !important;
-  }
+  .ynb-dropdown { min-width: calc(100vw - 16px) !important; width: calc(100vw - 16px) !important; left: 8px !important; }
 }
 `;
 
@@ -266,9 +209,7 @@
   }
 
   function toTitleCase(slug) {
-    return slug
-      .replace(/[-_]/g, ' ')
-      .replace(/\b\w/g, c => c.toUpperCase());
+    return slug.replace(/[-_]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
   }
 
   function el(tag, attrs, children) {
@@ -283,78 +224,57 @@
   }
 
   /* ─────────────────────────────────────────────
-     3. SITEMAP FETCH — three attempts
+     3. FETCH — three attempts
   ───────────────────────────────────────────── */
   async function fetchSitemap() {
-    // 1. Direct (works same-origin or open CORS)
     try {
       const r = await fetch(SITEMAP, { cache: 'no-cache' });
       if (r.ok) return await r.text();
     } catch (_) {}
-
-    // 2. allorigins.win  →  { contents: "..." }
     try {
-      const r = await fetch(
-        `https://api.allorigins.win/get?url=${encodeURIComponent(SITEMAP)}`,
-        { cache: 'no-cache' }
-      );
+      const r = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(SITEMAP)}`, { cache: 'no-cache' });
       if (r.ok) { const j = await r.json(); if (j?.contents) return j.contents; }
     } catch (_) {}
-
-    // 3. corsproxy.io  →  plain text
     try {
-      const r = await fetch(
-        `https://corsproxy.io/?${encodeURIComponent(SITEMAP)}`,
-        { cache: 'no-cache' }
-      );
+      const r = await fetch(`https://corsproxy.io/?${encodeURIComponent(SITEMAP)}`, { cache: 'no-cache' });
       if (r.ok) return await r.text();
     } catch (_) {}
-
-    return null; // all failed
+    return null;
   }
 
   /* ─────────────────────────────────────────────
-     4. SITEMAP PARSE
+     4. PARSE
   ───────────────────────────────────────────── */
   function parseSitemap(xml) {
-    // Map: categorySlug → Array<{ slug, url }>
     const cats = new Map();
     const re = /<loc>([\s\S]*?)<\/loc>/g;
     let m;
-
     while ((m = re.exec(xml)) !== null) {
-      const url  = decodeXml(m[1].trim());
+      const url   = decodeXml(m[1].trim());
       if (!url.startsWith(SITE + '/')) continue;
-
-      const path  = url.slice(SITE.length + 1);
-      const parts = path.split('/').filter(Boolean);
+      const parts = url.slice(SITE.length + 1).split('/').filter(Boolean);
       if (!parts.length) continue;
-
       const cat = parts[0];
-      if (cat === 'home') continue; // brand already links home
-
+      if (cat === 'home') continue;
       if (!cats.has(cat)) cats.set(cat, []);
-      if (parts.length > 1) {
-        cats.get(cat).push({ slug: parts.slice(1).join('/'), url });
-      }
+      if (parts.length > 1) cats.get(cat).push({ slug: parts.slice(1).join('/'), url });
     }
-
     return cats;
   }
 
   /* ─────────────────────────────────────────────
-     5. BUILD NAV DOM
+     5. BUILD NAV
   ───────────────────────────────────────────── */
   function buildNavItems(list, cats) {
-    let openItem = null;
+    let openDrop = null;
+    let openLi   = null;
 
     function closeAll() {
-      if (openItem) {
-        openItem.classList.remove('ynb-open');
-        const btn = openItem.querySelector('.ynb-trigger');
-        if (btn) btn.setAttribute('aria-expanded', 'false');
-        openItem = null;
-      }
+      if (openDrop) { openDrop.classList.remove('ynb-visible'); openDrop = null; }
+      if (openLi)   { openLi.classList.remove('ynb-open');
+                      const b = openLi.querySelector('.ynb-trigger');
+                      if (b) b.setAttribute('aria-expanded', 'false');
+                      openLi = null; }
     }
 
     cats.forEach((subs, cat) => {
@@ -363,39 +283,24 @@
       const li     = el('li', { className: 'ynb-item', role: 'none' });
 
       if (subs.length === 0) {
-        // ── Plain link ──
-        li.appendChild(el('a', {
-          className: 'ynb-trigger',
-          href: catUrl,
-          textContent: label,
-          role: 'menuitem',
-        }));
+        li.appendChild(el('a', { className: 'ynb-trigger', href: catUrl, textContent: label, role: 'menuitem' }));
       } else {
-        // ── Button + mega dropdown ──
         const btn = el('button', {
           className: 'ynb-trigger',
           'aria-haspopup': 'true',
           'aria-expanded': 'false',
           role: 'menuitem',
         });
-        btn.innerHTML =
-          `${label}<svg class="ynb-chevron" viewBox="0 0 10 6" fill="none"
-            xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5"
-              stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>`;
+        btn.innerHTML = `${label}<svg class="ynb-chevron" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
-        // Column layout: up to 3 columns, ≥4 items each
         const colCount = Math.min(3, Math.max(1, Math.ceil(subs.length / 4)));
         const perCol   = Math.ceil(subs.length / colCount);
-
-        const colsDiv = el('div', { className: 'ynb-cols' });
+        const colsDiv  = el('div', { className: 'ynb-cols' });
         colsDiv.style.setProperty('--ynb-cols', colCount);
 
         for (let c = 0; c < colCount; c++) {
-          const chunk = subs.slice(c * perCol, (c + 1) * perCol);
+          const chunk    = subs.slice(c * perCol, (c + 1) * perCol);
           if (!chunk.length) break;
-
           const linksDiv = el('div', { className: 'ynb-col-links' });
           chunk.forEach(sub => {
             linksDiv.appendChild(el('a', {
@@ -404,7 +309,6 @@
               textContent: toTitleCase(sub.slug.split('/').pop()),
             }));
           });
-
           colsDiv.appendChild(el('div', { className: 'ynb-col' }, [
             el('span', { className: 'ynb-cat-label', textContent: label }),
             linksDiv,
@@ -412,38 +316,36 @@
         }
 
         const footerDiv = el('div', { className: 'ynb-drop-footer' });
-        footerDiv.appendChild(
-          el('a', { href: catUrl, textContent: `View all in ${label} →` })
-        );
+        footerDiv.appendChild(el('a', { href: catUrl, textContent: `View all in ${label} →` }));
 
-        const drop = el('div', { className: 'ynb-dropdown', role: 'region' }, [
-          colsDiv,
-          footerDiv,
-        ]);
+        const drop = el('div', { className: 'ynb-dropdown', role: 'region' }, [colsDiv, footerDiv]);
+
+        // Portal to <html> — escapes any stacking/overflow context on <body>
+        document.documentElement.appendChild(drop);
 
         li.appendChild(btn);
-        li.appendChild(drop);
-
-        // Portal: move dropdown to body so it escapes any clipping ancestor
-        document.documentElement.appendChild(drop);
 
         btn.addEventListener('click', e => {
           e.stopPropagation();
           const isOpen = li.classList.contains('ynb-open');
           closeAll();
           if (!isOpen) {
-            // Position using fixed coords from the button's screen rect
+            // Use scrollY + getBoundingClientRect so position:absolute lands correctly
             const btnRect = btn.getBoundingClientRect();
             const dropW   = Math.min(720, Math.max(360, window.innerWidth * 0.5));
             let   left    = btnRect.left + btnRect.width / 2 - dropW / 2;
             left = Math.max(8, Math.min(left, window.innerWidth - dropW - 8));
-            drop.style.left  = left + 'px';
-            drop.style.width = dropW + 'px';
-            drop.style.top   = NAV_H + 'px';
 
+            drop.style.position = 'fixed'; // fixed avoids scroll offset math
+            drop.style.top      = NAV_H + 'px';
+            drop.style.left     = left + 'px';
+            drop.style.width    = dropW + 'px';
+
+            drop.classList.add('ynb-visible');
             li.classList.add('ynb-open');
             btn.setAttribute('aria-expanded', 'true');
-            openItem = li;
+            openDrop = drop;
+            openLi   = li;
           }
         });
       }
@@ -456,46 +358,32 @@
   }
 
   /* ─────────────────────────────────────────────
-     6. INJECT NAV INTO PAGE
+     6. INJECT
   ───────────────────────────────────────────── */
   function injectNav() {
-    // Styles
     const style = document.createElement('style');
     style.textContent = CSS;
     document.head.appendChild(style);
 
-    // Nav element
     const nav = document.createElement('nav');
     nav.className = 'ynb-nav';
     nav.setAttribute('role', 'navigation');
     nav.setAttribute('aria-label', 'Site navigation');
 
-    // Brand
-    nav.appendChild(el('a', {
-      className: 'ynb-brand',
-      href: SITE,
-      textContent: 'Yasir Bilgin',
-    }));
-
-    // Divider
+    nav.appendChild(el('a', { className: 'ynb-brand', href: SITE, textContent: 'Yasir Bilgin' }));
     nav.appendChild(el('span', { className: 'ynb-divider', 'aria-hidden': 'true' }));
 
-    // Nav list (starts with shimmer)
     const list = el('ul', { className: 'ynb-list', role: 'menubar' });
-
-    const skeleton = el('li', { className: 'ynb-skeleton', 'aria-hidden': 'true' });
+    const skel  = el('li', { className: 'ynb-skeleton', 'aria-hidden': 'true' });
     [72, 60, 88, 56].forEach(w => {
       const pill = el('div', { className: 'ynb-skel-pill' });
       pill.style.width = w + 'px';
-      skeleton.appendChild(pill);
+      skel.appendChild(pill);
     });
-    list.appendChild(skeleton);
+    list.appendChild(skel);
     nav.appendChild(list);
 
-    // Insert nav as first child of body
     document.body.insertBefore(nav, document.body.firstChild);
-
-    // Push page content down so nav doesn't overlap it
     document.body.style.paddingTop =
       (parseInt(document.body.style.paddingTop, 10) || 0) + NAV_H + 'px';
 
@@ -507,17 +395,11 @@
   ───────────────────────────────────────────── */
   async function init() {
     const list = injectNav();
-
-    const xml = await fetchSitemap();
-
-    // Remove shimmer
+    const xml  = await fetchSitemap();
     const skel = list.querySelector('.ynb-skeleton');
     if (skel) skel.remove();
-
-    if (!xml) return; // all fetches failed — brand-only nav is fine
-
-    const cats = parseSitemap(xml);
-    buildNavItems(list, cats);
+    if (!xml) return;
+    buildNavItems(list, parseSitemap(xml));
   }
 
   if (document.readyState === 'loading') {
