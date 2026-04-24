@@ -23,7 +23,7 @@
 .ynb-nav {
   position: fixed;
   top: 0; left: 0; right: 0;
-  z-index: 9999;
+  z-index: 999999;
   height: ${NAV_H}px;
   background: rgba(247,243,236,0.97);
   backdrop-filter: blur(12px);
@@ -34,6 +34,7 @@
   padding: 0 2rem;
   font-family: 'Lato', sans-serif;
   -webkit-font-smoothing: antialiased;
+  overflow: visible !important;
 }
 
 /* Brand */
@@ -154,10 +155,9 @@
 
 /* ── Mega dropdown ── */
 .ynb-dropdown {
-  position: absolute;
-  top: calc(100% + 1px);
-  left: 50%;
-  transform: translateX(-50%) translateY(-6px);
+  position: fixed;
+  top: ${NAV_H}px;
+  left: 0; /* overridden inline by JS */
   min-width: 480px;
   max-width: 720px;
   background: rgba(247,243,236,0.99);
@@ -169,13 +169,15 @@
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.18s ease, transform 0.18s ease;
+  transform: translateY(-6px);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+  z-index: 1000000;
 }
 .ynb-item.ynb-open .ynb-dropdown {
   opacity: 1;
   pointer-events: auto;
-  transform: translateX(-50%) translateY(0);
+  transform: translateY(0);
 }
 
 /* Column grid — --ynb-cols set inline */
@@ -243,12 +245,9 @@
 @media (max-width: 720px) {
   .ynb-nav { padding: 0 1rem; }
   .ynb-dropdown {
-    min-width: 90vw;
-    left: 0;
-    transform: translateX(0) translateY(-6px);
-  }
-  .ynb-item.ynb-open .ynb-dropdown {
-    transform: translateX(0) translateY(0);
+    min-width: calc(100vw - 16px) !important;
+    width: calc(100vw - 16px) !important;
+    left: 8px !important;
   }
 }
 `;
@@ -424,11 +423,23 @@
         li.appendChild(btn);
         li.appendChild(drop);
 
+        // Portal: move dropdown to body so it escapes any clipping ancestor
+        document.body.appendChild(drop);
+
         btn.addEventListener('click', e => {
           e.stopPropagation();
           const isOpen = li.classList.contains('ynb-open');
           closeAll();
           if (!isOpen) {
+            // Position using fixed coords from the button's screen rect
+            const btnRect = btn.getBoundingClientRect();
+            const dropW   = Math.min(720, Math.max(360, window.innerWidth * 0.5));
+            let   left    = btnRect.left + btnRect.width / 2 - dropW / 2;
+            left = Math.max(8, Math.min(left, window.innerWidth - dropW - 8));
+            drop.style.left  = left + 'px';
+            drop.style.width = dropW + 'px';
+            drop.style.top   = NAV_H + 'px';
+
             li.classList.add('ynb-open');
             btn.setAttribute('aria-expanded', 'true');
             openItem = li;
