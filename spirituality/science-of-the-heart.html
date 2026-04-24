@@ -367,7 +367,14 @@ footer{
 <body>
 <div class="progress-bar" id="progressBar"></div>
 
-<div id="header"></div>
+<!-- STICKY HEADER -->
+<header class="site-header">
+  <a class="site-name" href="#">Fikir Defteri</a>
+  <div class="header-right">
+    <span class="read-time">60 min read</span>
+    <button class="toc-btn" onclick="document.getElementById('tocOverlay').classList.add('open')">Contents</button>
+  </div>
+</header>
 
 <!-- TABLE OF CONTENTS OVERLAY -->
 <div class="toc-overlay" id="tocOverlay" onclick="if(event.target===this)this.classList.remove('open')">
@@ -1058,18 +1065,6 @@ window.addEventListener('scroll', () => {
   const docH = document.documentElement.scrollHeight - window.innerHeight;
   bar.style.width = (scrollTop / docH * 100) + '%';
 }, { passive: true });
-</script>
-<script>
-fetch('/components/header.html')
-  .then(res => res.text())
-  .then(data => {
-    document.getElementById('header').innerHTML = data;
-
-    // ✅ NOW load menu
-    const script = document.createElement('script');
-    script.src = '/assets/js/menu.js';
-    document.body.appendChild(script);
-  });
 </script>
 </body>
 </html>
