@@ -35,6 +35,7 @@
   font-family: 'Lato', sans-serif;
   -webkit-font-smoothing: antialiased;
   overflow: visible !important;
+  isolation: isolate;
 }
 
 /* Brand */
@@ -424,7 +425,7 @@
         li.appendChild(drop);
 
         // Portal: move dropdown to body so it escapes any clipping ancestor
-        document.body.appendChild(drop);
+        document.documentElement.appendChild(drop);
 
         btn.addEventListener('click', e => {
           e.stopPropagation();
