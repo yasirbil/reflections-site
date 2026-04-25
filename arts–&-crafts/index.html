@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Yasir Bilgin</title>
+
+<!-- ✅ REQUIRED GLOBAL NAV -->
+<script src="https://test.yasirbilgin.com/nav.js"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f5f3ee;
+    --surface: #ffffff;
+    --surface2: #f0ede6;
+    --border: rgba(0,0,0,0.10);
+    --border-strong: rgba(0,0,0,0.20);
+    --text: #1a1a18;
+    --text-muted: #7a7872;
+    --text-faint: #b0ada5;
+    --accent: #2d4a3e;
+    --accent-light: #e8f0ec;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* ✅ spacing for nav */
+  .page-wrap {
+    padding-top: 90px;
+  }
+
+  .hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 3.5rem 1.5rem 2.5rem;
+  }
+
+  .hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+  }
+
+  .hero-sub {
+    font-size: 15px;
+    color: var(--text-muted);
+    max-width: 700px;
+    line-height: 1.6;
+  }
+
+  .section-wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2.5rem 4rem;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1.4rem;
+  }
+
+  .section-label {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+
+  .section-line {
+    flex: 1;
+    height: 0.5px;
+    background: var(--border);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 14px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: all 0.15s;
+  }
+
+  .card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  .card-icon { font-size: 26px; }
+  .card-name { font-size: 17px; font-weight: 500; }
+  .card-desc { font-size: 14px; color: var(--text-muted); }
+  .card-url { font-size: 12px; color: var(--text-faint); }
+
+  .ref-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .ref-btn {
+    padding: 0.45rem 1rem;
+    border: 1px solid var(--border-strong);
+    border-radius: 30px;
+    text-decoration: none;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .footer {
+    text-align: center;
+    padding: 2rem;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--text-faint);
+  }
+</style>
+</head>
+
+<body>
+
+<div class="page-wrap">
+
+<section class="hero">
+  <p class="hero-eyebrow">Knowledge · Reflection · Community</p>
+  <p class="hero-sub">
+    Writings, reflections, and community resources in one place.
+  </p>
+</section>
+
+<div class="section-wrap">
+  <div class="section-header">
+    <span class="section-label">Browse all sections</span>
+    <div class="section-line"></div>
+  </div>
+  <div class="grid" id="cardGrid"></div>
+</div>
+
+<div class="section-wrap">
+  <div class="section-header">
+    <span class="section-label">References & Tools</span>
+    <div class="section-line"></div>
+  </div>
+  <div class="ref-grid" id="refGrid"></div>
+</div>
+
+<footer class="footer">
+  © Yasir Bilgin · yasirbilgin.com
+</footer>
+
+</div>
+
+<script>
+const SECTIONS = [
+  { icon: '✍️', name: 'Reflections', url: 'http://www.reflections.yasirbilgin.com' },
+  { icon: '📰', name: 'Medium', url: 'https://medium.com/@yasirbil' },
+  { icon: '📖', name: "Qur'an", url: 'https://www.quran.yasirbilgin.com' },
+  { icon: '🖥️', name: 'DevOps', url: 'https://devops.yasirbilgin.com' },
+  { icon: '✈️', name: 'Travels', url: 'https://www.travels.yasirbilgin.com' },
+  { icon: '🧠', name: 'MBTI', url: 'https://mbti.yasirbilgin.com' },
+  { icon: '🎨', name: 'Arts', url: 'https://arts.yasirbilgin.com' }
+];
+
+const grid = document.getElementById('cardGrid');
+SECTIONS.forEach(s => {
+  const a = document.createElement('a');
+  a.className = 'card';
+  a.href = s.url;
+  a.target = '_blank';
+  a.innerHTML = `
+    <div class="card-icon">${s.icon}</div>
+    <div class="card-name">${s.name}</div>
+  `;
+  grid.appendChild(a);
+});
+</script>
+
+</body>
+</html>
