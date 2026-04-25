@@ -602,34 +602,46 @@ body { top: 0 !important; }
   }
 
   function nukeGTCookies() {
-    // GT can set the cookie on several domain variations — kill them all.
     const hostname = location.hostname;
     const bare     = hostname.replace(/^www\./, '');
-    const expired  = 'expires=Thu, 01 Jan 1970 00:00:00 GMT';
-    const domains  = [
-      '',                  // no domain attr  (current host)
+    const expired  = 'expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0';
+    // Cover every domain variation Safari and Chrome may have used
+    const domains = [
+      '',
       `domain=${hostname}`,
       `domain=.${hostname}`,
       `domain=${bare}`,
       `domain=.${bare}`,
     ];
+    const paths = ['/', '/en', '/tr', '/ar', '/fr', '/de', '/es', '/zh-CN', '/ja', '/ru', '/pt'];
     domains.forEach(d => {
-      document.cookie = `googtrans=; path=/; ${d}; ${expired}`.replace(/; ;/g, ';');
-      document.cookie = `googtrans=; path=/; ${d}; ${expired}`.replace(/; ;/g, ';');
+      paths.forEach(p => {
+        const base = `googtrans=; path=${p}; ${expired}`;
+        document.cookie = d ? `${base}; ${d}` : base;
+      });
     });
   }
 
   function switchLanguage(code) {
-    // Always nuke first so we start clean regardless of what GT wrote
     nukeGTCookies();
 
-    if (code !== 'en') {
+    if (code === 'en') {
+      // For Safari: also try to use GT's own restore if the widget is ready
+      try {
+        const select = document.querySelector('.goog-te-combo');
+        if (select) {
+          select.value = '';
+          select.dispatchEvent(new Event('change'));
+        }
+      } catch(e) {}
+      // Small delay to let GT process before reload
+      setTimeout(() => location.reload(), 100);
+    } else {
       const bare = location.hostname.replace(/^www\./, '');
-      // Write on both bare and dot-prefixed domain so it survives redirects
       document.cookie = `googtrans=/en/${code}; path=/; domain=.${bare}`;
       document.cookie = `googtrans=/en/${code}; path=/`;
+      location.reload();
     }
-    location.reload();
   }
 
   function loadGoogleTranslate() {
