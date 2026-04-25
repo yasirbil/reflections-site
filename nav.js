@@ -605,59 +605,28 @@ body { top: 0 !important; }
     const hostname = location.hostname;
     const bare     = hostname.replace(/^www\./, '');
     const exp      = 'expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0';
-    ['', hostname, '.'+ hostname, bare, '.'+ bare].forEach(d => {
+    const domains  = ['', hostname, '.'+ hostname, bare, '.'+ bare];
+    domains.forEach(d => {
       const dc = d ? 'domain='+ d +'; ' : '';
+      // Cover both SameSite=None (Chrome 80+) and no-SameSite variants
       document.cookie = 'googtrans=; path=/; '+ dc + exp;
+      document.cookie = 'googtrans=; path=/; '+ dc + exp +'; SameSite=None; Secure';
+      document.cookie = 'googtrans=; path=/; '+ dc + exp +'; SameSite=Lax';
     });
-  }
-
-  function doGTSwitch(code) {
-    const isRestore = (code === 'en');
-    const attempt = (tries) => {
-      const select = document.querySelector('.goog-te-combo');
-      if (select) {
-        select.value = isRestore ? '' : code;
-        select.dispatchEvent(new Event('change'));
-
-        if (isRestore) {
-          // Belt-and-suspenders: also call GT's own restore API if available
-          try {
-            const iframe = document.querySelector('.goog-te-banner-frame');
-            if (iframe) {
-              const restoreBtn = iframe.contentDocument.querySelector('.restore');
-              if (restoreBtn) restoreBtn.click();
-            }
-          } catch(e) {}
-          // And the top-level restore function GT sometimes exposes
-          try {
-            if (typeof google !== 'undefined' && google.translate &&
-                google.translate.TranslateElement.getInstance) {
-              google.translate.TranslateElement.getInstance().restore();
-            }
-          } catch(e) {}
-        }
-        return;
-      }
-      if (tries > 0) setTimeout(() => attempt(tries - 1), 200);
-    };
-    attempt(20);
   }
 
   function switchLanguage(code) {
     nukeGTCookies();
-    if (code === 'en') {
-      // Restore original — drive the widget directly, no reload needed.
-      // Reloading after nuking cookies re-initialises GT in the target language
-      // if its internal state hasn't fully reset, so we avoid it entirely.
-      doGTSwitch('en');
-    } else {
+
+    if (code !== 'en') {
       const bare = location.hostname.replace(/^www\./, '');
       document.cookie = 'googtrans=/en/'+ code +'; path=/; domain=.'+ bare;
       document.cookie = 'googtrans=/en/'+ code +'; path=/';
-      doGTSwitch(code);
-      // Reload so the cookie-based translation applies to the full page
-      setTimeout(() => location.reload(), 500);
     }
+    // Use href assignment instead of reload() — forces a fresh uncached load
+    // so GT picks up the new cookie state cleanly in all browsers
+    const url = location.href.split('#')[0]; // strip any hash
+    location.href = url;
   }
 
   function loadGoogleTranslate() {
