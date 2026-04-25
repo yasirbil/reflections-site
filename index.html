@@ -106,7 +106,6 @@ body {
   display: flex;
   gap: 10px;
   align-items: center;
-  margin-bottom: 1rem;
 }
 
 .search-input {
@@ -123,13 +122,8 @@ body {
   transition: border-color 0.15s;
 }
 
-.search-input::placeholder {
-  color: var(--text-faint);
-}
-
-.search-input:focus {
-  border-color: var(--accent);
-}
+.search-input::placeholder { color: var(--text-faint); }
+.search-input:focus { border-color: var(--accent); }
 
 .search-btn {
   height: 44px;
@@ -162,72 +156,15 @@ body {
   flex-shrink: 0;
 }
 
-/* FILTER ROW */
-.filter-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 7px;
-  align-items: center;
+/* CSE results styling */
+#cseResultsWrap .gsc-result-info,
+#cseResultsWrap .gs-result .gs-title,
+#cseResultsWrap .gs-snippet {
+  font-family: 'DM Sans', sans-serif !important;
 }
+#cseResultsWrap .gsc-cursor-box { text-align: center; margin-top: 1rem; }
 
-.filter-label {
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--text-faint);
-  margin-right: 4px;
-  white-space: nowrap;
-}
 
-.filter-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 0.3rem 0.75rem;
-  background: var(--bg);
-  border: 0.5px solid var(--border-strong);
-  border-radius: 30px;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: background 0.12s, border-color 0.12s, color 0.12s;
-  user-select: none;
-}
-
-.filter-chip:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.filter-chip.active {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #fff;
-}
-
-.filter-chip .chip-dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: currentColor;
-  opacity: 0.7;
-}
-
-.search-hint {
-  font-size: 11.5px;
-  color: var(--text-faint);
-  margin-top: 0.65rem;
-  text-align: center;
-}
-
-.search-hint a {
-  color: var(--accent);
-  text-decoration: none;
-}
-
-.search-hint a:hover { text-decoration: underline; }
 
 /* SECTION */
 .section-wrap {
@@ -420,39 +357,21 @@ body {
         class="search-input"
         id="searchInput"
         type="text"
-        placeholder="Search across all sections — or filter cards below…"
+        placeholder="Search all content on yasirbilgin.com…"
         autocomplete="off"
         spellcheck="false"
       />
-      <button class="search-btn" id="googleSearchBtn" title="Search yasirbilgin.com on Google">
+      <button class="search-btn" id="searchBtn">
         <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         Search site
       </button>
     </div>
-
-    <div class="filter-row">
-      <span class="filter-label">Focus:</span>
-      <button class="filter-chip active" data-filter="all">
-        <span class="chip-dot"></span>All sections
-      </button>
-      <button class="filter-chip" data-filter="islam">
-        <span class="chip-dot"></span>Islam &amp; Spirituality
-      </button>
-      <button class="filter-chip" data-filter="knowledge">
-        <span class="chip-dot"></span>Knowledge &amp; Study
-      </button>
-      <button class="filter-chip" data-filter="community">
-        <span class="chip-dot"></span>Community
-      </button>
-      <button class="filter-chip" data-filter="other">
-        <span class="chip-dot"></span>Other
-      </button>
-    </div>
-
-    <p class="search-hint">
-      Type to filter cards instantly &mdash; or hit <strong>Search site</strong> to search all content via Google.
-    </p>
   </div>
+</div>
+
+<!-- CSE RESULTS render inline here -->
+<div class="search-wrap" id="cseResultsWrap" style="display:none; padding-top:0; padding-bottom:2rem;">
+  <div id="cseResults"><div class="gcse-searchresults-only" data-queryParameterName="q" data-gname="searchresults"></div></div>
 </div>
 
 <!-- BROWSE SECTIONS -->
@@ -479,6 +398,9 @@ body {
   © Yasir Bilgin · yasirbilgin.com
 </footer>
 
+<script>
+window.__gcse = { parserLoaded: function(){} };
+</script>
 <script>
 // ─── DATA ────────────────────────────────────────────────────────────────────
 
@@ -593,67 +515,51 @@ REFERENCES.forEach(r => {
   refGrid.appendChild(a);
 });
 
-// ─── FILTER LOGIC ─────────────────────────────────────────────────────────────
+// ─── SEARCH WIRING ───────────────────────────────────────────────────────────
 
-let activeFilter = 'all';
-let searchQuery = '';
-
-function applyFilters() {
-  const cards = grid.querySelectorAll('.card');
-  let visible = 0;
-
-  cards.forEach(card => {
-    const matchesFilter = activeFilter === 'all' || card.dataset.tags.includes(activeFilter);
-    const matchesSearch = !searchQuery || card.dataset.keywords.includes(searchQuery);
-    if (matchesFilter && matchesSearch) {
-      card.classList.remove('hidden');
-      visible++;
-    } else {
-      card.classList.add('hidden');
-    }
-  });
-
-  noResults.style.display = visible === 0 ? 'block' : 'none';
-}
-
-// Filter chips
-document.querySelectorAll('.filter-chip').forEach(chip => {
-  chip.addEventListener('click', () => {
-    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-    chip.classList.add('active');
-    activeFilter = chip.dataset.filter;
-    applyFilters();
-  });
-});
-
-// Search input — live filter
 const searchInput = document.getElementById('searchInput');
-searchInput.addEventListener('input', () => {
-  searchQuery = searchInput.value.trim().toLowerCase();
-  applyFilters();
-});
+const searchBtn   = document.getElementById('searchBtn');
+const resultsWrap = document.getElementById('cseResultsWrap');
+const resultsDiv  = document.getElementById('cseResults');
 
-// Google site search button
-// TO ADD CSE: replace the URL with https://cse.google.com/cse?cx=YOUR_CSE_ID&q=...
-document.getElementById('googleSearchBtn').addEventListener('click', () => {
+// Inject the gcse-searchresults-only element once, then reuse
+let cseElement = null;
+
+function doSearch() {
   const q = searchInput.value.trim();
   if (!q) return;
 
-  const url = `https://cse.google.com/cse?cx=94589d4b6bd3d4d58&q=${encodeURIComponent(q)}`;
+  resultsWrap.style.display = 'block';
+  resultsWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-  window.open(url, '_blank');
-});
-
-// Also trigger Google search on Enter key
-searchInput.addEventListener('keydown', e => {
-  if (e.key === 'Enter') {
-    const q = searchInput.value.trim();
-    if (q) {
-      const url = `https://cse.google.com/cse?cx=94589d4b6bd3d4d58&q=${encodeURIComponent(q)}`;
-      window.open(url, '_blank');
+  // Use the CSE JS API if loaded, otherwise fall back to embedded element
+  if (window.google && window.google.search && window.google.search.cse && window.google.search.cse.element) {
+    const el = window.google.search.cse.element.getElement('searchresults');
+    if (el) {
+      el.execute(q);
+      return;
     }
   }
-});
+
+  // Fallback: inject gcse div and let the script render it
+  if (!cseElement) {
+    cseElement = document.createElement('div');
+    cseElement.className = 'gcse-searchresults-only';
+    cseElement.dataset.queryParameterName = 'q';
+    resultsDiv.appendChild(cseElement);
+    // Re-render CSE elements
+    if (window.google && window.google.search) {
+      window.google.search.CustomSearchControl && window.google.search.CustomSearchControl.attachAutoCompletion();
+    }
+  }
+  // Set URL param so CSE picks up the query
+  const url = new URL(window.location);
+  url.searchParams.set('q', q);
+  window.history.replaceState({}, '', url);
+}
+
+searchBtn.addEventListener('click', doSearch);
+searchInput.addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
 </script>
 
 </body>
