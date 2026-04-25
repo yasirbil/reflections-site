@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Yasir Bilgin</title>
 
-<!-- ✅ GLOBAL NAV (REQUIRED) -->
 <script src="https://test.yasirbilgin.com/nav.js"></script>
+<script async src="https://cse.google.com/cse.js?cx=94589d4b6bd3d4d58"></script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -26,8 +26,7 @@
   --text-faint: #b0ada5;
   --accent: #2d4a3e;
   --accent-light: #e8f0ec;
-  --coming-color: #3a3a5c;
-  --coming-bg: #ededf7;
+  --accent-mid: #4a7c65;
   --radius-md: 10px;
   --radius-lg: 16px;
 }
@@ -44,8 +43,7 @@
     --text-faint: #5a5750;
     --accent: #7fbf9e;
     --accent-light: rgba(127,191,158,0.10);
-    --coming-color: #9b9bc8;
-    --coming-bg: rgba(155,155,200,0.12);
+    --accent-mid: #5a9e7f;
   }
 }
 
@@ -57,7 +55,7 @@ body {
   font-family: 'DM Sans', sans-serif;
   font-weight: 400;
   min-height: 100vh;
-  padding-top: 62px; /* ✅ for nav */
+  padding-top: 62px;
 }
 
 /* HERO */
@@ -66,7 +64,7 @@ body {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 3.5rem 1.5rem 2.5rem;
+  padding: 3.5rem 1.5rem 2rem;
   animation: fadeUp 0.5s ease both;
 }
 
@@ -86,6 +84,150 @@ body {
   max-width: 700px;
   line-height: 1.6;
 }
+
+/* SEARCH AREA */
+.search-wrap {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2.5rem 0;
+  animation: fadeUp 0.5s 0.05s ease both;
+}
+
+.search-box-container {
+  background: var(--surface);
+  border: 0.5px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.search-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.search-input {
+  flex: 1;
+  height: 44px;
+  padding: 0 1rem;
+  background: var(--bg);
+  border: 0.5px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14.5px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.search-input::placeholder {
+  color: var(--text-faint);
+}
+
+.search-input:focus {
+  border-color: var(--accent);
+}
+
+.search-btn {
+  height: 44px;
+  padding: 0 1.25rem;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.search-btn:hover { opacity: 0.88; }
+
+.search-btn svg {
+  width: 15px;
+  height: 15px;
+  stroke: #fff;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+}
+
+/* FILTER ROW */
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  align-items: center;
+}
+
+.filter-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-right: 4px;
+  white-space: nowrap;
+}
+
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0.3rem 0.75rem;
+  background: var(--bg);
+  border: 0.5px solid var(--border-strong);
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s, color 0.12s;
+  user-select: none;
+}
+
+.filter-chip:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.filter-chip.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.filter-chip .chip-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.7;
+}
+
+.search-hint {
+  font-size: 11.5px;
+  color: var(--text-faint);
+  margin-top: 0.65rem;
+  text-align: center;
+}
+
+.search-hint a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.search-hint a:hover { text-decoration: underline; }
 
 /* SECTION */
 .section-wrap {
@@ -135,7 +277,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  transition: border-color 0.15s, transform 0.12s;
+  transition: border-color 0.15s, transform 0.12s, opacity 0.2s;
   position: relative;
   overflow: hidden;
 }
@@ -151,6 +293,10 @@ body {
 
 .card:hover { border-color: var(--accent); transform: translateY(-2px); }
 .card:hover::before { opacity: 1; }
+
+.card.hidden {
+  display: none;
+}
 
 .card-icon { font-size: 26px; margin-bottom: 4px; position: relative; }
 
@@ -177,6 +323,16 @@ body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* NO RESULTS */
+.no-results {
+  display: none;
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 2.5rem 1rem;
+  color: var(--text-muted);
+  font-size: 14px;
 }
 
 /* REFERENCES */
@@ -212,6 +368,7 @@ body {
   height: 6px;
   border-radius: 50%;
   background: var(--accent);
+  flex-shrink: 0;
 }
 
 /* FOOTER */
@@ -230,13 +387,20 @@ body {
 }
 
 /* RESPONSIVE */
-@media (max-width: 900px) {
+@media (max-width: 1000px) {
+  .grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 720px) {
   .grid { grid-template-columns: repeat(2, 1fr); }
+  .search-wrap, .section-wrap { padding-left: 1.2rem; padding-right: 1.2rem; }
 }
 
 @media (max-width: 500px) {
   .grid { grid-template-columns: 1fr; }
   .section-wrap { padding: 0 1.2rem 3rem; }
+  .search-row { flex-wrap: wrap; }
+  .search-btn { width: 100%; justify-content: center; }
 }
 </style>
 </head>
@@ -248,14 +412,61 @@ body {
   <p class="hero-sub">Writings, reflections, and community resources in one place. More sections coming soon.</p>
 </section>
 
-<div class="section-wrap">
+<!-- SEARCH -->
+<div class="search-wrap">
+  <div class="search-box-container">
+    <div class="search-row">
+      <input
+        class="search-input"
+        id="searchInput"
+        type="text"
+        placeholder="Search across all sections — or filter cards below…"
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <button class="search-btn" id="googleSearchBtn" title="Search yasirbilgin.com on Google">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        Search site
+      </button>
+    </div>
+
+    <div class="filter-row">
+      <span class="filter-label">Focus:</span>
+      <button class="filter-chip active" data-filter="all">
+        <span class="chip-dot"></span>All sections
+      </button>
+      <button class="filter-chip" data-filter="islam">
+        <span class="chip-dot"></span>Islam &amp; Spirituality
+      </button>
+      <button class="filter-chip" data-filter="knowledge">
+        <span class="chip-dot"></span>Knowledge &amp; Study
+      </button>
+      <button class="filter-chip" data-filter="community">
+        <span class="chip-dot"></span>Community
+      </button>
+      <button class="filter-chip" data-filter="other">
+        <span class="chip-dot"></span>Other
+      </button>
+    </div>
+
+    <p class="search-hint">
+      Type to filter cards instantly &mdash; or hit <strong>Search site</strong> to search all content via Google.
+    </p>
+  </div>
+</div>
+
+<!-- BROWSE SECTIONS -->
+<div class="section-wrap" style="padding-top: 1.5rem;">
   <div class="section-header">
     <span class="section-label">Browse all sections</span>
     <div class="section-line"></div>
   </div>
-  <div class="grid" id="cardGrid"></div>
+  <div class="grid" id="cardGrid">
+    <div class="no-results" id="noResults">No sections match your search.</div>
+  </div>
 </div>
 
+<!-- REFERENCES & TOOLS -->
 <div class="section-wrap" style="padding-bottom: 4rem;">
   <div class="section-header">
     <span class="section-label">References &amp; Tools</span>
@@ -269,43 +480,108 @@ body {
 </footer>
 
 <script>
+// ─── DATA ────────────────────────────────────────────────────────────────────
+
 const SECTIONS = [
-  { icon: '✍️',  name: 'Reflections', desc: 'Personal essays, thoughts and spiritual writings', url: 'https://www.reflections.yasirbilgin.com', display: 'reflections.yasirbilgin.com' },
-  { icon: '📰',  name: 'Medium Articles', desc: 'Published long-form articles on Medium', url: 'https://medium.com/@yasirbil', display: 'medium.com/@yasirbil' },
-  { icon: '💡',  name: 'First Principles', desc: 'Foundational ideas and core beliefs', url: 'https://www.reflections.yasirbilgin.com/pages/first-principles', display: 'reflections.yasirbilgin.com' },
-  { icon: '📚',  name: 'Essential Books', desc: 'A curated reading list of recommended books', url: 'https://www.reflections.yasirbilgin.com/pages/essential-books', display: 'reflections.yasirbilgin.com' },
-  { icon: '🕌',  name: 'Essential Books — Islam', desc: 'A curated reading list of essential books on Islam and Islamic thought', url: 'https://reflections.yasirbilgin.com/pages/essential-books-islam', display: 'reflections.yasirbilgin.com' },
-  { icon: '🎓',  name: 'Madrasa Books', desc: 'Traditional madrasa curriculum texts and classical Islamic scholarly works', url: 'https://www.reflections.yasirbilgin.com/pages/medrese-books', display: 'reflections.yasirbilgin.com' },
-  { icon: '📜',  name: 'Historical Chronology', desc: 'Timeline of key events in Islamic and world history', url: 'https://www.reflections.yasirbilgin.com/pages/chronology', display: 'reflections.yasirbilgin.com' },
-  { icon: '🤝',  name: 'Hizmet Community', desc: 'Resources and info for the Hizmet movement', url: 'https://www.hizmet-community.yasirbilgin.com', display: 'hizmet-community.yasirbilgin.com' },
-  { icon: '📄',  name: 'CRISD Papers', desc: 'Academic and research papers from CRISD', url: 'https://mailchi.mp/939b3b8716af/ktphane', display: 'mailchi.mp (CRISD)' },
-  { icon: '📖',  name: "Study Qur'an", desc: "In-depth Qur'anic study and guides", url: 'https://www.quran.yasirbilgin.com', display: 'quran.yasirbilgin.com' },
-  { icon: '🖥️',  name: 'DevOps / SRE', desc: 'DevOps and infrastructure notes', url: 'https://devops.yasirbilgin.com', display: 'devops.yasirbilgin.com' },
-  { icon: '✈️',  name: 'Travels', desc: 'Journey through civilizations', url: 'https://www.travels.yasirbilgin.com/home', display: 'travels.yasirbilgin.com' },
-  { icon: '🧠',  name: 'MBTI', desc: 'Personality and reflection resources', url: 'https://mbti.yasirbilgin.com', display: 'mbti.yasirbilgin.com' },
-  { icon: '🎨',  name: 'Arts & Crafts', desc: 'Creative and handmade works', url: 'https://arts.yasirbilgin.com', display: 'arts.yasirbilgin.com' },
-  { icon: '🗣️',  name: 'Linguistics', desc: 'Language and communication studies', url: 'https://www.linguistics.yasirbilgin.com', display: 'linguistics.yasirbilgin.com' },
+  {
+    icon: '📖',
+    name: "Study Qur'an",
+    desc: "In-depth Qur'anic study and guides",
+    url: 'https://www.quran.yasirbilgin.com',
+    display: 'quran.yasirbilgin.com',
+    tags: ['islam', 'knowledge'],
+    keywords: 'quran quranic study islam arabic'
+  },
+  {
+    icon: '🤝',
+    name: 'Hizmet Community',
+    desc: 'Resources and info for the Hizmet movement',
+    url: 'https://www.hizmet-community.yasirbilgin.com',
+    display: 'hizmet-community.yasirbilgin.com',
+    tags: ['islam', 'community'],
+    keywords: 'hizmet gulen community movement'
+  },
+  {
+    icon: '🖥️',
+    name: 'DevOps / SRE',
+    desc: 'DevOps and infrastructure notes',
+    url: 'https://devops.yasirbilgin.com',
+    display: 'devops.yasirbilgin.com',
+    tags: ['other'],
+    keywords: 'devops sre infrastructure engineering technology'
+  },
+  {
+    icon: '✈️',
+    name: 'Travels',
+    desc: 'Journey through civilizations',
+    url: 'https://www.travels.yasirbilgin.com/home',
+    display: 'travels.yasirbilgin.com',
+    tags: ['other'],
+    keywords: 'travel journey civilizations world'
+  },
+  {
+    icon: '🧠',
+    name: 'MBTI',
+    desc: 'Personality and reflection resources',
+    url: 'https://mbti.yasirbilgin.com',
+    display: 'mbti.yasirbilgin.com',
+    tags: ['other'],
+    keywords: 'mbti personality psychology types'
+  },
+  {
+    icon: '🎨',
+    name: 'Arts & Crafts',
+    desc: 'Creative and handmade works',
+    url: 'https://arts.yasirbilgin.com',
+    display: 'arts.yasirbilgin.com',
+    tags: ['other'],
+    keywords: 'arts crafts creative handmade'
+  },
+  {
+    icon: '🗣️',
+    name: 'Linguistics',
+    desc: 'Language and communication studies',
+    url: 'https://www.linguistics.yasirbilgin.com',
+    display: 'linguistics.yasirbilgin.com',
+    tags: ['knowledge', 'other'],
+    keywords: 'linguistics language communication arabic turkish'
+  },
 ];
 
 const REFERENCES = [
-  { name: 'Usul.ai', url: 'https://usul.ai/' },
-  { name: 'OpenAlex Works', url: 'https://openalex.org/works' },
+  { name: 'Medium Articles',        url: 'https://medium.com/@yasirbil',                           icon: '📰' },
+  { name: 'First Principles',       url: 'https://www.reflections.yasirbilgin.com/pages/first-principles', icon: '💡' },
+  { name: 'Essential Books',        url: 'https://www.reflections.yasirbilgin.com/pages/essential-books',  icon: '📚' },
+  { name: 'Essential Books — Islam',url: 'https://reflections.yasirbilgin.com/pages/essential-books-islam',icon: '🕌' },
+  { name: 'Madrasa Books',          url: 'https://www.reflections.yasirbilgin.com/pages/medrese-books',    icon: '🎓' },
+  { name: 'Historical Chronology',  url: 'https://www.reflections.yasirbilgin.com/pages/chronology',      icon: '📜' },
+  { name: 'CRISD Papers',           url: 'https://mailchi.mp/939b3b8716af/ktphane',                       icon: '📄' },
+  { name: 'Usul.ai',                url: 'https://usul.ai/',                                              icon: '🔗' },
+  { name: 'OpenAlex Works',         url: 'https://openalex.org/works',                                    icon: '🔗' },
 ];
 
+// ─── RENDER CARDS ─────────────────────────────────────────────────────────────
+
 const grid = document.getElementById('cardGrid');
+const noResults = document.getElementById('noResults');
+
 SECTIONS.forEach(s => {
   const a = document.createElement('a');
   a.className = 'card';
   a.href = s.url;
   a.target = '_blank';
+  a.dataset.tags = s.tags.join(' ');
+  a.dataset.keywords = (s.name + ' ' + s.desc + ' ' + (s.keywords || '')).toLowerCase();
   a.innerHTML = `
     <div class="card-icon">${s.icon}</div>
     <div class="card-name">${s.name}</div>
     <div class="card-desc">${s.desc}</div>
     <div class="card-url">${s.display}</div>
   `;
-  grid.appendChild(a);
+  grid.insertBefore(a, noResults);
 });
+
+// ─── RENDER REFERENCES ────────────────────────────────────────────────────────
 
 const refGrid = document.getElementById('refGrid');
 REFERENCES.forEach(r => {
@@ -313,8 +589,70 @@ REFERENCES.forEach(r => {
   a.className = 'ref-btn';
   a.href = r.url;
   a.target = '_blank';
-  a.innerHTML = `<span class="ref-btn-dot"></span>${r.name} ↗`;
+  a.innerHTML = `<span class="ref-btn-dot"></span>${r.icon ? r.icon + ' ' : ''}${r.name} ↗`;
   refGrid.appendChild(a);
+});
+
+// ─── FILTER LOGIC ─────────────────────────────────────────────────────────────
+
+let activeFilter = 'all';
+let searchQuery = '';
+
+function applyFilters() {
+  const cards = grid.querySelectorAll('.card');
+  let visible = 0;
+
+  cards.forEach(card => {
+    const matchesFilter = activeFilter === 'all' || card.dataset.tags.includes(activeFilter);
+    const matchesSearch = !searchQuery || card.dataset.keywords.includes(searchQuery);
+    if (matchesFilter && matchesSearch) {
+      card.classList.remove('hidden');
+      visible++;
+    } else {
+      card.classList.add('hidden');
+    }
+  });
+
+  noResults.style.display = visible === 0 ? 'block' : 'none';
+}
+
+// Filter chips
+document.querySelectorAll('.filter-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    activeFilter = chip.dataset.filter;
+    applyFilters();
+  });
+});
+
+// Search input — live filter
+const searchInput = document.getElementById('searchInput');
+searchInput.addEventListener('input', () => {
+  searchQuery = searchInput.value.trim().toLowerCase();
+  applyFilters();
+});
+
+// Google site search button
+// TO ADD CSE: replace the URL with https://cse.google.com/cse?cx=YOUR_CSE_ID&q=...
+document.getElementById('googleSearchBtn').addEventListener('click', () => {
+  const q = searchInput.value.trim();
+  if (!q) return;
+
+  const url = `https://cse.google.com/cse?cx=94589d4b6bd3d4d58&q=${encodeURIComponent(q)}`;
+
+  window.open(url, '_blank');
+});
+
+// Also trigger Google search on Enter key
+searchInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    const q = searchInput.value.trim();
+    if (q) {
+      const url = `https://cse.google.com/cse?cx=94589d4b6bd3d4d58&q=${encodeURIComponent(q)}`;
+      window.open(url, '_blank');
+    }
+  }
 });
 </script>
 
