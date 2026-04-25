@@ -4,286 +4,243 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Yasir Bilgin</title>
+
+<!-- ✅ GLOBAL NAV (REQUIRED) -->
 <script src="https://test.yasirbilgin.com/nav.js"></script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+:root {
+  --bg: #f5f3ee;
+  --surface: #ffffff;
+  --surface2: #f0ede6;
+  --border: rgba(0,0,0,0.10);
+  --border-strong: rgba(0,0,0,0.20);
+  --text: #1a1a18;
+  --text-muted: #7a7872;
+  --text-faint: #b0ada5;
+  --accent: #2d4a3e;
+  --accent-light: #e8f0ec;
+  --coming-color: #3a3a5c;
+  --coming-bg: #ededf7;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+}
+
+@media (prefers-color-scheme: dark) {
   :root {
-    --bg: #f5f3ee;
-    --surface: #ffffff;
-    --surface2: #f0ede6;
-    --border: rgba(0,0,0,0.10);
-    --border-strong: rgba(0,0,0,0.20);
-    --text: #1a1a18;
-    --text-muted: #7a7872;
-    --text-faint: #b0ada5;
-    --accent: #2d4a3e;
-    --accent-light: #e8f0ec;
-    --coming-color: #3a3a5c;
-    --coming-bg: #ededf7;
-    --radius-md: 10px;
-    --radius-lg: 16px;
+    --bg: #131310;
+    --surface: #1e1e1a;
+    --surface2: #252520;
+    --border: rgba(255,255,255,0.10);
+    --border-strong: rgba(255,255,255,0.22);
+    --text: #f0ede5;
+    --text-muted: #908d85;
+    --text-faint: #5a5750;
+    --accent: #7fbf9e;
+    --accent-light: rgba(127,191,158,0.10);
+    --coming-color: #9b9bc8;
+    --coming-bg: rgba(155,155,200,0.12);
   }
+}
 
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #131310;
-      --surface: #1e1e1a;
-      --surface2: #252520;
-      --border: rgba(255,255,255,0.10);
-      --border-strong: rgba(255,255,255,0.22);
-      --text: #f0ede5;
-      --text-muted: #908d85;
-      --text-faint: #5a5750;
-      --accent: #7fbf9e;
-      --accent-light: rgba(127,191,158,0.10);
-      --coming-color: #9b9bc8;
-      --coming-bg: rgba(155,155,200,0.12);
-    }
-  }
+html { scroll-behavior: smooth; }
 
-  html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 400;
+  min-height: 100vh;
+  padding-top: 62px; /* ✅ for nav */
+}
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 400;
-    min-height: 100vh;
-  }
+/* HERO */
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 3.5rem 1.5rem 2.5rem;
+  animation: fadeUp 0.5s ease both;
+}
 
-  .header-stripe {
-    width: 100%;
-    background: var(--surface);
-    border-bottom: 0.5px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0.85rem 1.5rem;
-  }
+.hero-eyebrow {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.75rem;
+}
 
-  .header-inner {
-    width: 100%;
-    max-width: 1200px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
+.hero-sub {
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--text-muted);
+  max-width: 700px;
+  line-height: 1.6;
+}
 
-  .logo-mark {
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    background: var(--accent);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Playfair Display', serif;
-    font-size: 13px;
-    font-weight: 600;
-    color: #fff;
-    flex-shrink: 0;
-    letter-spacing: 0.03em;
-  }
+/* SECTION */
+.section-wrap {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2.5rem 4rem;
+  animation: fadeUp 0.5s 0.1s ease both;
+}
 
-  .header-name {
-    font-family: 'Playfair Display', serif;
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--text);
-    letter-spacing: 0.01em;
-    transition: color 0.15s;
-    text-decoration: none;
-  }
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1.4rem;
+}
 
+.section-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  white-space: nowrap;
+}
 
+.section-line {
+  flex: 1;
+  height: 0.5px;
+  background: var(--border);
+}
 
-  .header-tagline {
-    margin-left: auto;
-    font-size: 12px;
-    color: var(--text-faint);
-    letter-spacing: 0.03em;
-  }
+/* GRID */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
 
-  .hero {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: 3.5rem 1.5rem 2.5rem;
-    animation: fadeUp 0.5s ease both;
-  }
+/* CARD */
+.card {
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: border-color 0.15s, transform 0.12s;
+  position: relative;
+  overflow: hidden;
+}
 
-  .hero-eyebrow {
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 0.75rem;
-  }
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--accent-light);
+  opacity: 0;
+  transition: opacity 0.15s;
+}
 
-  .hero-sub {
-    font-size: 15px;
-    font-weight: 300;
-    color: var(--text-muted);
-    max-width: 700px;
-    line-height: 1.6;
-  }
+.card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.card:hover::before { opacity: 1; }
 
-  .section-wrap {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 2.5rem 4rem;
-    animation: fadeUp 0.5s 0.1s ease both;
-  }
+.card-icon { font-size: 26px; margin-bottom: 4px; position: relative; }
 
-  .section-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 1.4rem;
-  }
+.card-name {
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--text);
+  position: relative;
+}
 
-  .section-label {
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--text-faint);
-    white-space: nowrap;
-  }
+.card-desc {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.55;
+  position: relative;
+  flex: 1;
+}
 
-  .section-line {
-    flex: 1;
-    height: 0.5px;
-    background: var(--border);
-  }
+.card-url {
+  font-size: 12.5px;
+  color: var(--text-faint);
+  margin-top: 4px;
+  position: relative;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 14px;
-  }
+/* REFERENCES */
+.ref-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
 
-  .card {
-    background: var(--surface);
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 1.25rem;
-    text-decoration: none;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    transition: border-color 0.15s, transform 0.12s;
-    position: relative;
-    overflow: hidden;
-  }
+.ref-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0.45rem 1rem;
+  background: var(--surface);
+  border: 0.5px solid var(--border-strong);
+  border-radius: 30px;
+  text-decoration: none;
+  color: var(--text-muted);
+  font-size: 12.5px;
+  font-weight: 500;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
 
-  .card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: var(--accent-light);
-    opacity: 0;
-    transition: opacity 0.15s;
-  }
+.ref-btn:hover {
+  border-color: var(--accent);
+  color: var(--text);
+  background: var(--accent-light);
+}
 
-  .card:hover { border-color: var(--accent); transform: translateY(-2px); }
-  .card:hover::before { opacity: 1; }
+.ref-btn-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
 
-  .card-icon { font-size: 26px; margin-bottom: 4px; position: relative; }
+/* FOOTER */
+.footer {
+  text-align: center;
+  padding: 2rem 1.5rem;
+  border-top: 0.5px solid var(--border);
+  font-size: 12px;
+  color: var(--text-faint);
+}
 
-  .card-name {
-    font-size: 17px;
-    font-weight: 500;
-    color: var(--text);
-    position: relative;
-  }
+/* ANIMATION */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 
-  .card-desc {
-    font-size: 14px;
-    color: var(--text-muted);
-    line-height: 1.55;
-    position: relative;
-    flex: 1;
-  }
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .grid { grid-template-columns: repeat(2, 1fr); }
+}
 
-  .card-url {
-    font-size: 12.5px;
-    color: var(--text-faint);
-    margin-top: 4px;
-    position: relative;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .ref-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-
-  .ref-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    padding: 0.45rem 1rem;
-    background: var(--surface);
-    border: 0.5px solid var(--border-strong);
-    border-radius: 30px;
-    text-decoration: none;
-    color: var(--text-muted);
-    font-size: 12.5px;
-    font-weight: 500;
-    transition: border-color 0.15s, color 0.15s, background 0.15s;
-    white-space: nowrap;
-  }
-
-  .ref-btn:hover {
-    border-color: var(--accent);
-    color: var(--text);
-    background: var(--accent-light);
-  }
-
-  .ref-btn-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--accent);
-    flex-shrink: 0;
-    opacity: 0.6;
-  }
-
-  .footer {
-    text-align: center;
-    padding: 2rem 1.5rem;
-    border-top: 0.5px solid var(--border);
-    font-size: 12px;
-    color: var(--text-faint);
-    letter-spacing: 0.02em;
-  }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(14px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  @media (max-width: 900px) {
-    .grid { grid-template-columns: repeat(2, 1fr); }
-  }
-
-  @media (max-width: 500px) {
-    .grid { grid-template-columns: 1fr; }
-    .section-wrap { padding: 0 1.2rem 3rem; }
-  }
+@media (max-width: 500px) {
+  .grid { grid-template-columns: 1fr; }
+  .section-wrap { padding: 0 1.2rem 3rem; }
+}
 </style>
 </head>
+
 <body>
 
 <section class="hero">
@@ -308,30 +265,30 @@
 </div>
 
 <footer class="footer">
-  © Yasir Bilgin &nbsp;·&nbsp; yasirbilgin.com
+  © Yasir Bilgin · yasirbilgin.com
 </footer>
 
 <script>
 const SECTIONS = [
-  { icon: '✍️',  name: 'Reflections',          desc: 'Personal essays, thoughts and spiritual writings',                                                                         url: 'http://www.reflections.yasirbilgin.com',                        display: 'reflections.yasirbilgin.com' },
-  { icon: '📰',  name: 'Medium Articles',       desc: 'Published long-form articles on Medium',                                                                                   url: 'https://medium.com/@yasirbil',                                  display: 'medium.com/@yasirbil' },
-  { icon: '💡',  name: 'First Principles',      desc: 'Foundational ideas and core beliefs',                                                                                      url: 'https://www.reflections.yasirbilgin.com/pages/first-principles', display: 'reflections.yasirbilgin.com' },
-  { icon: '📚',  name: 'Essential Books',       desc: 'A curated reading list of recommended books',                                                                              url: 'https://www.reflections.yasirbilgin.com/pages/essential-books',  display: 'reflections.yasirbilgin.com' },
-  { icon: '🕌',  name: 'Essential Books — Islam', desc: 'A curated reading list of essential books on Islam and Islamic thought',                                                url: 'https://reflections.yasirbilgin.com/pages/essential-books-islam',display: 'reflections.yasirbilgin.com' },
-  { icon: '🎓',  name: 'Madrasa Books',         desc: 'Traditional madrasa curriculum texts and classical Islamic scholarly works',                                               url: 'https://www.reflections.yasirbilgin.com/pages/medrese-books',    display: 'reflections.yasirbilgin.com' },
-  { icon: '📜',  name: 'Historical Chronology', desc: 'A timeline of key events in Islamic and world history for contextual understanding',                                       url: 'https://www.reflections.yasirbilgin.com/pages/chronology',       display: 'reflections.yasirbilgin.com' },
-  { icon: '🤝',  name: 'Hizmet Community',      desc: 'Resources and info for the Hizmet movement',                                                                               url: 'http://www.hizmet-community.yasirbilgin.com',                    display: 'hizmet-community.yasirbilgin.com' },
-  { icon: '📄',  name: 'CRISD Papers',          desc: 'Academic and research papers from CRISD',                                                                                  url: 'https://mailchi.mp/939b3b8716af/ktphane',                       display: 'mailchi.mp (CRISD)' },
-  { icon: '📖',  name: "Study Qur'an",          desc: "In-depth Qur'anic study — commentary, reflection, and contextual reading guides for personal and scholarly use.",          url: 'https://www.quran.yasirbilgin.com',                             display: 'quran.yasirbilgin.com' },
-  { icon: '🖥️',  name: 'DevOps / SRE',          desc: 'Notes, guides, and resources on DevOps practices, site reliability engineering, and infrastructure at scale.',             url: 'https://devops.yasirbilgin.com',                                display: 'devops.yasirbilgin.com' },
-  { icon: '✈️',  name: 'Travels',               desc: 'Eight civilizational spheres — a journey through history, culture, and influence across the world.',                       url: 'https://www.travels.yasirbilgin.com/home',                      display: 'travels.yasirbilgin.com' },
-  { icon: '🧠',  name: 'MBTI',                  desc: 'Personality type resources, guides, and reflections through the lens of the Myers-Briggs framework.',                      url: 'https://mbti.yasirbilgin.com',                                  display: 'mbti.yasirbilgin.com' },
-  { icon: '🎨',  name: 'Arts & Crafts',         desc: 'Creative projects, visual arts, and handcrafted works — a space for making and expression.',                               url: 'https://arts.yasirbilgin.com',                                  display: 'arts.yasirbilgin.com' },
-  { icon: '🗣️',  name: 'Linguistics',           desc: 'Language, structure, meaning, and the science of how humans communicate across cultures and time.',                         url: 'https://www.linguistics.yasirbilgin.com',                       display: 'linguistics.yasirbilgin.com' },
+  { icon: '✍️',  name: 'Reflections', desc: 'Personal essays, thoughts and spiritual writings', url: 'https://www.reflections.yasirbilgin.com', display: 'reflections.yasirbilgin.com' },
+  { icon: '📰',  name: 'Medium Articles', desc: 'Published long-form articles on Medium', url: 'https://medium.com/@yasirbil', display: 'medium.com/@yasirbil' },
+  { icon: '💡',  name: 'First Principles', desc: 'Foundational ideas and core beliefs', url: 'https://www.reflections.yasirbilgin.com/pages/first-principles', display: 'reflections.yasirbilgin.com' },
+  { icon: '📚',  name: 'Essential Books', desc: 'A curated reading list of recommended books', url: 'https://www.reflections.yasirbilgin.com/pages/essential-books', display: 'reflections.yasirbilgin.com' },
+  { icon: '🕌',  name: 'Essential Books — Islam', desc: 'A curated reading list of essential books on Islam and Islamic thought', url: 'https://reflections.yasirbilgin.com/pages/essential-books-islam', display: 'reflections.yasirbilgin.com' },
+  { icon: '🎓',  name: 'Madrasa Books', desc: 'Traditional madrasa curriculum texts and classical Islamic scholarly works', url: 'https://www.reflections.yasirbilgin.com/pages/medrese-books', display: 'reflections.yasirbilgin.com' },
+  { icon: '📜',  name: 'Historical Chronology', desc: 'Timeline of key events in Islamic and world history', url: 'https://www.reflections.yasirbilgin.com/pages/chronology', display: 'reflections.yasirbilgin.com' },
+  { icon: '🤝',  name: 'Hizmet Community', desc: 'Resources and info for the Hizmet movement', url: 'https://www.hizmet-community.yasirbilgin.com', display: 'hizmet-community.yasirbilgin.com' },
+  { icon: '📄',  name: 'CRISD Papers', desc: 'Academic and research papers from CRISD', url: 'https://mailchi.mp/939b3b8716af/ktphane', display: 'mailchi.mp (CRISD)' },
+  { icon: '📖',  name: "Study Qur'an", desc: "In-depth Qur'anic study and guides", url: 'https://www.quran.yasirbilgin.com', display: 'quran.yasirbilgin.com' },
+  { icon: '🖥️',  name: 'DevOps / SRE', desc: 'DevOps and infrastructure notes', url: 'https://devops.yasirbilgin.com', display: 'devops.yasirbilgin.com' },
+  { icon: '✈️',  name: 'Travels', desc: 'Journey through civilizations', url: 'https://www.travels.yasirbilgin.com/home', display: 'travels.yasirbilgin.com' },
+  { icon: '🧠',  name: 'MBTI', desc: 'Personality and reflection resources', url: 'https://mbti.yasirbilgin.com', display: 'mbti.yasirbilgin.com' },
+  { icon: '🎨',  name: 'Arts & Crafts', desc: 'Creative and handmade works', url: 'https://arts.yasirbilgin.com', display: 'arts.yasirbilgin.com' },
+  { icon: '🗣️',  name: 'Linguistics', desc: 'Language and communication studies', url: 'https://www.linguistics.yasirbilgin.com', display: 'linguistics.yasirbilgin.com' },
 ];
 
 const REFERENCES = [
-  { name: 'Usul.ai',        url: 'https://usul.ai/' },
+  { name: 'Usul.ai', url: 'https://usul.ai/' },
   { name: 'OpenAlex Works', url: 'https://openalex.org/works' },
 ];
 
@@ -360,5 +317,6 @@ REFERENCES.forEach(r => {
   refGrid.appendChild(a);
 });
 </script>
+
 </body>
 </html>
