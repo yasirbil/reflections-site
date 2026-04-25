@@ -1,25 +1,27 @@
 /*!
  * nav.js — Yasir Bilgin dynamic site navigation
  * Drop in any page:  <script src="/nav.js"></script>
- * No dependencies. Fetches sitemap.xml, builds mega-dropdown nav.
+ * No dependencies. Desktop: mega-dropdown. Mobile: slide-in drawer.
  */
 (function () {
   'use strict';
 
-  const SITE    = 'https://test.yasirbilgin.com';
-  const SITEMAP = SITE + '/sitemap.xml';
-  const NAV_H   = 62;
+  const SITE      = 'https://test.yasirbilgin.com';
+  const SITEMAP   = SITE + '/sitemap.xml';
+  const NAV_H     = 62;
+  const MOBILE_BP = 768;
 
   /* ─────────────────────────────────────────────
      1. STYLES
   ───────────────────────────────────────────── */
   const CSS = `
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=Lato:wght@700&family=Lora:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=Lato:wght@400;700&family=Lora:wght@400;600&display=swap');
 
 .ynb-nav *,
 .ynb-nav *::before,
 .ynb-nav *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* ── NAV BAR ── */
 .ynb-nav {
   position: fixed;
   top: 0; left: 0; right: 0;
@@ -29,11 +31,12 @@
   border-bottom: 1px solid #d5c9b5;
   display: flex;
   align-items: center;
-  padding: 0 2rem;
+  padding: 0 1.5rem;
   font-family: 'Lato', sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
+/* ── BRAND ── */
 .ynb-brand {
   font-family: 'Cinzel', serif;
   font-size: 0.78rem;
@@ -56,13 +59,13 @@
   flex-shrink: 0;
 }
 
+/* ── DESKTOP LIST ── */
 .ynb-list {
   display: flex;
   align-items: center;
   list-style: none;
   flex: 1;
 }
-
 .ynb-item { position: relative; }
 
 .ynb-trigger {
@@ -88,9 +91,7 @@
 .ynb-trigger::after {
   content: '';
   position: absolute;
-  bottom: 0;
-  left: 0.85rem;
-  right: 0.85rem;
+  bottom: 0; left: 0.85rem; right: 0.85rem;
   height: 2px;
   background: #8B4513;
   transform: scaleX(0);
@@ -108,7 +109,36 @@
 }
 .ynb-item.ynb-open .ynb-chevron { transform: rotate(180deg); opacity: 1; }
 
-/* Shimmer */
+/* ── HAMBURGER ── */
+.ynb-hamburger {
+  display: none;
+  margin-left: auto;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 40px; height: 40px;
+  padding: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+.ynb-hamburger:hover { background: rgba(139,69,19,0.08); }
+.ynb-hamburger span {
+  display: block;
+  height: 2px;
+  background: #38322a;
+  border-radius: 2px;
+  transition: transform 0.25s ease, opacity 0.2s ease;
+  transform-origin: center;
+}
+.ynb-hamburger.ynb-active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.ynb-hamburger.ynb-active span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.ynb-hamburger.ynb-active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* ── SHIMMER ── */
 .ynb-skeleton { display: flex; align-items: center; gap: 1rem; flex: 1; }
 .ynb-skel-pill {
   height: 12px; border-radius: 6px;
@@ -121,10 +151,10 @@
   100% { background-position: -200% 0; }
 }
 
-/* ── Dropdown — portaled to <html>, position:absolute with JS-set top ── */
+/* ── DESKTOP DROPDOWN ── */
 .ynb-dropdown {
   display: none;
-  position: absolute;
+  position: fixed;
   min-width: 360px;
   max-width: 720px;
   background: #f7f3ec;
@@ -139,7 +169,7 @@
 
 .ynb-cols {
   display: grid;
-  grid-template-columns: repeat(var(--ynb-cols, 2), 1fr);
+  grid-template-columns: repeat(var(--ynb-cols,2), 1fr);
   gap: 0 2rem;
 }
 .ynb-col { padding-bottom: 1rem; }
@@ -147,21 +177,16 @@
 .ynb-cat-label {
   display: block;
   font-family: 'Cinzel', serif;
-  font-size: 0.6rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: #8B4513;
-  margin-bottom: 0.5rem;
+  font-size: 0.6rem; font-weight: 600;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: #8B4513; margin-bottom: 0.5rem;
 }
-
 .ynb-col-links { display: flex; flex-direction: column; }
 
 .ynb-link {
   display: block;
   font-family: 'Lora', Georgia, serif;
-  font-size: 0.84rem;
-  color: #38322a;
+  font-size: 0.84rem; color: #38322a;
   text-decoration: none;
   padding: 0.3rem 0 0.3rem 0.5rem;
   margin-left: -0.5rem;
@@ -175,24 +200,122 @@
   border-top: 1px solid #d5c9b5;
   margin: 0 -1.6rem;
   padding: 0.65rem 1.6rem;
-  display: flex;
-  justify-content: flex-end;
+  display: flex; justify-content: flex-end;
 }
 .ynb-drop-footer a {
   font-family: 'Lato', sans-serif;
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #b5651d;
-  text-decoration: none;
+  font-size: 0.68rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: #b5651d; text-decoration: none;
   transition: color 0.15s;
 }
 .ynb-drop-footer a:hover { color: #8B4513; }
 
-@media (max-width: 720px) {
-  .ynb-nav { padding: 0 1rem; }
-  .ynb-dropdown { min-width: calc(100vw - 16px) !important; width: calc(100vw - 16px) !important; left: 8px !important; }
+/* ── MOBILE DRAWER ── */
+.ynb-drawer {
+  position: fixed;
+  top: ${NAV_H}px; left: 0; right: 0; bottom: 0;
+  z-index: 2147483645;
+  background: #f7f3ec;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  transform: translateX(-100%);
+  transition: transform 0.28s ease;
+  border-top: 1px solid #d5c9b5;
+  /* hidden on desktop via media query */
+}
+.ynb-drawer.ynb-drawer-open { transform: translateX(0); }
+
+.ynb-drawer-inner { padding: 0.5rem 0 4rem; }
+
+.ynb-drawer-item { border-bottom: 1px solid #ece7df; }
+
+.ynb-drawer-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 1rem 1.5rem;
+  font-family: 'Lato', sans-serif;
+  font-size: 0.75rem; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: #1c1812;
+  text-decoration: none;
+  background: none; border: none;
+  cursor: pointer; text-align: left;
+  transition: color 0.15s, background 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.ynb-drawer-trigger:hover,
+.ynb-drawer-item.ynb-drawer-open .ynb-drawer-trigger {
+  color: #8B4513;
+  background: rgba(139,69,19,0.04);
+}
+
+.ynb-drawer-chevron {
+  width: 12px; height: 12px;
+  flex-shrink: 0;
+  transition: transform 0.25s ease;
+  opacity: 0.45;
+}
+.ynb-drawer-item.ynb-drawer-open .ynb-drawer-chevron {
+  transform: rotate(180deg);
+  opacity: 1;
+}
+
+.ynb-drawer-sub {
+  display: none;
+  padding: 0.2rem 1.5rem 1rem 2.2rem;
+  background: rgba(139,69,19,0.025);
+}
+.ynb-drawer-item.ynb-drawer-open .ynb-drawer-sub { display: block; }
+
+.ynb-drawer-sub-link {
+  display: block;
+  font-family: 'Lora', Georgia, serif;
+  font-size: 0.9rem; color: #5c4e3a;
+  text-decoration: none;
+  padding: 0.5rem 0 0.5rem 0.8rem;
+  border-left: 2px solid #d5c9b5;
+  margin-bottom: 0.1rem;
+  transition: color 0.15s, border-color 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.ynb-drawer-sub-link:hover,
+.ynb-drawer-sub-link:active {
+  color: #8B4513;
+  border-left-color: #8B4513;
+}
+
+.ynb-drawer-view-all {
+  display: inline-block;
+  margin-top: 0.8rem;
+  font-family: 'Lato', sans-serif;
+  font-size: 0.68rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: #b5651d; text-decoration: none;
+}
+.ynb-drawer-view-all:hover { color: #8B4513; }
+
+/* ── SCRIM ── */
+.ynb-scrim {
+  display: none;
+  position: fixed;
+  inset: 0; top: ${NAV_H}px;
+  z-index: 2147483644;
+  background: rgba(28,24,18,0.35);
+}
+.ynb-scrim.ynb-scrim-visible { display: block; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: ${MOBILE_BP}px) {
+  .ynb-divider  { display: none; }
+  .ynb-list     { display: none; }
+  .ynb-hamburger { display: flex; }
+}
+@media (min-width: ${MOBILE_BP + 1}px) {
+  .ynb-drawer { display: none !important; }
+  .ynb-scrim  { display: none !important; }
 }
 `;
 
@@ -201,17 +324,13 @@
   ───────────────────────────────────────────── */
   function decodeXml(str) {
     return str
-      .replace(/&amp;/g,  '&')
-      .replace(/&lt;/g,   '<')
-      .replace(/&gt;/g,   '>')
-      .replace(/&quot;/g, '"')
+      .replace(/&amp;/g,  '&').replace(/&lt;/g,   '<')
+      .replace(/&gt;/g,   '>').replace(/&quot;/g, '"')
       .replace(/&apos;/g, "'");
   }
-
   function toTitleCase(slug) {
     return slug.replace(/[-_]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
   }
-
   function el(tag, attrs, children) {
     const node = document.createElement(tag);
     if (attrs) Object.entries(attrs).forEach(([k, v]) => {
@@ -222,9 +341,24 @@
     if (children) children.forEach(c => c && node.appendChild(c));
     return node;
   }
+  function chevronSVG(cls) {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', '0 0 10 6');
+    svg.setAttribute('fill', 'none');
+    svg.setAttribute('aria-hidden', 'true');
+    svg.setAttribute('class', cls);
+    const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    p.setAttribute('d', 'M1 1l4 4 4-4');
+    p.setAttribute('stroke', 'currentColor');
+    p.setAttribute('stroke-width', '1.5');
+    p.setAttribute('stroke-linecap', 'round');
+    p.setAttribute('stroke-linejoin', 'round');
+    svg.appendChild(p);
+    return svg;
+  }
 
   /* ─────────────────────────────────────────────
-     3. FETCH — three attempts
+     3. FETCH
   ───────────────────────────────────────────── */
   async function fetchSitemap() {
     try {
@@ -232,11 +366,17 @@
       if (r.ok) return await r.text();
     } catch (_) {}
     try {
-      const r = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(SITEMAP)}`, { cache: 'no-cache' });
+      const r = await fetch(
+        `https://api.allorigins.win/get?url=${encodeURIComponent(SITEMAP)}`,
+        { cache: 'no-cache' }
+      );
       if (r.ok) { const j = await r.json(); if (j?.contents) return j.contents; }
     } catch (_) {}
     try {
-      const r = await fetch(`https://corsproxy.io/?${encodeURIComponent(SITEMAP)}`, { cache: 'no-cache' });
+      const r = await fetch(
+        `https://corsproxy.io/?${encodeURIComponent(SITEMAP)}`,
+        { cache: 'no-cache' }
+      );
       if (r.ok) return await r.text();
     } catch (_) {}
     return null;
@@ -263,18 +403,18 @@
   }
 
   /* ─────────────────────────────────────────────
-     5. BUILD NAV
+     5. DESKTOP ITEMS
   ───────────────────────────────────────────── */
-  function buildNavItems(list, cats) {
-    let openDrop = null;
-    let openLi   = null;
+  function buildDesktopItems(list, cats) {
+    let openDrop = null, openLi = null;
 
     function closeAll() {
       if (openDrop) { openDrop.classList.remove('ynb-visible'); openDrop = null; }
-      if (openLi)   { openLi.classList.remove('ynb-open');
-                      const b = openLi.querySelector('.ynb-trigger');
-                      if (b) b.setAttribute('aria-expanded', 'false');
-                      openLi = null; }
+      if (openLi)   {
+        openLi.classList.remove('ynb-open');
+        openLi.querySelector('.ynb-trigger')?.setAttribute('aria-expanded', 'false');
+        openLi = null;
+      }
     }
 
     cats.forEach((subs, cat) => {
@@ -285,13 +425,9 @@
       if (subs.length === 0) {
         li.appendChild(el('a', { className: 'ynb-trigger', href: catUrl, textContent: label, role: 'menuitem' }));
       } else {
-        const btn = el('button', {
-          className: 'ynb-trigger',
-          'aria-haspopup': 'true',
-          'aria-expanded': 'false',
-          role: 'menuitem',
-        });
-        btn.innerHTML = `${label}<svg class="ynb-chevron" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+        const btn = el('button', { className: 'ynb-trigger', 'aria-haspopup': 'true', 'aria-expanded': 'false', role: 'menuitem' });
+        btn.appendChild(document.createTextNode(label));
+        btn.appendChild(chevronSVG('ynb-chevron'));
 
         const colCount = Math.min(3, Math.max(1, Math.ceil(subs.length / 4)));
         const perCol   = Math.ceil(subs.length / colCount);
@@ -299,16 +435,13 @@
         colsDiv.style.setProperty('--ynb-cols', colCount);
 
         for (let c = 0; c < colCount; c++) {
-          const chunk    = subs.slice(c * perCol, (c + 1) * perCol);
+          const chunk = subs.slice(c * perCol, (c + 1) * perCol);
           if (!chunk.length) break;
           const linksDiv = el('div', { className: 'ynb-col-links' });
-          chunk.forEach(sub => {
-            linksDiv.appendChild(el('a', {
-              className: 'ynb-link',
-              href: sub.url,
-              textContent: toTitleCase(sub.slug.split('/').pop()),
-            }));
-          });
+          chunk.forEach(s => linksDiv.appendChild(el('a', {
+            className: 'ynb-link', href: s.url,
+            textContent: toTitleCase(s.slug.split('/').pop()),
+          })));
           colsDiv.appendChild(el('div', { className: 'ynb-col' }, [
             el('span', { className: 'ynb-cat-label', textContent: label }),
             linksDiv,
@@ -319,10 +452,7 @@
         footerDiv.appendChild(el('a', { href: catUrl, textContent: `View all in ${label} →` }));
 
         const drop = el('div', { className: 'ynb-dropdown', role: 'region' }, [colsDiv, footerDiv]);
-
-        // Portal to <html> — escapes any stacking/overflow context on <body>
         document.documentElement.appendChild(drop);
-
         li.appendChild(btn);
 
         btn.addEventListener('click', e => {
@@ -330,26 +460,20 @@
           const isOpen = li.classList.contains('ynb-open');
           closeAll();
           if (!isOpen) {
-            // Use scrollY + getBoundingClientRect so position:absolute lands correctly
-            const btnRect = btn.getBoundingClientRect();
-            const dropW   = Math.min(720, Math.max(360, window.innerWidth * 0.5));
-            let   left    = btnRect.left + btnRect.width / 2 - dropW / 2;
+            const r    = btn.getBoundingClientRect();
+            const dropW = Math.min(720, Math.max(360, window.innerWidth * 0.5));
+            let left   = r.left + r.width / 2 - dropW / 2;
             left = Math.max(8, Math.min(left, window.innerWidth - dropW - 8));
-
-            drop.style.position = 'fixed'; // fixed avoids scroll offset math
-            drop.style.top      = NAV_H + 'px';
-            drop.style.left     = left + 'px';
-            drop.style.width    = dropW + 'px';
-
+            drop.style.top   = NAV_H + 'px';
+            drop.style.left  = left + 'px';
+            drop.style.width = dropW + 'px';
             drop.classList.add('ynb-visible');
             li.classList.add('ynb-open');
             btn.setAttribute('aria-expanded', 'true');
-            openDrop = drop;
-            openLi   = li;
+            openDrop = drop; openLi = li;
           }
         });
       }
-
       list.appendChild(li);
     });
 
@@ -358,7 +482,55 @@
   }
 
   /* ─────────────────────────────────────────────
-     6. INJECT
+     6. MOBILE DRAWER
+  ───────────────────────────────────────────── */
+  function buildDrawerContent(drawer, cats) {
+    const inner = el('div', { className: 'ynb-drawer-inner' });
+
+    cats.forEach((subs, cat) => {
+      const label  = toTitleCase(cat);
+      const catUrl = `${SITE}/${cat}`;
+      const item   = el('div', { className: 'ynb-drawer-item' });
+
+      if (subs.length === 0) {
+        item.appendChild(el('a', { className: 'ynb-drawer-trigger', href: catUrl, textContent: label }));
+      } else {
+        const trig = el('button', { className: 'ynb-drawer-trigger', 'aria-expanded': 'false' });
+        trig.appendChild(document.createTextNode(label));
+        trig.appendChild(chevronSVG('ynb-drawer-chevron'));
+
+        const sub = el('div', { className: 'ynb-drawer-sub' });
+        subs.forEach(s => sub.appendChild(el('a', {
+          className: 'ynb-drawer-sub-link',
+          href: s.url,
+          textContent: toTitleCase(s.slug.split('/').pop()),
+        })));
+        sub.appendChild(el('a', { className: 'ynb-drawer-view-all', href: catUrl, textContent: `View all in ${label} →` }));
+
+        trig.addEventListener('click', () => {
+          const isOpen = item.classList.contains('ynb-drawer-open');
+          inner.querySelectorAll('.ynb-drawer-item.ynb-drawer-open').forEach(i => {
+            i.classList.remove('ynb-drawer-open');
+            i.querySelector('button')?.setAttribute('aria-expanded', 'false');
+          });
+          if (!isOpen) {
+            item.classList.add('ynb-drawer-open');
+            trig.setAttribute('aria-expanded', 'true');
+          }
+        });
+
+        item.appendChild(trig);
+        item.appendChild(sub);
+      }
+      inner.appendChild(item);
+    });
+
+    drawer.innerHTML = '';
+    drawer.appendChild(inner);
+  }
+
+  /* ─────────────────────────────────────────────
+     7. INJECT
   ───────────────────────────────────────────── */
   function injectNav() {
     const style = document.createElement('style');
@@ -374,7 +546,7 @@
     nav.appendChild(el('span', { className: 'ynb-divider', 'aria-hidden': 'true' }));
 
     const list = el('ul', { className: 'ynb-list', role: 'menubar' });
-    const skel  = el('li', { className: 'ynb-skeleton', 'aria-hidden': 'true' });
+    const skel = el('li', { className: 'ynb-skeleton', 'aria-hidden': 'true' });
     [72, 60, 88, 56].forEach(w => {
       const pill = el('div', { className: 'ynb-skel-pill' });
       pill.style.width = w + 'px';
@@ -383,23 +555,60 @@
     list.appendChild(skel);
     nav.appendChild(list);
 
+    const ham = el('button', {
+      className: 'ynb-hamburger',
+      'aria-label': 'Open navigation menu',
+      'aria-expanded': 'false',
+    });
+    ham.innerHTML = '<span></span><span></span><span></span>';
+    nav.appendChild(ham);
+
+    const drawer = el('div', { className: 'ynb-drawer' });
+    const scrim  = el('div', { className: 'ynb-scrim'  });
+
     document.body.insertBefore(nav, document.body.firstChild);
+    document.documentElement.appendChild(drawer);
+    document.documentElement.appendChild(scrim);
+
     document.body.style.paddingTop =
       (parseInt(document.body.style.paddingTop, 10) || 0) + NAV_H + 'px';
 
-    return list;
+    function openDrawer()  {
+      drawer.classList.add('ynb-drawer-open');
+      scrim.classList.add('ynb-scrim-visible');
+      ham.classList.add('ynb-active');
+      ham.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeDrawer() {
+      drawer.classList.remove('ynb-drawer-open');
+      scrim.classList.remove('ynb-scrim-visible');
+      ham.classList.remove('ynb-active');
+      ham.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    }
+
+    ham.addEventListener('click', e => {
+      e.stopPropagation();
+      drawer.classList.contains('ynb-drawer-open') ? closeDrawer() : openDrawer();
+    });
+    scrim.addEventListener('click', closeDrawer);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+
+    return { list, drawer, skel };
   }
 
   /* ─────────────────────────────────────────────
-     7. INIT
+     8. INIT
   ───────────────────────────────────────────── */
   async function init() {
-    const list = injectNav();
-    const xml  = await fetchSitemap();
-    const skel = list.querySelector('.ynb-skeleton');
-    if (skel) skel.remove();
+    const { list, drawer, skel } = injectNav();
+    const xml = await fetchSitemap();
+    skel.remove();
     if (!xml) return;
-    buildNavItems(list, parseSitemap(xml));
+    const cats = parseSitemap(xml);
+    buildDesktopItems(list, cats);
+    buildDrawerContent(drawer, cats);
   }
 
   if (document.readyState === 'loading') {
