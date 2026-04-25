@@ -594,36 +594,58 @@ body { top: 0 !important; }
      5. LANGUAGE MENU
   ───────────────────────────────────────────── */
   function getCurrentLang() {
-    // GT rewrites its own cookie to /tr/tr after translating, so grab the last segment.
+    // GT may rewrite cookie to /tr/tr — grab last segment only.
+    // Also handle zh-CN style codes with a hyphen.
     const m = document.cookie.match(/googtrans=\/[^/]+\/([^;,\s]+)/i);
     const code = m ? m[1] : 'en';
     return LANGUAGES.find(l => l.code === code) ? code : 'en';
   }
 
+  function nukeGTCookies() {
+    // GT can set the cookie on several domain variations — kill them all.
+    const hostname = location.hostname;
+    const bare     = hostname.replace(/^www\./, '');
+    const expired  = 'expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    const domains  = [
+      '',                  // no domain attr  (current host)
+      `domain=${hostname}`,
+      `domain=.${hostname}`,
+      `domain=${bare}`,
+      `domain=.${bare}`,
+    ];
+    domains.forEach(d => {
+      document.cookie = `googtrans=; path=/; ${d}; ${expired}`.replace(/; ;/g, ';');
+      document.cookie = `googtrans=; path=/; ${d}; ${expired}`.replace(/; ;/g, ';');
+    });
+  }
+
   function switchLanguage(code) {
-    const domain = location.hostname.replace(/^www\./, '');
-    if (code === 'en') {
-      // Clear cookie entirely to restore original language
-      document.cookie = `googtrans=; path=/; domain=.${domain}; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
-      document.cookie = `googtrans=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
-    } else {
-      // Always write /en/{target} so GT picks it up on reload
-      document.cookie = `googtrans=/en/${code}; path=/; domain=.${domain}`;
+    // Always nuke first so we start clean regardless of what GT wrote
+    nukeGTCookies();
+
+    if (code !== 'en') {
+      const bare = location.hostname.replace(/^www\./, '');
+      // Write on both bare and dot-prefixed domain so it survives redirects
+      document.cookie = `googtrans=/en/${code}; path=/; domain=.${bare}`;
       document.cookie = `googtrans=/en/${code}; path=/`;
     }
     location.reload();
   }
 
   function loadGoogleTranslate() {
-    // Hidden element GT needs to anchor to
     const anchor = document.createElement('div');
     anchor.id = 'google_translate_element';
-    anchor.style.cssText = 'display:none;position:absolute;';
+    anchor.style.cssText = 'display:none;position:absolute;overflow:hidden;height:0;width:0;';
     document.body.appendChild(anchor);
 
     window.googleTranslateElementInit = function () {
       new google.translate.TranslateElement(
-        { pageLanguage: 'en', autoDisplay: false },
+        {
+          pageLanguage: 'en',
+          autoDisplay: false,
+          // Suppress the floating GT toolbar entirely
+          gaTrack: false,
+        },
         'google_translate_element'
       );
     };
