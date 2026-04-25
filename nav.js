@@ -594,16 +594,23 @@ body { top: 0 !important; }
      5. LANGUAGE MENU
   ───────────────────────────────────────────── */
   function getCurrentLang() {
-    const m = document.cookie.match(/googtrans=\/[a-z-]+\/([a-z-]+)/i);
-    return m ? m[1] : 'en';
+    // GT rewrites its own cookie to /tr/tr after translating, so grab the last segment.
+    const m = document.cookie.match(/googtrans=\/[^/]+\/([^;,\s]+)/i);
+    const code = m ? m[1] : 'en';
+    return LANGUAGES.find(l => l.code === code) ? code : 'en';
   }
 
   function switchLanguage(code) {
-    if (code === getCurrentLang()) return;
     const domain = location.hostname.replace(/^www\./, '');
-    // Set cookie for both apex and www
-    document.cookie = `googtrans=/en/${code}; path=/; domain=.${domain}`;
-    document.cookie = `googtrans=/en/${code}; path=/`;
+    if (code === 'en') {
+      // Clear cookie entirely to restore original language
+      document.cookie = `googtrans=; path=/; domain=.${domain}; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+      document.cookie = `googtrans=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+    } else {
+      // Always write /en/{target} so GT picks it up on reload
+      document.cookie = `googtrans=/en/${code}; path=/; domain=.${domain}`;
+      document.cookie = `googtrans=/en/${code}; path=/`;
+    }
     location.reload();
   }
 
@@ -640,7 +647,10 @@ body { top: 0 !important; }
     btn.setAttribute('aria-haspopup', 'true');
     btn.setAttribute('aria-expanded', 'false');
     btn.appendChild(globeSVG());
-    btn.appendChild(document.createTextNode(currentLang.label));
+    const btnLabel = document.createElement('span');
+    btnLabel.setAttribute('translate', 'no');
+    btnLabel.textContent = currentLang.label;
+    btn.appendChild(btnLabel);
     btn.appendChild(chevronSVG('ynb-lang-chevron'));
 
     const panel = el('div', { className: 'ynb-lang-panel', role: 'menu' });
@@ -649,6 +659,7 @@ body { top: 0 !important; }
       const opt = document.createElement('button');
       opt.className = 'ynb-lang-option' + (lang.code === current ? ' ynb-lang-active' : '');
       opt.setAttribute('role', 'menuitem');
+      opt.setAttribute('translate', 'no');
       opt.textContent = lang.label;
       opt.addEventListener('click', () => switchLanguage(lang.code));
       panel.appendChild(opt);
@@ -690,6 +701,7 @@ body { top: 0 !important; }
     LANGUAGES.forEach(lang => {
       const btn = document.createElement('button');
       btn.className = 'ynb-drawer-lang-opt' + (lang.code === current ? ' ynb-lang-active' : '');
+      btn.setAttribute('translate', 'no');
       btn.textContent = lang.label;
       btn.addEventListener('click', () => switchLanguage(lang.code));
       grid.appendChild(btn);
