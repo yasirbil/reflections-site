@@ -83,6 +83,7 @@
   align-items: center;
   list-style: none;
   flex: 1;
+  min-width: 0;
 }
 .ynb-item { position: relative; }
 
@@ -345,7 +346,8 @@
   position: relative;
   display: flex;
   align-items: center;
-  margin-left: 0.75rem;
+  margin-left: auto;
+  padding-left: 0.75rem;
   flex-shrink: 0;
 }
 
