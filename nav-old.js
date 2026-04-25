@@ -382,51 +382,25 @@
     return null;
   }
 
-/* ─────────────────────────────────────────────
-   4. PARSE (UPDATED — supports subcategories)
-───────────────────────────────────────────── */
-function parseSitemap(xml) {
-  const cats = new Map();
-  const re = /<loc>([\s\S]*?)<\/loc>/g;
-  let m;
-
-  while ((m = re.exec(xml)) !== null) {
-    const url = decodeXml(m[1].trim());
-    if (!url.startsWith(SITE + '/')) continue;
-
-    const parts = url.slice(SITE.length + 1).split('/').filter(Boolean);
-    if (!parts.length) continue;
-
-    const cat = parts[0];
-    if (cat === 'home') continue;
-
-    // ensure category map exists
-    if (!cats.has(cat)) cats.set(cat, new Map());
-
-    // only category (no children)
-    if (parts.length === 1) continue;
-
-    const sub = parts[1];
-
-    // ensure subcategory array exists
-    if (!cats.get(cat).has(sub)) {
-      cats.get(cat).set(sub, []);
+  /* ─────────────────────────────────────────────
+     4. PARSE
+  ───────────────────────────────────────────── */
+  function parseSitemap(xml) {
+    const cats = new Map();
+    const re = /<loc>([\s\S]*?)<\/loc>/g;
+    let m;
+    while ((m = re.exec(xml)) !== null) {
+      const url   = decodeXml(m[1].trim());
+      if (!url.startsWith(SITE + '/')) continue;
+      const parts = url.slice(SITE.length + 1).split('/').filter(Boolean);
+      if (!parts.length) continue;
+      const cat = parts[0];
+      if (cat === 'home') continue;
+      if (!cats.has(cat)) cats.set(cat, []);
+      if (parts.length > 1) cats.get(cat).push({ slug: parts.slice(1).join('/'), url });
     }
-
-    // page under subcategory
-    const pageSlug = parts.slice(2).join('/');
-    const title = toTitleCase(
-      pageSlug ? pageSlug.split('/').pop() : sub
-    );
-
-    cats.get(cat).get(sub).push({
-      title,
-      url
-    });
+    return cats;
   }
-
-  return cats;
-}
 
   /* ─────────────────────────────────────────────
      5. DESKTOP ITEMS
@@ -508,93 +482,52 @@ function parseSitemap(xml) {
   }
 
   /* ─────────────────────────────────────────────
-   6. MOBILE DRAWER (UPDATED — nested support)
-───────────────────────────────────────────── */
-function buildDrawerContent(drawer, cats) {
-  const inner = el('div', { className: 'ynb-drawer-inner' });
+     6. MOBILE DRAWER
+  ───────────────────────────────────────────── */
+  function buildDrawerContent(drawer, cats) {
+    const inner = el('div', { className: 'ynb-drawer-inner' });
 
-  cats.forEach((subs, cat) => {
-    const label  = toTitleCase(cat);
-    const catUrl = `${SITE}/${cat}`;
-    const item   = el('div', { className: 'ynb-drawer-item' });
+    cats.forEach((subs, cat) => {
+      const label  = toTitleCase(cat);
+      const catUrl = `${SITE}/${cat}`;
+      const item   = el('div', { className: 'ynb-drawer-item' });
 
-    // if no subcategories
-    if (!(subs instanceof Map) || subs.size === 0) {
-      item.appendChild(
-        el('a', {
-          className: 'ynb-drawer-trigger',
-          href: catUrl,
-          textContent: label
-        })
-      );
-    } else {
-      const trig = el('button', {
-        className: 'ynb-drawer-trigger',
-        'aria-expanded': 'false'
-      });
+      if (subs.length === 0) {
+        item.appendChild(el('a', { className: 'ynb-drawer-trigger', href: catUrl, textContent: label }));
+      } else {
+        const trig = el('button', { className: 'ynb-drawer-trigger', 'aria-expanded': 'false' });
+        trig.appendChild(document.createTextNode(label));
+        trig.appendChild(chevronSVG('ynb-drawer-chevron'));
 
-      trig.appendChild(document.createTextNode(label));
-      trig.appendChild(chevronSVG('ynb-drawer-chevron'));
+        const sub = el('div', { className: 'ynb-drawer-sub' });
+        subs.forEach(s => sub.appendChild(el('a', {
+          className: 'ynb-drawer-sub-link',
+          href: s.url,
+          textContent: toTitleCase(s.slug.split('/').pop()),
+        })));
+        sub.appendChild(el('a', { className: 'ynb-drawer-view-all', href: catUrl, textContent: `View all in ${label} →` }));
 
-      const subWrap = el('div', { className: 'ynb-drawer-sub' });
-
-      // loop subcategories
-      subs.forEach((pages, sub) => {
-        // subcategory label
-        subWrap.appendChild(
-          el('div', {
-            className: 'ynb-drawer-sub-label',
-            textContent: toTitleCase(sub)
-          })
-        );
-
-        // pages under subcategory
-        pages.forEach(p => {
-          subWrap.appendChild(
-            el('a', {
-              className: 'ynb-drawer-sub-link',
-              href: p.url,
-              textContent: p.title
-            })
-          );
-        });
-      });
-
-      // view all link
-      subWrap.appendChild(
-        el('a', {
-          className: 'ynb-drawer-view-all',
-          href: catUrl,
-          textContent: `View all in ${label} →`
-        })
-      );
-
-      // toggle behavior
-      trig.addEventListener('click', () => {
-        const isOpen = item.classList.contains('ynb-drawer-open');
-
-        inner.querySelectorAll('.ynb-drawer-item.ynb-drawer-open')
-          .forEach(i => {
+        trig.addEventListener('click', () => {
+          const isOpen = item.classList.contains('ynb-drawer-open');
+          inner.querySelectorAll('.ynb-drawer-item.ynb-drawer-open').forEach(i => {
             i.classList.remove('ynb-drawer-open');
             i.querySelector('button')?.setAttribute('aria-expanded', 'false');
           });
+          if (!isOpen) {
+            item.classList.add('ynb-drawer-open');
+            trig.setAttribute('aria-expanded', 'true');
+          }
+        });
 
-        if (!isOpen) {
-          item.classList.add('ynb-drawer-open');
-          trig.setAttribute('aria-expanded', 'true');
-        }
-      });
+        item.appendChild(trig);
+        item.appendChild(sub);
+      }
+      inner.appendChild(item);
+    });
 
-      item.appendChild(trig);
-      item.appendChild(subWrap);
-    }
-
-    inner.appendChild(item);
-  });
-
-  drawer.innerHTML = '';
-  drawer.appendChild(inner);
-}
+    drawer.innerHTML = '';
+    drawer.appendChild(inner);
+  }
 
   /* ─────────────────────────────────────────────
      7. INJECT
