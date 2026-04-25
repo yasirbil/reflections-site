@@ -329,7 +329,7 @@
       .replace(/&apos;/g, "'");
   }
   function toTitleCase(slug) {
-    return slug.replace(/[-_]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    return slug.replace(/\.html?$/i, '').replace(/[-_]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
   }
   function el(tag, attrs, children) {
     const node = document.createElement(tag);
