@@ -297,6 +297,24 @@
 }
 .ynb-drawer-view-all:hover { color: #8B4513; }
 
+/* Subfolder heading inside mobile drawer */
+.ynb-drawer-subfolder {
+  font-family: 'Cinzel', serif;
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #8B4513;
+  padding: 0.7rem 0 0.3rem 0.8rem;
+  margin-top: 0.4rem;
+}
+.ynb-drawer-subfolder:first-child { margin-top: 0; }
+
+/* Nested page links under a subfolder heading */
+.ynb-drawer-sub-link--nested {
+  padding-left: 1.4rem !important;
+}
+
 /* ── SCRIM ── */
 .ynb-scrim {
   display: none;
@@ -384,8 +402,17 @@
 
   /* ─────────────────────────────────────────────
      4. PARSE
+     Structure returned:
+       Map {
+         cat → Map {
+           subfolderLabel → [ { name, url }, … ]
+         }
+       }
+     Pages directly inside a category (depth 1) go under the
+     special key "" (empty string = no subfolder heading).
   ───────────────────────────────────────────── */
   function parseSitemap(xml) {
+    // cats: Map< catSlug, Map< subfolderLabel, Array<{name,url}> > >
     const cats = new Map();
     const re = /<loc>([\s\S]*?)<\/loc>/g;
     let m;
@@ -396,8 +423,23 @@
       if (!parts.length) continue;
       const cat = parts[0];
       if (cat === 'home') continue;
-      if (!cats.has(cat)) cats.set(cat, []);
-      if (parts.length > 1) cats.get(cat).push({ slug: parts.slice(1).join('/'), url });
+      if (!cats.has(cat)) cats.set(cat, new Map());
+      const catMap = cats.get(cat);
+      if (parts.length === 1) {
+        // The category index page itself — skip, "View all" covers it
+      } else if (parts.length === 2) {
+        // Direct child: travels/cultural-guide.html
+        const name = toTitleCase(parts[1]);
+        if (!catMap.has('')) catMap.set('', []);
+        catMap.get('').push({ name, url });
+      } else {
+        // Nested: travels/japan/cultural-guide.html
+        // parts[1] = subfolder, parts[2+] = filename
+        const subfolder = toTitleCase(parts[1]);
+        const name      = toTitleCase(parts[parts.length - 1]);
+        if (!catMap.has(subfolder)) catMap.set(subfolder, []);
+        catMap.get(subfolder).push({ name, url });
+      }
     }
     return cats;
   }
