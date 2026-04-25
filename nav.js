@@ -459,36 +459,40 @@
       }
     }
 
-    cats.forEach((subs, cat) => {
+    cats.forEach((catMap, cat) => {
       const label  = toTitleCase(cat);
       const catUrl = `${SITE}/${cat}`;
       const li     = el('li', { className: 'ynb-item', role: 'none' });
 
-      if (subs.length === 0) {
+      // Count total pages across all subfolders
+      let totalPages = 0;
+      catMap.forEach(pages => { totalPages += pages.length; });
+
+      if (totalPages === 0) {
         li.appendChild(el('a', { className: 'ynb-trigger', href: catUrl, textContent: label, role: 'menuitem' }));
       } else {
         const btn = el('button', { className: 'ynb-trigger', 'aria-haspopup': 'true', 'aria-expanded': 'false', role: 'menuitem' });
         btn.appendChild(document.createTextNode(label));
         btn.appendChild(chevronSVG('ynb-chevron'));
 
-        const colCount = Math.min(3, Math.max(1, Math.ceil(subs.length / 4)));
-        const perCol   = Math.ceil(subs.length / colCount);
-        const colsDiv  = el('div', { className: 'ynb-cols' });
+        // One column per subfolder (max 3)
+        const subfolders = [...catMap.entries()];
+        const colCount   = Math.min(3, Math.max(1, subfolders.length));
+        const colsDiv    = el('div', { className: 'ynb-cols' });
         colsDiv.style.setProperty('--ynb-cols', colCount);
 
-        for (let c = 0; c < colCount; c++) {
-          const chunk = subs.slice(c * perCol, (c + 1) * perCol);
-          if (!chunk.length) break;
+        subfolders.forEach(([subfolder, pages]) => {
           const linksDiv = el('div', { className: 'ynb-col-links' });
-          chunk.forEach(s => linksDiv.appendChild(el('a', {
-            className: 'ynb-link', href: s.url,
-            textContent: toTitleCase(s.slug.split('/').pop()),
+          pages.forEach(p => linksDiv.appendChild(el('a', {
+            className: 'ynb-link', href: p.url, textContent: p.name,
           })));
+          // Use subfolder name as heading; if no subfolder, use category name
+          const heading = subfolder || label;
           colsDiv.appendChild(el('div', { className: 'ynb-col' }, [
-            el('span', { className: 'ynb-cat-label', textContent: label }),
+            el('span', { className: 'ynb-cat-label', textContent: heading }),
             linksDiv,
           ]));
-        }
+        });
 
         const footerDiv = el('div', { className: 'ynb-drop-footer' });
         footerDiv.appendChild(el('a', { href: catUrl, textContent: `View all in ${label} →` }));
@@ -502,9 +506,9 @@
           const isOpen = li.classList.contains('ynb-open');
           closeAll();
           if (!isOpen) {
-            const r    = btn.getBoundingClientRect();
+            const r     = btn.getBoundingClientRect();
             const dropW = Math.min(720, Math.max(360, window.innerWidth * 0.5));
-            let left   = r.left + r.width / 2 - dropW / 2;
+            let left    = r.left + r.width / 2 - dropW / 2;
             left = Math.max(8, Math.min(left, window.innerWidth - dropW - 8));
             drop.style.top   = NAV_H + 'px';
             drop.style.left  = left + 'px';
@@ -529,12 +533,15 @@
   function buildDrawerContent(drawer, cats) {
     const inner = el('div', { className: 'ynb-drawer-inner' });
 
-    cats.forEach((subs, cat) => {
+    cats.forEach((catMap, cat) => {
       const label  = toTitleCase(cat);
       const catUrl = `${SITE}/${cat}`;
       const item   = el('div', { className: 'ynb-drawer-item' });
 
-      if (subs.length === 0) {
+      let totalPages = 0;
+      catMap.forEach(pages => { totalPages += pages.length; });
+
+      if (totalPages === 0) {
         item.appendChild(el('a', { className: 'ynb-drawer-trigger', href: catUrl, textContent: label }));
       } else {
         const trig = el('button', { className: 'ynb-drawer-trigger', 'aria-expanded': 'false' });
@@ -542,11 +549,19 @@
         trig.appendChild(chevronSVG('ynb-drawer-chevron'));
 
         const sub = el('div', { className: 'ynb-drawer-sub' });
-        subs.forEach(s => sub.appendChild(el('a', {
-          className: 'ynb-drawer-sub-link',
-          href: s.url,
-          textContent: toTitleCase(s.slug.split('/').pop()),
-        })));
+
+        catMap.forEach((pages, subfolder) => {
+          if (subfolder) {
+            const hd = el('div', { className: 'ynb-drawer-subfolder', textContent: subfolder });
+            sub.appendChild(hd);
+          }
+          pages.forEach(p => sub.appendChild(el('a', {
+            className: 'ynb-drawer-sub-link' + (subfolder ? ' ynb-drawer-sub-link--nested' : ''),
+            href: p.url,
+            textContent: p.name,
+          })));
+        });
+
         sub.appendChild(el('a', { className: 'ynb-drawer-view-all', href: catUrl, textContent: `View all in ${label} →` }));
 
         trig.addEventListener('click', () => {
