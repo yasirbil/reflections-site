@@ -112,10 +112,58 @@
     body { font-size: 17px; }
   }
 
+  /* ── ARTICLE-INTERNAL NAV ── */
+  nav.article-nav {
+    position: sticky;
+    top: 62px;       /* sits flush below the global nav.js bar */
+    z-index: 50;     /* well below nav.js z-index */
+    background: var(--emerald);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+  }
+
+  nav.article-nav ul {
+    display: flex;
+    flex-wrap: wrap;   /* wraps on narrow screens — no horizontal overflow */
+    list-style: none;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  nav.article-nav ul li a {
+    display: block;
+    padding: 0.85rem 1rem;
+    color: #c8e6d8;
+    text-decoration: none;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: color 0.2s, background 0.2s;
+    border-bottom: 2px solid transparent;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+
+  nav.article-nav ul li a:hover {
+    color: #fff;
+    background: rgba(255,255,255,0.08);
+    border-bottom-color: var(--gold);
+  }
+
+  @media (max-width: 680px) {
+    nav.article-nav ul li a {
+      padding: 0.7rem 0.6rem;
+      font-size: 0.6rem;
+    }
+  }
+
   /* ── SECTION ── */
   section {
     margin: 4rem 0;
-    scroll-margin-top: 80px;
+    /* 62px global nav + ~60px article nav + 8px gap */
+    scroll-margin-top: 130px;
   }
 
   .section-header {
@@ -533,6 +581,22 @@
   <div class="header-divider"></div>
   <p class="subtitle">A professional reference for chaplains across all contexts, with dedicated attention to Islamic chaplaincy</p>
 </header>
+
+<!-- ══════════════ ARTICLE-INTERNAL NAV ══════════════ -->
+<!-- Sits below the global nav.js bar (top: 62px) — all links are internal anchors -->
+<nav class="article-nav">
+  <ul>
+    <li><a href="#foundations">Foundations</a></li>
+    <li><a href="#theories">Theories</a></li>
+    <li><a href="#practices">Practices</a></li>
+    <li><a href="#contexts">Contexts</a></li>
+    <li><a href="#competencies">Competencies</a></li>
+    <li><a href="#islamic">Islamic Chaplaincy</a></li>
+    <li><a href="#terms">Terms</a></li>
+    <li><a href="#ethics">Ethics</a></li>
+    <li><a href="#resources">Resources</a></li>
+  </ul>
+</nav>
 
 <!-- ══════════════ MAIN ══════════════ -->
 <main>
@@ -1338,14 +1402,16 @@
 </footer>
 
 <script>
-  // Robust anchor scrolling that accounts for fixed nav.js bar (62px)
+  // Anchor scrolling — accounts for global nav.js (62px) + article nav height
   document.querySelectorAll('a[href^="#"]').forEach(link => {
     link.addEventListener('click', function(e) {
       e.preventDefault();
-      const targetId = this.getAttribute('href').slice(1);
-      const target = document.getElementById(targetId);
+      const target = document.getElementById(this.getAttribute('href').slice(1));
       if (!target) return;
-      const top = target.getBoundingClientRect().top + window.scrollY - 78;
+      const globalNavH   = 62;
+      const articleNavH  = document.querySelector('nav.article-nav').offsetHeight;
+      const offset = globalNavH + articleNavH + 8; // 8px breathing room
+      const top = target.getBoundingClientRect().top + window.scrollY - offset;
       window.scrollTo({ top, behavior: 'smooth' });
     });
   });
