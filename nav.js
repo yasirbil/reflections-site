@@ -4,17 +4,17 @@
  * No dependencies. Desktop: mega-dropdown. Mobile: slide-in drawer.
  */
 (function () {
-    'use strict';
+  'use strict';
 
-    const SITE = 'https://test.yasirbilgin.com';
-    const SITEMAP = SITE + '/sitemap.xml';
-    const NAV_H = 62;
-    const MOBILE_BP = 768;
+  const SITE      = 'https://test.yasirbilgin.com';
+  const SITEMAP   = SITE + '/sitemap.xml';
+  const NAV_H     = 62;
+  const MOBILE_BP = 768;
 
-    /* ─────────────────────────────────────────────
-       1. STYLES
-    ───────────────────────────────────────────── */
-    const CSS = `
+  /* ─────────────────────────────────────────────
+     1. STYLES
+  ───────────────────────────────────────────── */
+  const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=Lato:wght@400;700&family=Lora:wght@400;600&display=swap');
 
 .ynb-nav *,
@@ -319,386 +319,301 @@
 }
 `;
 
-    /* ─────────────────────────────────────────────
-       2. HELPERS
-    ───────────────────────────────────────────── */
-    function decodeXml(str) {
-        return str
-            .replace(/&amp;/g, '&').replace(/&lt;/g, '<')
-            .replace(/&gt;/g, '>').replace(/&quot;/g, '"')
-            .replace(/&apos;/g, "'");
-    }
-    function toTitleCase(slug) {
-        return slug.replace(/\.html?$/i, '').replace(/[-_]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-    }
-    function el(tag, attrs, children) {
-        const node = document.createElement(tag);
-        if (attrs) Object.entries(attrs).forEach(([k, v]) => {
-            if (k === 'className') node.className = v;
-            else if (k === 'textContent') node.textContent = v;
-            else node.setAttribute(k, v);
-        });
-        if (children) children.forEach(c => c && node.appendChild(c));
-        return node;
-    }
-    function chevronSVG(cls) {
-        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svg.setAttribute('viewBox', '0 0 10 6');
-        svg.setAttribute('fill', 'none');
-        svg.setAttribute('aria-hidden', 'true');
-        svg.setAttribute('class', cls);
-        const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        p.setAttribute('d', 'M1 1l4 4 4-4');
-        p.setAttribute('stroke', 'currentColor');
-        p.setAttribute('stroke-width', '1.5');
-        p.setAttribute('stroke-linecap', 'round');
-        p.setAttribute('stroke-linejoin', 'round');
-        svg.appendChild(p);
-        return svg;
-    }
-
-    /* ─────────────────────────────────────────────
-       3. FETCH
-    ───────────────────────────────────────────── */
-    async function fetchSitemap() {
-        try {
-            const r = await fetch(SITEMAP, { cache: 'no-cache' });
-            if (r.ok) return await r.text();
-        } catch (_) { }
-        try {
-            const r = await fetch(
-                `https://api.allorigins.win/get?url=${encodeURIComponent(SITEMAP)}`,
-                { cache: 'no-cache' }
-            );
-            if (r.ok) { const j = await r.json(); if (j?.contents) return j.contents; }
-        } catch (_) { }
-        try {
-            const r = await fetch(
-                `https://corsproxy.io/?${encodeURIComponent(SITEMAP)}`,
-                { cache: 'no-cache' }
-            );
-            if (r.ok) return await r.text();
-        } catch (_) { }
-        return null;
-    }
-
-    /* ─────────────────────────────────────────────
-       4. PARSE (UPDATED — supports subcategories)
-    ───────────────────────────────────────────── */
-    function parseSitemap(xml) {
-        const cats = new Map();
-        const re = /<loc>([\s\S]*?)<\/loc>/g;
-        let m;
-
-        while ((m = re.exec(xml)) !== null) {
-            const url = decodeXml(m[1].trim());
-            if (!url.startsWith(SITE + '/')) continue;
-
-            const parts = url.slice(SITE.length + 1).split('/').filter(Boolean);
-            if (!parts.length) continue;
-
-            const cat = parts[0];
-            if (cat === 'home') continue;
-
-            // ensure category map exists
-            if (!cats.has(cat)) cats.set(cat, new Map());
-
-            // only category (no children)
-            if (parts.length === 1) continue;
-
-            const sub = parts[1];
-
-            // ensure subcategory array exists
-            if (!cats.get(cat).has(sub)) {
-                cats.get(cat).set(sub, []);
-            }
-
-            // page under subcategory
-            const pageSlug = parts.slice(2).join('/');
-            const title = toTitleCase(
-                pageSlug ? pageSlug.split('/').pop() : sub
-            );
-
-            cats.get(cat).get(sub).push({
-                title,
-                url
-            });
-        }
-
-        return cats;
-    }
-
-    /* ─────────────────────────────────────────────
-       5. DESKTOP ITEMS
-    ───────────────────────────────────────────── */
-    function buildDesktopItems(list, cats) {
-        let openDrop = null, openLi = null;
-
-        function closeAll() {
-            if (openDrop) { openDrop.classList.remove('ynb-visible'); openDrop = null; }
-            if (openLi) {
-                openLi.classList.remove('ynb-open');
-                openLi.querySelector('.ynb-trigger')?.setAttribute('aria-expanded', 'false');
-                openLi = null;
-            }
-        }
-
-        cats.forEach((subs, cat) => {
-            const label = toTitleCase(cat);
-            const catUrl = `${SITE}/${cat}`;
-            const li = el('li', { className: 'ynb-item', role: 'none' });
-
-            if (subs.length === 0) {
-                li.appendChild(el('a', { className: 'ynb-trigger', href: catUrl, textContent: label, role: 'menuitem' }));
-            } else {
-                const btn = el('button', { className: 'ynb-trigger', 'aria-haspopup': 'true', 'aria-expanded': 'false', role: 'menuitem' });
-                btn.appendChild(document.createTextNode(label));
-                btn.appendChild(chevronSVG('ynb-chevron'));
-
-                // subs is now a Map (subcategory → pages[])
-                const subEntries = Array.from(subs.entries());
-
-                // column logic based on subcategories
-                const colCount = Math.min(3, Math.max(1, subEntries.length));
-                const perCol = Math.ceil(subEntries.length / colCount);
-
-                for (let c = 0; c < colCount; c++) {
-                    const chunk = subEntries.slice(c * perCol, (c + 1) * perCol);
-                    if (!chunk.length) break;
-
-                    const col = el('div', { className: 'ynb-col' });
-
-                    chunk.forEach(([sub, pages]) => {
-                        // subcategory label (JAPAN)
-                        col.appendChild(el('span', {
-                            className: 'ynb-cat-label',
-                            textContent: toTitleCase(sub)
-                        }));
-
-                        const linksDiv = el('div', { className: 'ynb-col-links' });
-
-                        // pages under subcategory
-                        pages.forEach(p => {
-                            linksDiv.appendChild(el('a', {
-                                className: 'ynb-link',
-                                href: p.url,
-                                textContent: p.title
-                            }));
-                        });
-
-                        col.appendChild(linksDiv);
-                    });
-
-                    colsDiv.appendChild(col);
-                }
-
-                const footerDiv = el('div', { className: 'ynb-drop-footer' });
-                footerDiv.appendChild(el('a', { href: catUrl, textContent: `View all in ${label} →` }));
-
-                const drop = el('div', { className: 'ynb-dropdown', role: 'region' }, [colsDiv, footerDiv]);
-                document.documentElement.appendChild(drop);
-                li.appendChild(btn);
-
-                btn.addEventListener('click', e => {
-                    e.stopPropagation();
-                    const isOpen = li.classList.contains('ynb-open');
-                    closeAll();
-                    if (!isOpen) {
-                        const r = btn.getBoundingClientRect();
-                        const dropW = Math.min(720, Math.max(360, window.innerWidth * 0.5));
-                        let left = r.left + r.width / 2 - dropW / 2;
-                        left = Math.max(8, Math.min(left, window.innerWidth - dropW - 8));
-                        drop.style.top = NAV_H + 'px';
-                        drop.style.left = left + 'px';
-                        drop.style.width = dropW + 'px';
-                        drop.classList.add('ynb-visible');
-                        li.classList.add('ynb-open');
-                        btn.setAttribute('aria-expanded', 'true');
-                        openDrop = drop; openLi = li;
-                    }
-                });
-            }
-            list.appendChild(li);
-        });
-
-        document.addEventListener('click', closeAll);
-        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAll(); });
-    }
-
-    /* ─────────────────────────────────────────────
-     6. MOBILE DRAWER (UPDATED — nested support)
+  /* ─────────────────────────────────────────────
+     2. HELPERS
   ───────────────────────────────────────────── */
-    function buildDrawerContent(drawer, cats) {
-        const inner = el('div', { className: 'ynb-drawer-inner' });
+  function decodeXml(str) {
+    return str
+      .replace(/&amp;/g,  '&').replace(/&lt;/g,   '<')
+      .replace(/&gt;/g,   '>').replace(/&quot;/g, '"')
+      .replace(/&apos;/g, "'");
+  }
+  function toTitleCase(slug) {
+    return slug.replace(/\.html?$/i, '').replace(/[-_]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+  }
+  function el(tag, attrs, children) {
+    const node = document.createElement(tag);
+    if (attrs) Object.entries(attrs).forEach(([k, v]) => {
+      if (k === 'className') node.className = v;
+      else if (k === 'textContent') node.textContent = v;
+      else node.setAttribute(k, v);
+    });
+    if (children) children.forEach(c => c && node.appendChild(c));
+    return node;
+  }
+  function chevronSVG(cls) {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', '0 0 10 6');
+    svg.setAttribute('fill', 'none');
+    svg.setAttribute('aria-hidden', 'true');
+    svg.setAttribute('class', cls);
+    const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    p.setAttribute('d', 'M1 1l4 4 4-4');
+    p.setAttribute('stroke', 'currentColor');
+    p.setAttribute('stroke-width', '1.5');
+    p.setAttribute('stroke-linecap', 'round');
+    p.setAttribute('stroke-linejoin', 'round');
+    svg.appendChild(p);
+    return svg;
+  }
 
-        cats.forEach((subs, cat) => {
-            const label = toTitleCase(cat);
-            const catUrl = `${SITE}/${cat}`;
-            const item = el('div', { className: 'ynb-drawer-item' });
+  /* ─────────────────────────────────────────────
+     3. FETCH
+  ───────────────────────────────────────────── */
+  async function fetchSitemap() {
+    try {
+      const r = await fetch(SITEMAP, { cache: 'no-cache' });
+      if (r.ok) return await r.text();
+    } catch (_) {}
+    try {
+      const r = await fetch(
+        `https://api.allorigins.win/get?url=${encodeURIComponent(SITEMAP)}`,
+        { cache: 'no-cache' }
+      );
+      if (r.ok) { const j = await r.json(); if (j?.contents) return j.contents; }
+    } catch (_) {}
+    try {
+      const r = await fetch(
+        `https://corsproxy.io/?${encodeURIComponent(SITEMAP)}`,
+        { cache: 'no-cache' }
+      );
+      if (r.ok) return await r.text();
+    } catch (_) {}
+    return null;
+  }
 
-            // if no subcategories
-            if (!(subs instanceof Map) || subs.size === 0) {
-                item.appendChild(
-                    el('a', {
-                        className: 'ynb-drawer-trigger',
-                        href: catUrl,
-                        textContent: label
-                    })
-                );
-            } else {
-                const trig = el('button', {
-                    className: 'ynb-drawer-trigger',
-                    'aria-expanded': 'false'
-                });
+  /* ─────────────────────────────────────────────
+     4. PARSE
+  ───────────────────────────────────────────── */
+  function parseSitemap(xml) {
+    const cats = new Map();
+    const re = /<loc>([\s\S]*?)<\/loc>/g;
+    let m;
+    while ((m = re.exec(xml)) !== null) {
+      const url   = decodeXml(m[1].trim());
+      if (!url.startsWith(SITE + '/')) continue;
+      const parts = url.slice(SITE.length + 1).split('/').filter(Boolean);
+      if (!parts.length) continue;
+      const cat = parts[0];
+      if (cat === 'home') continue;
+      if (!cats.has(cat)) cats.set(cat, []);
+      if (parts.length > 1) cats.get(cat).push({ slug: parts.slice(1).join('/'), url });
+    }
+    return cats;
+  }
 
-                trig.appendChild(document.createTextNode(label));
-                trig.appendChild(chevronSVG('ynb-drawer-chevron'));
+  /* ─────────────────────────────────────────────
+     5. DESKTOP ITEMS
+  ───────────────────────────────────────────── */
+  function buildDesktopItems(list, cats) {
+    let openDrop = null, openLi = null;
 
-                const subWrap = el('div', { className: 'ynb-drawer-sub' });
-
-                // loop subcategories
-                subs.forEach((pages, sub) => {
-                    // subcategory label
-                    subWrap.appendChild(
-                        el('div', {
-                            className: 'ynb-drawer-sub-label',
-                            textContent: toTitleCase(sub)
-                        })
-                    );
-
-                    // pages under subcategory
-                    pages.forEach(p => {
-                        subWrap.appendChild(
-                            el('a', {
-                                className: 'ynb-drawer-sub-link',
-                                href: p.url,
-                                textContent: p.title
-                            })
-                        );
-                    });
-                });
-
-                // view all link
-                subWrap.appendChild(
-                    el('a', {
-                        className: 'ynb-drawer-view-all',
-                        href: catUrl,
-                        textContent: `View all in ${label} →`
-                    })
-                );
-
-                // toggle behavior
-                trig.addEventListener('click', () => {
-                    const isOpen = item.classList.contains('ynb-drawer-open');
-
-                    inner.querySelectorAll('.ynb-drawer-item.ynb-drawer-open')
-                        .forEach(i => {
-                            i.classList.remove('ynb-drawer-open');
-                            i.querySelector('button')?.setAttribute('aria-expanded', 'false');
-                        });
-
-                    if (!isOpen) {
-                        item.classList.add('ynb-drawer-open');
-                        trig.setAttribute('aria-expanded', 'true');
-                    }
-                });
-
-                item.appendChild(trig);
-                item.appendChild(subWrap);
-            }
-
-            inner.appendChild(item);
-        });
-
-        drawer.innerHTML = '';
-        drawer.appendChild(inner);
+    function closeAll() {
+      if (openDrop) { openDrop.classList.remove('ynb-visible'); openDrop = null; }
+      if (openLi)   {
+        openLi.classList.remove('ynb-open');
+        openLi.querySelector('.ynb-trigger')?.setAttribute('aria-expanded', 'false');
+        openLi = null;
+      }
     }
 
-    /* ─────────────────────────────────────────────
-       7. INJECT
-    ───────────────────────────────────────────── */
-    function injectNav() {
-        const style = document.createElement('style');
-        style.textContent = CSS;
-        document.head.appendChild(style);
+    cats.forEach((subs, cat) => {
+      const label  = toTitleCase(cat);
+      const catUrl = `${SITE}/${cat}`;
+      const li     = el('li', { className: 'ynb-item', role: 'none' });
 
-        const nav = document.createElement('nav');
-        nav.className = 'ynb-nav';
-        nav.setAttribute('role', 'navigation');
-        nav.setAttribute('aria-label', 'Site navigation');
+      if (subs.length === 0) {
+        li.appendChild(el('a', { className: 'ynb-trigger', href: catUrl, textContent: label, role: 'menuitem' }));
+      } else {
+        const btn = el('button', { className: 'ynb-trigger', 'aria-haspopup': 'true', 'aria-expanded': 'false', role: 'menuitem' });
+        btn.appendChild(document.createTextNode(label));
+        btn.appendChild(chevronSVG('ynb-chevron'));
 
-        nav.appendChild(el('a', { className: 'ynb-brand', href: SITE, textContent: 'Yasir Bilgin' }));
-        nav.appendChild(el('span', { className: 'ynb-divider', 'aria-hidden': 'true' }));
+        const colCount = Math.min(3, Math.max(1, Math.ceil(subs.length / 4)));
+        const perCol   = Math.ceil(subs.length / colCount);
+        const colsDiv  = el('div', { className: 'ynb-cols' });
+        colsDiv.style.setProperty('--ynb-cols', colCount);
 
-        const list = el('ul', { className: 'ynb-list', role: 'menubar' });
-        const skel = el('li', { className: 'ynb-skeleton', 'aria-hidden': 'true' });
-        [72, 60, 88, 56].forEach(w => {
-            const pill = el('div', { className: 'ynb-skel-pill' });
-            pill.style.width = w + 'px';
-            skel.appendChild(pill);
-        });
-        list.appendChild(skel);
-        nav.appendChild(list);
-
-        const ham = el('button', {
-            className: 'ynb-hamburger',
-            'aria-label': 'Open navigation menu',
-            'aria-expanded': 'false',
-        });
-        ham.innerHTML = '<span></span><span></span><span></span>';
-        nav.appendChild(ham);
-
-        const drawer = el('div', { className: 'ynb-drawer' });
-        const scrim = el('div', { className: 'ynb-scrim' });
-
-        document.body.insertBefore(nav, document.body.firstChild);
-        document.documentElement.appendChild(drawer);
-        document.documentElement.appendChild(scrim);
-
-        document.body.style.paddingTop =
-            (parseInt(document.body.style.paddingTop, 10) || 0) + NAV_H + 'px';
-
-        function openDrawer() {
-            drawer.classList.add('ynb-drawer-open');
-            scrim.classList.add('ynb-scrim-visible');
-            ham.classList.add('ynb-active');
-            ham.setAttribute('aria-expanded', 'true');
-            document.body.style.overflow = 'hidden';
-        }
-        function closeDrawer() {
-            drawer.classList.remove('ynb-drawer-open');
-            scrim.classList.remove('ynb-scrim-visible');
-            ham.classList.remove('ynb-active');
-            ham.setAttribute('aria-expanded', 'false');
-            document.body.style.overflow = '';
+        for (let c = 0; c < colCount; c++) {
+          const chunk = subs.slice(c * perCol, (c + 1) * perCol);
+          if (!chunk.length) break;
+          const linksDiv = el('div', { className: 'ynb-col-links' });
+          chunk.forEach(s => linksDiv.appendChild(el('a', {
+            className: 'ynb-link', href: s.url,
+            textContent: toTitleCase(s.slug.split('/').pop()),
+          })));
+          colsDiv.appendChild(el('div', { className: 'ynb-col' }, [
+            el('span', { className: 'ynb-cat-label', textContent: label }),
+            linksDiv,
+          ]));
         }
 
-        ham.addEventListener('click', e => {
-            e.stopPropagation();
-            drawer.classList.contains('ynb-drawer-open') ? closeDrawer() : openDrawer();
+        const footerDiv = el('div', { className: 'ynb-drop-footer' });
+        footerDiv.appendChild(el('a', { href: catUrl, textContent: `View all in ${label} →` }));
+
+        const drop = el('div', { className: 'ynb-dropdown', role: 'region' }, [colsDiv, footerDiv]);
+        document.documentElement.appendChild(drop);
+        li.appendChild(btn);
+
+        btn.addEventListener('click', e => {
+          e.stopPropagation();
+          const isOpen = li.classList.contains('ynb-open');
+          closeAll();
+          if (!isOpen) {
+            const r    = btn.getBoundingClientRect();
+            const dropW = Math.min(720, Math.max(360, window.innerWidth * 0.5));
+            let left   = r.left + r.width / 2 - dropW / 2;
+            left = Math.max(8, Math.min(left, window.innerWidth - dropW - 8));
+            drop.style.top   = NAV_H + 'px';
+            drop.style.left  = left + 'px';
+            drop.style.width = dropW + 'px';
+            drop.classList.add('ynb-visible');
+            li.classList.add('ynb-open');
+            btn.setAttribute('aria-expanded', 'true');
+            openDrop = drop; openLi = li;
+          }
         });
-        scrim.addEventListener('click', closeDrawer);
-        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+      }
+      list.appendChild(li);
+    });
 
-        return { list, drawer, skel };
+    document.addEventListener('click',   closeAll);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAll(); });
+  }
+
+  /* ─────────────────────────────────────────────
+     6. MOBILE DRAWER
+  ───────────────────────────────────────────── */
+  function buildDrawerContent(drawer, cats) {
+    const inner = el('div', { className: 'ynb-drawer-inner' });
+
+    cats.forEach((subs, cat) => {
+      const label  = toTitleCase(cat);
+      const catUrl = `${SITE}/${cat}`;
+      const item   = el('div', { className: 'ynb-drawer-item' });
+
+      if (subs.length === 0) {
+        item.appendChild(el('a', { className: 'ynb-drawer-trigger', href: catUrl, textContent: label }));
+      } else {
+        const trig = el('button', { className: 'ynb-drawer-trigger', 'aria-expanded': 'false' });
+        trig.appendChild(document.createTextNode(label));
+        trig.appendChild(chevronSVG('ynb-drawer-chevron'));
+
+        const sub = el('div', { className: 'ynb-drawer-sub' });
+        subs.forEach(s => sub.appendChild(el('a', {
+          className: 'ynb-drawer-sub-link',
+          href: s.url,
+          textContent: toTitleCase(s.slug.split('/').pop()),
+        })));
+        sub.appendChild(el('a', { className: 'ynb-drawer-view-all', href: catUrl, textContent: `View all in ${label} →` }));
+
+        trig.addEventListener('click', () => {
+          const isOpen = item.classList.contains('ynb-drawer-open');
+          inner.querySelectorAll('.ynb-drawer-item.ynb-drawer-open').forEach(i => {
+            i.classList.remove('ynb-drawer-open');
+            i.querySelector('button')?.setAttribute('aria-expanded', 'false');
+          });
+          if (!isOpen) {
+            item.classList.add('ynb-drawer-open');
+            trig.setAttribute('aria-expanded', 'true');
+          }
+        });
+
+        item.appendChild(trig);
+        item.appendChild(sub);
+      }
+      inner.appendChild(item);
+    });
+
+    drawer.innerHTML = '';
+    drawer.appendChild(inner);
+  }
+
+  /* ─────────────────────────────────────────────
+     7. INJECT
+  ───────────────────────────────────────────── */
+  function injectNav() {
+    const style = document.createElement('style');
+    style.textContent = CSS;
+    document.head.appendChild(style);
+
+    const nav = document.createElement('nav');
+    nav.className = 'ynb-nav';
+    nav.setAttribute('role', 'navigation');
+    nav.setAttribute('aria-label', 'Site navigation');
+
+    nav.appendChild(el('a', { className: 'ynb-brand', href: SITE, textContent: 'Yasir Bilgin' }));
+    nav.appendChild(el('span', { className: 'ynb-divider', 'aria-hidden': 'true' }));
+
+    const list = el('ul', { className: 'ynb-list', role: 'menubar' });
+    const skel = el('li', { className: 'ynb-skeleton', 'aria-hidden': 'true' });
+    [72, 60, 88, 56].forEach(w => {
+      const pill = el('div', { className: 'ynb-skel-pill' });
+      pill.style.width = w + 'px';
+      skel.appendChild(pill);
+    });
+    list.appendChild(skel);
+    nav.appendChild(list);
+
+    const ham = el('button', {
+      className: 'ynb-hamburger',
+      'aria-label': 'Open navigation menu',
+      'aria-expanded': 'false',
+    });
+    ham.innerHTML = '<span></span><span></span><span></span>';
+    nav.appendChild(ham);
+
+    const drawer = el('div', { className: 'ynb-drawer' });
+    const scrim  = el('div', { className: 'ynb-scrim'  });
+
+    document.body.insertBefore(nav, document.body.firstChild);
+    document.documentElement.appendChild(drawer);
+    document.documentElement.appendChild(scrim);
+
+    document.body.style.paddingTop =
+      (parseInt(document.body.style.paddingTop, 10) || 0) + NAV_H + 'px';
+
+    function openDrawer()  {
+      drawer.classList.add('ynb-drawer-open');
+      scrim.classList.add('ynb-scrim-visible');
+      ham.classList.add('ynb-active');
+      ham.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeDrawer() {
+      drawer.classList.remove('ynb-drawer-open');
+      scrim.classList.remove('ynb-scrim-visible');
+      ham.classList.remove('ynb-active');
+      ham.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
     }
 
-    /* ─────────────────────────────────────────────
-       8. INIT
-    ───────────────────────────────────────────── */
-    async function init() {
-        const { list, drawer, skel } = injectNav();
-        const xml = await fetchSitemap();
-        skel.remove();
-        if (!xml) return;
-        const cats = parseSitemap(xml);
-        buildDesktopItems(list, cats);
-        buildDrawerContent(drawer, cats);
-    }
+    ham.addEventListener('click', e => {
+      e.stopPropagation();
+      drawer.classList.contains('ynb-drawer-open') ? closeDrawer() : openDrawer();
+    });
+    scrim.addEventListener('click', closeDrawer);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-    } else {
-        init();
-    }
+    return { list, drawer, skel };
+  }
+
+  /* ─────────────────────────────────────────────
+     8. INIT
+  ───────────────────────────────────────────── */
+  async function init() {
+    const { list, drawer, skel } = injectNav();
+    const xml = await fetchSitemap();
+    skel.remove();
+    if (!xml) return;
+    const cats = parseSitemap(xml);
+    buildDesktopItems(list, cats);
+    buildDrawerContent(drawer, cats);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 })();
