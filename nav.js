@@ -602,16 +602,30 @@ body { top: 0 !important; }
   }
 
   function nukeGTCookies() {
-    const hostname = location.hostname;
-    const bare     = hostname.replace(/^www\./, '');
+    const hostname = location.hostname;           // test.yasirbilgin.com
+    const bare     = hostname.replace(/^www\./, '').replace(/^[^.]+\./, ''); // yasirbilgin.com
+    const sub      = hostname;                    // test.yasirbilgin.com
     const exp      = 'expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0';
-    const domains  = ['', hostname, '.'+ hostname, bare, '.'+ bare];
+
+    // Every realistic domain GT might have used to set the cookie
+    const domains = [
+      '',           // no domain attr
+      sub,          // test.yasirbilgin.com
+      '.'+ sub,     // .test.yasirbilgin.com
+      bare,         // yasirbilgin.com
+      '.'+ bare,    // .yasirbilgin.com
+    ];
+
+    const paths     = ['/'];
+    const sameSites = ['', '; SameSite=Lax', '; SameSite=None; Secure'];
+
     domains.forEach(d => {
       const dc = d ? 'domain='+ d +'; ' : '';
-      // Cover both SameSite=None (Chrome 80+) and no-SameSite variants
-      document.cookie = 'googtrans=; path=/; '+ dc + exp;
-      document.cookie = 'googtrans=; path=/; '+ dc + exp +'; SameSite=None; Secure';
-      document.cookie = 'googtrans=; path=/; '+ dc + exp +'; SameSite=Lax';
+      paths.forEach(p => {
+        sameSites.forEach(ss => {
+          document.cookie = 'googtrans=; path='+ p +'; '+ dc + exp + ss;
+        });
+      });
     });
   }
 
@@ -619,14 +633,21 @@ body { top: 0 !important; }
     nukeGTCookies();
 
     if (code !== 'en') {
-      const bare = location.hostname.replace(/^www\./, '');
-      document.cookie = 'googtrans=/en/'+ code +'; path=/; domain=.'+ bare;
+      const hostname = location.hostname;
+      const bare     = hostname.replace(/^www\./, '').replace(/^[^.]+\./, '');
+      // Write on every domain variation with every SameSite variant
+      [hostname, '.'+ hostname, bare, '.'+ bare].forEach(d => {
+        document.cookie = 'googtrans=/en/'+ code +'; path=/; domain='+ d;
+        document.cookie = 'googtrans=/en/'+ code +'; path=/; domain='+ d +'; SameSite=None; Secure';
+      });
       document.cookie = 'googtrans=/en/'+ code +'; path=/';
     }
-    // Use href assignment instead of reload() — forces a fresh uncached load
-    // so GT picks up the new cookie state cleanly in all browsers
-    const url = location.href.split('#')[0]; // strip any hash
-    location.href = url;
+
+    // Small wait to ensure cookie writes are committed, then navigate fresh
+    setTimeout(() => {
+      const url = location.href.split('#')[0];
+      location.href = url;
+    }, 50);
   }
 
   function loadGoogleTranslate() {
