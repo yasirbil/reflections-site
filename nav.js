@@ -604,50 +604,42 @@ body { top: 0 !important; }
   function nukeGTCookies() {
     const hostname = location.hostname;
     const bare     = hostname.replace(/^www\./, '');
-    const expired  = 'expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0';
-    // Cover every domain variation Safari and Chrome may have used
-    const domains = [
-      '',
-      `domain=${hostname}`,
-      `domain=.${hostname}`,
-      `domain=${bare}`,
-      `domain=.${bare}`,
-    ];
-    const paths = ['/', '/en', '/tr', '/ar', '/fr', '/de', '/es', '/zh-CN', '/ja', '/ru', '/pt'];
-    domains.forEach(d => {
-      paths.forEach(p => {
-        const base = `googtrans=; path=${p}; ${expired}`;
-        document.cookie = d ? `${base}; ${d}` : base;
-      });
+    const exp      = 'expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0';
+    ['', hostname, '.'+ hostname, bare, '.'+ bare].forEach(d => {
+      const dc = d ? 'domain='+ d +'; ' : '';
+      document.cookie = 'googtrans=; path=/; '+ dc + exp;
     });
+  }
+
+  function doGTSwitch(code) {
+    // Drive GT\'s own hidden <select> — most reliable cross-browser method
+    const attempt = (tries) => {
+      const select = document.querySelector('.goog-te-combo');
+      if (select) {
+        select.value = (code === 'en') ? '' : code;
+        select.dispatchEvent(new Event('change'));
+        return;
+      }
+      if (tries > 0) setTimeout(() => attempt(tries - 1), 200);
+    };
+    attempt(20);
   }
 
   function switchLanguage(code) {
     nukeGTCookies();
-
-    if (code === 'en') {
-      // For Safari: also try to use GT's own restore if the widget is ready
-      try {
-        const select = document.querySelector('.goog-te-combo');
-        if (select) {
-          select.value = '';
-          select.dispatchEvent(new Event('change'));
-        }
-      } catch(e) {}
-      // Small delay to let GT process before reload
-      setTimeout(() => location.reload(), 100);
-    } else {
+    if (code !== 'en') {
       const bare = location.hostname.replace(/^www\./, '');
-      document.cookie = `googtrans=/en/${code}; path=/; domain=.${bare}`;
-      document.cookie = `googtrans=/en/${code}; path=/`;
-      location.reload();
+      document.cookie = 'googtrans=/en/'+ code +'; path=/; domain=.'+ bare;
+      document.cookie = 'googtrans=/en/'+ code +'; path=/';
     }
+    doGTSwitch(code);
+    setTimeout(() => location.reload(), 500);
   }
 
   function loadGoogleTranslate() {
     const anchor = document.createElement('div');
     anchor.id = 'google_translate_element';
-    anchor.style.cssText = 'display:none;position:absolute;overflow:hidden;height:0;width:0;';
+    anchor.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;overflow:hidden;';
     document.body.appendChild(anchor);
 
     window.googleTranslateElementInit = function () {
