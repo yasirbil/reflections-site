@@ -402,17 +402,11 @@
 
   /* ─────────────────────────────────────────────
      4. PARSE
-     Structure returned:
-       Map {
-         cat → Map {
-           subfolderLabel → [ { name, url }, … ]
-         }
-       }
-     Pages directly inside a category (depth 1) go under the
-     special key "" (empty string = no subfolder heading).
+     Returns: Map< catSlug, Array<{ name, url, group }> >
+     - group = '' for flat pages (travels/page.html)
+     - group = 'Japan' for nested pages (travels/japan/page.html)
   ───────────────────────────────────────────── */
   function parseSitemap(xml) {
-    // cats: Map< catSlug, Map< subfolderLabel, Array<{name,url}> > >
     const cats = new Map();
     const re = /<loc>([\s\S]*?)<\/loc>/g;
     let m;
@@ -423,22 +417,20 @@
       if (!parts.length) continue;
       const cat = parts[0];
       if (cat === 'home') continue;
-      if (!cats.has(cat)) cats.set(cat, new Map());
-      const catMap = cats.get(cat);
+      if (!cats.has(cat)) cats.set(cat, []);
+
       if (parts.length === 1) {
-        // The category index page itself — skip, "View all" covers it
+        // Category root — skip (covered by "View all")
       } else if (parts.length === 2) {
-        // Direct child: travels/cultural-guide.html
-        const name = toTitleCase(parts[1]);
-        if (!catMap.has('')) catMap.set('', []);
-        catMap.get('').push({ name, url });
+        // Direct page: travels/cultural-guide.html
+        cats.get(cat).push({ name: toTitleCase(parts[1]), url, group: '' });
       } else {
-        // Nested: travels/japan/cultural-guide.html
-        // parts[1] = subfolder, parts[2+] = filename
-        const subfolder = toTitleCase(parts[1]);
-        const name      = toTitleCase(parts[parts.length - 1]);
-        if (!catMap.has(subfolder)) catMap.set(subfolder, []);
-        catMap.get(subfolder).push({ name, url });
+        // Nested page: travels/japan/cultural-guide.html
+        cats.get(cat).push({
+          name:  toTitleCase(parts[parts.length - 1]),
+          url,
+          group: toTitleCase(parts[1]),
+        });
       }
     }
     return cats;
@@ -459,35 +451,36 @@
       }
     }
 
-    cats.forEach((catMap, cat) => {
+    cats.forEach((subs, cat) => {
       const label  = toTitleCase(cat);
       const catUrl = `${SITE}/${cat}`;
       const li     = el('li', { className: 'ynb-item', role: 'none' });
 
-      // Count total pages across all subfolders
-      let totalPages = 0;
-      catMap.forEach(pages => { totalPages += pages.length; });
-
-      if (totalPages === 0) {
+      if (subs.length === 0) {
         li.appendChild(el('a', { className: 'ynb-trigger', href: catUrl, textContent: label, role: 'menuitem' }));
       } else {
         const btn = el('button', { className: 'ynb-trigger', 'aria-haspopup': 'true', 'aria-expanded': 'false', role: 'menuitem' });
         btn.appendChild(document.createTextNode(label));
         btn.appendChild(chevronSVG('ynb-chevron'));
 
-        // One column per subfolder (max 3)
-        const subfolders = [...catMap.entries()];
-        const colCount   = Math.min(3, Math.max(1, subfolders.length));
-        const colsDiv    = el('div', { className: 'ynb-cols' });
+        // Group pages by their group field, preserving insertion order
+        const groupMap = new Map();
+        subs.forEach(p => {
+          const g = p.group || '';
+          if (!groupMap.has(g)) groupMap.set(g, []);
+          groupMap.get(g).push(p);
+        });
+        const groups   = [...groupMap.entries()];
+        const colCount = Math.min(3, Math.max(1, groups.length));
+        const colsDiv  = el('div', { className: 'ynb-cols' });
         colsDiv.style.setProperty('--ynb-cols', colCount);
 
-        subfolders.forEach(([subfolder, pages]) => {
+        groups.forEach(([group, pages]) => {
           const linksDiv = el('div', { className: 'ynb-col-links' });
           pages.forEach(p => linksDiv.appendChild(el('a', {
             className: 'ynb-link', href: p.url, textContent: p.name,
           })));
-          // Use subfolder name as heading; if no subfolder, use category name
-          const heading = subfolder || label;
+          const heading = group || label;
           colsDiv.appendChild(el('div', { className: 'ynb-col' }, [
             el('span', { className: 'ynb-cat-label', textContent: heading }),
             linksDiv,
@@ -533,15 +526,12 @@
   function buildDrawerContent(drawer, cats) {
     const inner = el('div', { className: 'ynb-drawer-inner' });
 
-    cats.forEach((catMap, cat) => {
+    cats.forEach((subs, cat) => {
       const label  = toTitleCase(cat);
       const catUrl = `${SITE}/${cat}`;
       const item   = el('div', { className: 'ynb-drawer-item' });
 
-      let totalPages = 0;
-      catMap.forEach(pages => { totalPages += pages.length; });
-
-      if (totalPages === 0) {
+      if (subs.length === 0) {
         item.appendChild(el('a', { className: 'ynb-drawer-trigger', href: catUrl, textContent: label }));
       } else {
         const trig = el('button', { className: 'ynb-drawer-trigger', 'aria-expanded': 'false' });
@@ -550,13 +540,19 @@
 
         const sub = el('div', { className: 'ynb-drawer-sub' });
 
-        catMap.forEach((pages, subfolder) => {
-          if (subfolder) {
-            const hd = el('div', { className: 'ynb-drawer-subfolder', textContent: subfolder });
-            sub.appendChild(hd);
+        // Group by subfolder
+        const groupMap = new Map();
+        subs.forEach(p => {
+          const g = p.group || '';
+          if (!groupMap.has(g)) groupMap.set(g, []);
+          groupMap.get(g).push(p);
+        });
+        groupMap.forEach((pages, group) => {
+          if (group) {
+            sub.appendChild(el('div', { className: 'ynb-drawer-subfolder', textContent: group }));
           }
           pages.forEach(p => sub.appendChild(el('a', {
-            className: 'ynb-drawer-sub-link' + (subfolder ? ' ynb-drawer-sub-link--nested' : ''),
+            className: 'ynb-drawer-sub-link' + (group ? ' ynb-drawer-sub-link--nested' : ''),
             href: p.url,
             textContent: p.name,
           })));
