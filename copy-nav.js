@@ -270,15 +270,6 @@
 }
 .ynb-drawer-item.ynb-drawer-open .ynb-drawer-sub { display: block; }
 
-.ynb-drawer-sub-label {
-  font-size: 0.65rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  margin-top: 10px;
-  margin-bottom: 4px;
-  opacity: 0.6;
-}
-
 .ynb-drawer-sub-link {
   display: block;
   font-family: 'Lora', Georgia, serif;
@@ -392,60 +383,34 @@
   }
 
   /* ─────────────────────────────────────────────
-   4. PARSE (UPDATED — supports subcategories)
+     4. PARSE
   ───────────────────────────────────────────── */
   function parseSitemap(xml) {
     const cats = new Map();
     const re = /<loc>([\s\S]*?)<\/loc>/g;
     let m;
-
     while ((m = re.exec(xml)) !== null) {
-      const url = decodeXml(m[1].trim());
+      const url   = decodeXml(m[1].trim());
       if (!url.startsWith(SITE + '/')) continue;
-
       const parts = url.slice(SITE.length + 1).split('/').filter(Boolean);
       if (!parts.length) continue;
-
       const cat = parts[0];
       if (cat === 'home') continue;
-
-      if (!cats.has(cat)) cats.set(cat, new Map());
-
-      // category landing page only, like /travels
-      if (parts.length === 1) continue;
-
-      const sub = parts[1];
-
-      if (!cats.get(cat).has(sub)) {
-        cats.get(cat).set(sub, []);
-      }
-
-      const pageSlug = parts.slice(2).join('/');
-      const title = toTitleCase(
-        pageSlug ? pageSlug.split('/').pop() : sub
-      );
-
-      cats.get(cat).get(sub).push({
-        title,
-        url
-      });
+      if (!cats.has(cat)) cats.set(cat, []);
+      if (parts.length > 1) cats.get(cat).push({ slug: parts.slice(1).join('/'), url });
     }
-
     return cats;
   }
 
   /* ─────────────────────────────────────────────
-   5. DESKTOP ITEMS (UPDATED — nested support)
+     5. DESKTOP ITEMS
   ───────────────────────────────────────────── */
   function buildDesktopItems(list, cats) {
     let openDrop = null, openLi = null;
 
     function closeAll() {
-      if (openDrop) {
-        openDrop.classList.remove('ynb-visible');
-        openDrop = null;
-      }
-      if (openLi) {
+      if (openDrop) { openDrop.classList.remove('ynb-visible'); openDrop = null; }
+      if (openLi)   {
         openLi.classList.remove('ynb-open');
         openLi.querySelector('.ynb-trigger')?.setAttribute('aria-expanded', 'false');
         openLi = null;
@@ -457,114 +422,67 @@
       const catUrl = `${SITE}/${cat}`;
       const li     = el('li', { className: 'ynb-item', role: 'none' });
 
-      if (!(subs instanceof Map) || subs.size === 0) {
-        li.appendChild(
-          el('a', {
-            className: 'ynb-trigger',
-            href: catUrl,
-            textContent: label,
-            role: 'menuitem'
-          })
-        );
+      if (subs.length === 0) {
+        li.appendChild(el('a', { className: 'ynb-trigger', href: catUrl, textContent: label, role: 'menuitem' }));
       } else {
-        const btn = el('button', {
-          className: 'ynb-trigger',
-          'aria-haspopup': 'true',
-          'aria-expanded': 'false',
-          role: 'menuitem'
-        });
-
+        const btn = el('button', { className: 'ynb-trigger', 'aria-haspopup': 'true', 'aria-expanded': 'false', role: 'menuitem' });
         btn.appendChild(document.createTextNode(label));
         btn.appendChild(chevronSVG('ynb-chevron'));
 
-        const subEntries = Array.from(subs.entries());
-        const colCount = Math.min(3, Math.max(1, subEntries.length));
-        const perCol   = Math.ceil(subEntries.length / colCount);
-
-        const colsDiv = el('div', { className: 'ynb-cols' });
+        const colCount = Math.min(3, Math.max(1, Math.ceil(subs.length / 4)));
+        const perCol   = Math.ceil(subs.length / colCount);
+        const colsDiv  = el('div', { className: 'ynb-cols' });
         colsDiv.style.setProperty('--ynb-cols', colCount);
 
         for (let c = 0; c < colCount; c++) {
-          const chunk = subEntries.slice(c * perCol, (c + 1) * perCol);
+          const chunk = subs.slice(c * perCol, (c + 1) * perCol);
           if (!chunk.length) break;
-
-          const col = el('div', { className: 'ynb-col' });
-
-          chunk.forEach(([sub, pages]) => {
-            col.appendChild(el('span', {
-              className: 'ynb-cat-label',
-              textContent: toTitleCase(sub)
-            }));
-
-            const linksDiv = el('div', { className: 'ynb-col-links' });
-
-            pages.forEach(p => {
-              linksDiv.appendChild(el('a', {
-                className: 'ynb-link',
-                href: p.url,
-                textContent: p.title
-              }));
-            });
-
-            col.appendChild(linksDiv);
-          });
-
-          colsDiv.appendChild(col);
+          const linksDiv = el('div', { className: 'ynb-col-links' });
+          chunk.forEach(s => linksDiv.appendChild(el('a', {
+            className: 'ynb-link', href: s.url,
+            textContent: toTitleCase(s.slug.split('/').pop()),
+          })));
+          colsDiv.appendChild(el('div', { className: 'ynb-col' }, [
+            el('span', { className: 'ynb-cat-label', textContent: label }),
+            linksDiv,
+          ]));
         }
 
         const footerDiv = el('div', { className: 'ynb-drop-footer' });
-        footerDiv.appendChild(
-          el('a', {
-            href: catUrl,
-            textContent: `View all in ${label} →`
-          })
-        );
+        footerDiv.appendChild(el('a', { href: catUrl, textContent: `View all in ${label} →` }));
 
-        const drop = el('div', { className: 'ynb-dropdown', role: 'region' }, [
-          colsDiv,
-          footerDiv
-        ]);
-
+        const drop = el('div', { className: 'ynb-dropdown', role: 'region' }, [colsDiv, footerDiv]);
         document.documentElement.appendChild(drop);
         li.appendChild(btn);
 
         btn.addEventListener('click', e => {
           e.stopPropagation();
           const isOpen = li.classList.contains('ynb-open');
-
           closeAll();
-
           if (!isOpen) {
-            const r = btn.getBoundingClientRect();
+            const r    = btn.getBoundingClientRect();
             const dropW = Math.min(720, Math.max(360, window.innerWidth * 0.5));
-            let left = r.left + r.width / 2 - dropW / 2;
+            let left   = r.left + r.width / 2 - dropW / 2;
             left = Math.max(8, Math.min(left, window.innerWidth - dropW - 8));
-
-            drop.style.top = NAV_H + 'px';
-            drop.style.left = left + 'px';
+            drop.style.top   = NAV_H + 'px';
+            drop.style.left  = left + 'px';
             drop.style.width = dropW + 'px';
-
             drop.classList.add('ynb-visible');
             li.classList.add('ynb-open');
             btn.setAttribute('aria-expanded', 'true');
-
-            openDrop = drop;
-            openLi = li;
+            openDrop = drop; openLi = li;
           }
         });
       }
-
       list.appendChild(li);
     });
 
-    document.addEventListener('click', closeAll);
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') closeAll();
-    });
+    document.addEventListener('click',   closeAll);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAll(); });
   }
 
   /* ─────────────────────────────────────────────
-   6. MOBILE DRAWER (UPDATED — nested support)
+     6. MOBILE DRAWER
   ───────────────────────────────────────────── */
   function buildDrawerContent(drawer, cats) {
     const inner = el('div', { className: 'ynb-drawer-inner' });
@@ -574,60 +492,27 @@
       const catUrl = `${SITE}/${cat}`;
       const item   = el('div', { className: 'ynb-drawer-item' });
 
-      if (!(subs instanceof Map) || subs.size === 0) {
-        item.appendChild(
-          el('a', {
-            className: 'ynb-drawer-trigger',
-            href: catUrl,
-            textContent: label
-          })
-        );
+      if (subs.length === 0) {
+        item.appendChild(el('a', { className: 'ynb-drawer-trigger', href: catUrl, textContent: label }));
       } else {
-        const trig = el('button', {
-          className: 'ynb-drawer-trigger',
-          'aria-expanded': 'false'
-        });
-
+        const trig = el('button', { className: 'ynb-drawer-trigger', 'aria-expanded': 'false' });
         trig.appendChild(document.createTextNode(label));
         trig.appendChild(chevronSVG('ynb-drawer-chevron'));
 
-        const subWrap = el('div', { className: 'ynb-drawer-sub' });
-
-        subs.forEach((pages, sub) => {
-          subWrap.appendChild(
-            el('div', {
-              className: 'ynb-drawer-sub-label',
-              textContent: toTitleCase(sub)
-            })
-          );
-
-          pages.forEach(p => {
-            subWrap.appendChild(
-              el('a', {
-                className: 'ynb-drawer-sub-link',
-                href: p.url,
-                textContent: p.title
-              })
-            );
-          });
-        });
-
-        subWrap.appendChild(
-          el('a', {
-            className: 'ynb-drawer-view-all',
-            href: catUrl,
-            textContent: `View all in ${label} →`
-          })
-        );
+        const sub = el('div', { className: 'ynb-drawer-sub' });
+        subs.forEach(s => sub.appendChild(el('a', {
+          className: 'ynb-drawer-sub-link',
+          href: s.url,
+          textContent: toTitleCase(s.slug.split('/').pop()),
+        })));
+        sub.appendChild(el('a', { className: 'ynb-drawer-view-all', href: catUrl, textContent: `View all in ${label} →` }));
 
         trig.addEventListener('click', () => {
           const isOpen = item.classList.contains('ynb-drawer-open');
-
           inner.querySelectorAll('.ynb-drawer-item.ynb-drawer-open').forEach(i => {
             i.classList.remove('ynb-drawer-open');
             i.querySelector('button')?.setAttribute('aria-expanded', 'false');
           });
-
           if (!isOpen) {
             item.classList.add('ynb-drawer-open');
             trig.setAttribute('aria-expanded', 'true');
@@ -635,9 +520,8 @@
         });
 
         item.appendChild(trig);
-        item.appendChild(subWrap);
+        item.appendChild(sub);
       }
-
       inner.appendChild(item);
     });
 
