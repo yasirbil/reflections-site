@@ -6,7 +6,6 @@
 <title>Yasir Bilgin</title>
 
 <script src="https://test.yasirbilgin.com/nav.js"></script>
-<script async src="https://cse.google.com/cse.js?cx=94589d4b6bd3d4d58"></script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -18,7 +17,6 @@
 :root {
   --bg: #f5f3ee;
   --surface: #ffffff;
-  --surface2: #f0ede6;
   --border: rgba(0,0,0,0.10);
   --border-strong: rgba(0,0,0,0.20);
   --text: #1a1a18;
@@ -26,7 +24,6 @@
   --text-faint: #b0ada5;
   --accent: #2d4a3e;
   --accent-light: #e8f0ec;
-  --accent-mid: #4a7c65;
   --radius-md: 10px;
   --radius-lg: 16px;
 }
@@ -35,7 +32,6 @@
   :root {
     --bg: #131310;
     --surface: #1e1e1a;
-    --surface2: #252520;
     --border: rgba(255,255,255,0.10);
     --border-strong: rgba(255,255,255,0.22);
     --text: #f0ede5;
@@ -43,7 +39,6 @@
     --text-faint: #5a5750;
     --accent: #7fbf9e;
     --accent-light: rgba(127,191,158,0.10);
-    --accent-mid: #5a9e7f;
   }
 }
 
@@ -85,12 +80,12 @@ body {
   line-height: 1.6;
 }
 
-/* SEARCH AREA */
+/* SEARCH */
 .search-wrap {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 2.5rem 0;
+  padding: 0 2.5rem;
   animation: fadeUp 0.5s 0.05s ease both;
 }
 
@@ -156,16 +151,6 @@ body {
   flex-shrink: 0;
 }
 
-/* CSE results styling */
-#cseResultsWrap .gsc-result-info,
-#cseResultsWrap .gs-result .gs-title,
-#cseResultsWrap .gs-snippet {
-  font-family: 'DM Sans', sans-serif !important;
-}
-#cseResultsWrap .gsc-cursor-box { text-align: center; margin-top: 1rem; }
-
-
-
 /* SECTION */
 .section-wrap {
   width: 100%;
@@ -214,7 +199,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  transition: border-color 0.15s, transform 0.12s, opacity 0.2s;
+  transition: border-color 0.15s, transform 0.12s;
   position: relative;
   overflow: hidden;
 }
@@ -230,10 +215,6 @@ body {
 
 .card:hover { border-color: var(--accent); transform: translateY(-2px); }
 .card:hover::before { opacity: 1; }
-
-.card.hidden {
-  display: none;
-}
 
 .card-icon { font-size: 26px; margin-bottom: 4px; position: relative; }
 
@@ -260,16 +241,6 @@ body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-/* NO RESULTS */
-.no-results {
-  display: none;
-  grid-column: 1 / -1;
-  text-align: center;
-  padding: 2.5rem 1rem;
-  color: var(--text-muted);
-  font-size: 14px;
 }
 
 /* REFERENCES */
@@ -369,20 +340,13 @@ body {
   </div>
 </div>
 
-<!-- CSE RESULTS render inline here -->
-<div class="search-wrap" id="cseResultsWrap" style="display:none; padding-top:0; padding-bottom:2rem;">
-  <div id="cseResults"><div class="gcse-searchresults-only" data-queryParameterName="q" data-gname="searchresults"></div></div>
-</div>
-
 <!-- BROWSE SECTIONS -->
 <div class="section-wrap" style="padding-top: 1.5rem;">
   <div class="section-header">
     <span class="section-label">Browse all sections</span>
     <div class="section-line"></div>
   </div>
-  <div class="grid" id="cardGrid">
-    <div class="no-results" id="noResults">No sections match your search.</div>
-  </div>
+  <div class="grid" id="cardGrid"></div>
 </div>
 
 <!-- REFERENCES & TOOLS -->
@@ -399,167 +363,67 @@ body {
 </footer>
 
 <script>
-window.__gcse = { parserLoaded: function(){} };
-</script>
-<script>
-// ─── DATA ────────────────────────────────────────────────────────────────────
-
 const SECTIONS = [
-  {
-    icon: '📖',
-    name: "Study Qur'an",
-    desc: "In-depth Qur'anic study and guides",
-    url: 'https://www.quran.yasirbilgin.com',
-    display: 'quran.yasirbilgin.com',
-    tags: ['islam', 'knowledge'],
-    keywords: 'quran quranic study islam arabic'
-  },
-  {
-    icon: '🤝',
-    name: 'Hizmet Community',
-    desc: 'Resources and info for the Hizmet movement',
-    url: 'https://www.hizmet-community.yasirbilgin.com',
-    display: 'hizmet-community.yasirbilgin.com',
-    tags: ['islam', 'community'],
-    keywords: 'hizmet gulen community movement'
-  },
-  {
-    icon: '🖥️',
-    name: 'DevOps / SRE',
-    desc: 'DevOps and infrastructure notes',
-    url: 'https://devops.yasirbilgin.com',
-    display: 'devops.yasirbilgin.com',
-    tags: ['other'],
-    keywords: 'devops sre infrastructure engineering technology'
-  },
-  {
-    icon: '✈️',
-    name: 'Travels',
-    desc: 'Journey through civilizations',
-    url: 'https://www.travels.yasirbilgin.com/home',
-    display: 'travels.yasirbilgin.com',
-    tags: ['other'],
-    keywords: 'travel journey civilizations world'
-  },
-  {
-    icon: '🧠',
-    name: 'MBTI',
-    desc: 'Personality and reflection resources',
-    url: 'https://mbti.yasirbilgin.com',
-    display: 'mbti.yasirbilgin.com',
-    tags: ['other'],
-    keywords: 'mbti personality psychology types'
-  },
-  {
-    icon: '🎨',
-    name: 'Arts & Crafts',
-    desc: 'Creative and handmade works',
-    url: 'https://arts.yasirbilgin.com',
-    display: 'arts.yasirbilgin.com',
-    tags: ['other'],
-    keywords: 'arts crafts creative handmade'
-  },
-  {
-    icon: '🗣️',
-    name: 'Linguistics',
-    desc: 'Language and communication studies',
-    url: 'https://www.linguistics.yasirbilgin.com',
-    display: 'linguistics.yasirbilgin.com',
-    tags: ['knowledge', 'other'],
-    keywords: 'linguistics language communication arabic turkish'
-  },
+  { icon: '📖', name: "Study Qur'an",     desc: "In-depth Qur'anic study and guides",         url: 'https://www.quran.yasirbilgin.com',           display: 'quran.yasirbilgin.com' },
+  { icon: '🤝', name: 'Hizmet Community', desc: 'Resources and info for the Hizmet movement', url: 'https://www.hizmet-community.yasirbilgin.com', display: 'hizmet-community.yasirbilgin.com' },
+  { icon: '🖥️', name: 'DevOps / SRE',     desc: 'DevOps and infrastructure notes',            url: 'https://devops.yasirbilgin.com',              display: 'devops.yasirbilgin.com' },
+  { icon: '✈️', name: 'Travels',          desc: 'Journey through civilizations',              url: 'https://www.travels.yasirbilgin.com/home',    display: 'travels.yasirbilgin.com' },
+  { icon: '🧠', name: 'MBTI',             desc: 'Personality and reflection resources',       url: 'https://mbti.yasirbilgin.com',                display: 'mbti.yasirbilgin.com' },
+  { icon: '🎨', name: 'Arts & Crafts',    desc: 'Creative and handmade works',                url: 'https://arts.yasirbilgin.com',                display: 'arts.yasirbilgin.com' },
+  { icon: '🗣️', name: 'Linguistics',      desc: 'Language and communication studies',         url: 'https://www.linguistics.yasirbilgin.com',     display: 'linguistics.yasirbilgin.com' },
 ];
 
 const REFERENCES = [
-  { name: 'Medium Articles',        url: 'https://medium.com/@yasirbil',                           icon: '📰' },
-  { name: 'First Principles',       url: 'https://www.reflections.yasirbilgin.com/pages/first-principles', icon: '💡' },
-  { name: 'Essential Books',        url: 'https://www.reflections.yasirbilgin.com/pages/essential-books',  icon: '📚' },
-  { name: 'Essential Books — Islam',url: 'https://reflections.yasirbilgin.com/pages/essential-books-islam',icon: '🕌' },
-  { name: 'Madrasa Books',          url: 'https://www.reflections.yasirbilgin.com/pages/medrese-books',    icon: '🎓' },
-  { name: 'Historical Chronology',  url: 'https://www.reflections.yasirbilgin.com/pages/chronology',      icon: '📜' },
-  { name: 'CRISD Papers',           url: 'https://mailchi.mp/939b3b8716af/ktphane',                       icon: '📄' },
-  { name: 'Usul.ai',                url: 'https://usul.ai/',                                              icon: '🔗' },
-  { name: 'OpenAlex Works',         url: 'https://openalex.org/works',                                    icon: '🔗' },
+  { icon: '📰', name: 'Medium Articles',         url: 'https://medium.com/@yasirbil' },
+  { icon: '💡', name: 'First Principles',        url: 'https://www.reflections.yasirbilgin.com/pages/first-principles' },
+  { icon: '📚', name: 'Essential Books',         url: 'https://www.reflections.yasirbilgin.com/pages/essential-books' },
+  { icon: '🕌', name: 'Essential Books — Islam', url: 'https://reflections.yasirbilgin.com/pages/essential-books-islam' },
+  { icon: '🎓', name: 'Madrasa Books',           url: 'https://www.reflections.yasirbilgin.com/pages/medrese-books' },
+  { icon: '📜', name: 'Historical Chronology',   url: 'https://www.reflections.yasirbilgin.com/pages/chronology' },
+  { icon: '📄', name: 'CRISD Papers',            url: 'https://mailchi.mp/939b3b8716af/ktphane' },
+  { icon: '🔗', name: 'Usul.ai',                 url: 'https://usul.ai/' },
+  { icon: '🔗', name: 'OpenAlex Works',          url: 'https://openalex.org/works' },
 ];
 
-// ─── RENDER CARDS ─────────────────────────────────────────────────────────────
-
+// Render section cards
 const grid = document.getElementById('cardGrid');
-const noResults = document.getElementById('noResults');
-
 SECTIONS.forEach(s => {
   const a = document.createElement('a');
   a.className = 'card';
   a.href = s.url;
   a.target = '_blank';
-  a.dataset.tags = s.tags.join(' ');
-  a.dataset.keywords = (s.name + ' ' + s.desc + ' ' + (s.keywords || '')).toLowerCase();
   a.innerHTML = `
     <div class="card-icon">${s.icon}</div>
     <div class="card-name">${s.name}</div>
     <div class="card-desc">${s.desc}</div>
     <div class="card-url">${s.display}</div>
   `;
-  grid.insertBefore(a, noResults);
+  grid.appendChild(a);
 });
 
-// ─── RENDER REFERENCES ────────────────────────────────────────────────────────
-
+// Render reference pills
 const refGrid = document.getElementById('refGrid');
 REFERENCES.forEach(r => {
   const a = document.createElement('a');
   a.className = 'ref-btn';
   a.href = r.url;
   a.target = '_blank';
-  a.innerHTML = `<span class="ref-btn-dot"></span>${r.icon ? r.icon + ' ' : ''}${r.name} ↗`;
+  a.innerHTML = `<span class="ref-btn-dot"></span>${r.icon} ${r.name} ↗`;
   refGrid.appendChild(a);
 });
 
-// ─── SEARCH WIRING ───────────────────────────────────────────────────────────
-
+// Search — opens Google CSE in a new tab
 const searchInput = document.getElementById('searchInput');
 const searchBtn   = document.getElementById('searchBtn');
-const resultsWrap = document.getElementById('cseResultsWrap');
-const resultsDiv  = document.getElementById('cseResults');
-
-// Inject the gcse-searchresults-only element once, then reuse
-let cseElement = null;
 
 function doSearch() {
   const q = searchInput.value.trim();
   if (!q) return;
-
-  resultsWrap.style.display = 'block';
-  resultsWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-  // Use the CSE JS API if loaded, otherwise fall back to embedded element
-  if (window.google && window.google.search && window.google.search.cse && window.google.search.cse.element) {
-    const el = window.google.search.cse.element.getElement('searchresults');
-    if (el) {
-      el.execute(q);
-      return;
-    }
-  }
-
-  // Fallback: inject gcse div and let the script render it
-  if (!cseElement) {
-    cseElement = document.createElement('div');
-    cseElement.className = 'gcse-searchresults-only';
-    cseElement.dataset.queryParameterName = 'q';
-    resultsDiv.appendChild(cseElement);
-    // Re-render CSE elements
-    if (window.google && window.google.search) {
-      window.google.search.CustomSearchControl && window.google.search.CustomSearchControl.attachAutoCompletion();
-    }
-  }
-  // Set URL param so CSE picks up the query
-  const url = new URL(window.location);
-  url.searchParams.set('q', q);
-  window.history.replaceState({}, '', url);
+  window.open('https://cse.google.com/cse?cx=94589d4b6bd3d4d58&q=' + encodeURIComponent(q), '_blank');
 }
 
 searchBtn.addEventListener('click', doSearch);
-searchInput.addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
+searchInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') doSearch(); });
 </script>
 
 </body>
