@@ -34,6 +34,7 @@
   padding: 0 1.5rem;
   font-family: 'Lato', sans-serif;
   -webkit-font-smoothing: antialiased;
+  gap: 0;
 }
 
 /* ── BRAND ── */
@@ -64,18 +65,18 @@
   display: flex;
   align-items: center;
   list-style: none;
-  flex: 1 1 0;           /* grow but start from zero, not content size */
-  min-width: 0;          /* allow shrinking below content size */
-  max-width: calc(100vw - 220px); /* never push past brand + padding */
-  overflow: hidden;      /* clip rather than overflow into other elements */
+  /* Take available space but never push outside nav bounds */
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
 }
 .ynb-item { position: relative; }
 
 .ynb-trigger {
   display: flex;
   align-items: center;
-  gap: 0.28rem;
-  padding: 0 0.6rem;
+  gap: 0.25rem;
+  padding: 0 0.65rem;
   height: ${NAV_H}px;
   font-family: 'Lato', sans-serif;
   font-size: 0.68rem;
@@ -90,13 +91,12 @@
   white-space: nowrap;
   transition: color 0.18s;
   position: relative;
-  flex-shrink: 1;        /* allow items to shrink when space is tight */
-  min-width: 0;
+  flex-shrink: 1;
 }
 .ynb-trigger::after {
   content: '';
   position: absolute;
-  bottom: 0; left: 0.85rem; right: 0.85rem;
+  bottom: 0; left: 0.65rem; right: 0.65rem;
   height: 2px;
   background: #8B4513;
   transform: scaleX(0);
@@ -227,7 +227,6 @@
   transform: translateX(-100%);
   transition: transform 0.28s ease;
   border-top: 1px solid #d5c9b5;
-  /* hidden on desktop via media query */
 }
 .ynb-drawer.ynb-drawer-open { transform: translateX(0); }
 
@@ -287,10 +286,8 @@
   -webkit-tap-highlight-color: transparent;
 }
 .ynb-drawer-sub-link:hover,
-.ynb-drawer-sub-link:active {
-  color: #8B4513;
-  border-left-color: #8B4513;
-}
+.ynb-drawer-sub-link:active { color: #8B4513; border-left-color: #8B4513; }
+.ynb-drawer-sub-link--nested { padding-left: 1.4rem; }
 
 .ynb-drawer-view-all {
   display: inline-block;
@@ -305,20 +302,13 @@
 /* Subfolder heading inside mobile drawer */
 .ynb-drawer-subfolder {
   font-family: 'Cinzel', serif;
-  font-size: 0.58rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  font-size: 0.58rem; font-weight: 600;
+  letter-spacing: 0.16em; text-transform: uppercase;
   color: #8B4513;
   padding: 0.7rem 0 0.3rem 0.8rem;
   margin-top: 0.4rem;
 }
 .ynb-drawer-subfolder:first-child { margin-top: 0; }
-
-/* Nested page links under a subfolder heading */
-.ynb-drawer-sub-link--nested {
-  padding-left: 1.4rem !important;
-}
 
 /* ── SCRIM ── */
 .ynb-scrim {
@@ -336,12 +326,11 @@
   .ynb-list      { display: none; }
   .ynb-hamburger { display: flex; }
 }
-/* Medium screens: tighter padding and smaller font */
-@media (min-width: ${MOBILE_BP + 1}px) and (max-width: 1200px) {
+@media (min-width: ${MOBILE_BP + 1}px) and (max-width: 1100px) {
   .ynb-trigger {
-    padding: 0 0.45rem;
-    font-size: 0.62rem;
-    letter-spacing: 0.06em;
+    padding: 0 0.4rem;
+    font-size: 0.6rem;
+    letter-spacing: 0.05em;
   }
 }
 @media (min-width: ${MOBILE_BP + 1}px) {
@@ -476,7 +465,7 @@
         btn.appendChild(document.createTextNode(label));
         btn.appendChild(chevronSVG('ynb-chevron'));
 
-        // Group pages by their group field, preserving insertion order
+        // Group pages by their group field
         const groupMap = new Map();
         subs.forEach(p => {
           const g = p.group || '';
@@ -501,7 +490,7 @@
         });
 
         const footerDiv = el('div', { className: 'ynb-drop-footer' });
-        footerDiv.appendChild(el('a', { href: catUrl, textContent: `View all in ${label} →` }));
+        footerDiv.appendChild(el('a', { href: catUrl, textContent: `View all in ${label} \u2192` }));
 
         const drop = el('div', { className: 'ynb-dropdown', role: 'region' }, [colsDiv, footerDiv]);
         document.documentElement.appendChild(drop);
@@ -571,7 +560,7 @@
           })));
         });
 
-        sub.appendChild(el('a', { className: 'ynb-drawer-view-all', href: catUrl, textContent: `View all in ${label} →` }));
+        sub.appendChild(el('a', { className: 'ynb-drawer-view-all', href: catUrl, textContent: `View all in ${label} \u2192` }));
 
         trig.addEventListener('click', () => {
           const isOpen = item.classList.contains('ynb-drawer-open');
@@ -639,7 +628,7 @@
     document.body.style.paddingTop =
       (parseInt(document.body.style.paddingTop, 10) || 0) + NAV_H + 'px';
 
-    function openDrawer()  {
+    function openDrawer() {
       drawer.classList.add('ynb-drawer-open');
       scrim.classList.add('ynb-scrim-visible');
       ham.classList.add('ynb-active');
