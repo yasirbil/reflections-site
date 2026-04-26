@@ -2,7 +2,6 @@
  * nav.js — Yasir Bilgin dynamic site navigation
  * Drop in any page:  <script src="/nav.js"></script>
  * No dependencies. Desktop: mega-dropdown. Mobile: slide-in drawer.
- * Includes: Google Translate language menu (right side of nav bar).
  */
 (function () {
   'use strict';
@@ -11,23 +10,6 @@
   const SITEMAP   = SITE + '/sitemap.xml';
   const NAV_H     = 62;
   const MOBILE_BP = 768;
-
-  /* ─────────────────────────────────────────────
-     LANGUAGE MENU CONFIG
-     Add or remove languages here as needed.
-  ───────────────────────────────────────────── */
-  const LANGUAGES = [
-    { code: 'en',    label: 'English'  },
-    { code: 'tr',    label: 'Türkçe'   },
-    { code: 'ar',    label: 'العربية'  },
-    { code: 'fr',    label: 'Français' },
-    { code: 'de',    label: 'Deutsch'  },
-    { code: 'es',    label: 'Español'  },
-    { code: 'zh-CN', label: '中文'     },
-    { code: 'ja',    label: '日本語'   },
-    { code: 'ru',    label: 'Русский'  },
-    { code: 'pt',    label: 'Português'},
-  ];
 
   /* ─────────────────────────────────────────────
      1. STYLES
@@ -83,7 +65,8 @@
   align-items: center;
   list-style: none;
   flex: 1;
-  min-width: 0;
+  min-width: 0;          /* allow shrinking below content size */
+  overflow: hidden;      /* clip rather than overflow into other elements */
 }
 .ynb-item { position: relative; }
 
@@ -91,12 +74,12 @@
   display: flex;
   align-items: center;
   gap: 0.28rem;
-  padding: 0 0.85rem;
+  padding: 0 0.6rem;
   height: ${NAV_H}px;
   font-family: 'Lato', sans-serif;
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #38322a;
   text-decoration: none;
@@ -106,6 +89,8 @@
   white-space: nowrap;
   transition: color 0.18s;
   position: relative;
+  flex-shrink: 1;        /* allow items to shrink when space is tight */
+  min-width: 0;
 }
 .ynb-trigger::after {
   content: '';
@@ -241,6 +226,7 @@
   transform: translateX(-100%);
   transition: transform 0.28s ease;
   border-top: 1px solid #d5c9b5;
+  /* hidden on desktop via media query */
 }
 .ynb-drawer.ynb-drawer-open { transform: translateX(0); }
 
@@ -315,6 +301,7 @@
 }
 .ynb-drawer-view-all:hover { color: #8B4513; }
 
+/* Subfolder heading inside mobile drawer */
 .ynb-drawer-subfolder {
   font-family: 'Cinzel', serif;
   font-size: 0.58rem;
@@ -327,6 +314,7 @@
 }
 .ynb-drawer-subfolder:first-child { margin-top: 0; }
 
+/* Nested page links under a subfolder heading */
 .ynb-drawer-sub-link--nested {
   padding-left: 1.4rem !important;
 }
@@ -341,139 +329,19 @@
 }
 .ynb-scrim.ynb-scrim-visible { display: block; }
 
-/* ── LANGUAGE MENU ── */
-.ynb-lang-wrap {
-  position: relative;
-  display: flex;
-  align-items: center;
-  margin-left: auto;
-  padding-left: 0.75rem;
-  flex-shrink: 0;
-}
-
-/* Globe icon button */
-.ynb-lang-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-  height: 32px;
-  padding: 0 0.65rem;
-  background: none;
-  border: 1px solid #c8bfb0;
-  border-radius: 5px;
-  cursor: pointer;
-  font-family: 'Lato', sans-serif;
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.07em;
-  color: #38322a;
-  white-space: nowrap;
-  transition: border-color 0.15s, color 0.15s, background 0.15s;
-}
-.ynb-lang-btn:hover {
-  border-color: #8B4513;
-  color: #8B4513;
-  background: rgba(139,69,19,0.05);
-}
-.ynb-lang-btn svg {
-  width: 14px; height: 14px;
-  flex-shrink: 0;
-  opacity: 0.7;
-}
-.ynb-lang-btn .ynb-lang-chevron {
-  width: 8px; height: 8px;
-  opacity: 0.5;
-  transition: transform 0.2s ease;
-}
-.ynb-lang-wrap.ynb-lang-open .ynb-lang-chevron { transform: rotate(180deg); opacity: 0.8; }
-
-/* Dropdown panel */
-.ynb-lang-panel {
-  display: none;
-  position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
-  min-width: 160px;
-  background: #f7f3ec;
-  border: 1px solid #d5c9b5;
-  border-top: 3px solid #8B4513;
-  border-radius: 0 0 6px 6px;
-  box-shadow: 0 8px 24px rgba(28,24,18,0.15);
-  z-index: 2147483647;
-  padding: 0.4rem 0;
-  overflow: hidden;
-}
-.ynb-lang-wrap.ynb-lang-open .ynb-lang-panel { display: block; }
-
-.ynb-lang-option {
-  display: block;
-  width: 100%;
-  padding: 0.52rem 1rem;
-  font-family: 'Lato', sans-serif;
-  font-size: 0.78rem;
-  color: #38322a;
-  text-align: left;
-  background: none;
-  border: none;
-  cursor: pointer;
-  transition: background 0.12s, color 0.12s;
-  white-space: nowrap;
-}
-.ynb-lang-option:hover { background: rgba(139,69,19,0.07); color: #8B4513; }
-.ynb-lang-option.ynb-lang-active {
-  color: #8B4513;
-  font-weight: 700;
-}
-
-/* Mobile: language row at bottom of drawer */
-.ynb-drawer-lang {
-  padding: 1rem 1.5rem 0.5rem;
-  border-top: 1px solid #ece7df;
-  margin-top: 0.5rem;
-}
-.ynb-drawer-lang-label {
-  font-family: 'Cinzel', serif;
-  font-size: 0.58rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: #8B4513;
-  margin-bottom: 0.6rem;
-  display: block;
-}
-.ynb-drawer-lang-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-}
-.ynb-drawer-lang-opt {
-  padding: 0.35rem 0.75rem;
-  border: 1px solid #c8bfb0;
-  border-radius: 4px;
-  font-family: 'Lato', sans-serif;
-  font-size: 0.72rem;
-  color: #38322a;
-  background: none;
-  cursor: pointer;
-  transition: border-color 0.12s, color 0.12s, background 0.12s;
-  -webkit-tap-highlight-color: transparent;
-}
-.ynb-drawer-lang-opt:hover,
-.ynb-drawer-lang-opt:active { border-color: #8B4513; color: #8B4513; background: rgba(139,69,19,0.05); }
-.ynb-drawer-lang-opt.ynb-lang-active { border-color: #8B4513; color: #8B4513; font-weight: 700; }
-
-/* Suppress Google Translate's own toolbar — we drive it via cookie */
-.goog-te-banner-frame,
-.goog-te-banner-frame.skiptranslate { display: none !important; }
-body { top: 0 !important; }
-.goog-te-gadget { display: none !important; }
-
 /* ── RESPONSIVE ── */
 @media (max-width: ${MOBILE_BP}px) {
   .ynb-divider   { display: none; }
   .ynb-list      { display: none; }
   .ynb-hamburger { display: flex; }
-  .ynb-lang-wrap { display: none; } /* shown inside drawer instead */
+}
+/* Medium screens: tighter padding and smaller font */
+@media (min-width: ${MOBILE_BP + 1}px) and (max-width: 1200px) {
+  .ynb-trigger {
+    padding: 0 0.45rem;
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
+  }
 }
 @media (min-width: ${MOBILE_BP + 1}px) {
   .ynb-drawer { display: none !important; }
@@ -518,21 +386,6 @@ body { top: 0 !important; }
     svg.appendChild(p);
     return svg;
   }
-  function globeSVG() {
-    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('viewBox', '0 0 24 24');
-    svg.setAttribute('fill', 'none');
-    svg.setAttribute('stroke', 'currentColor');
-    svg.setAttribute('stroke-width', '1.8');
-    svg.setAttribute('stroke-linecap', 'round');
-    svg.setAttribute('stroke-linejoin', 'round');
-    svg.setAttribute('aria-hidden', 'true');
-    svg.innerHTML = `
-      <circle cx="12" cy="12" r="10"/>
-      <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
-    `;
-    return svg;
-  }
 
   /* ─────────────────────────────────────────────
      3. FETCH
@@ -561,6 +414,9 @@ body { top: 0 !important; }
 
   /* ─────────────────────────────────────────────
      4. PARSE
+     Returns: Map< catSlug, Array<{ name, url, group }> >
+     - group = '' for flat pages (travels/page.html)
+     - group = 'Japan' for nested pages (travels/japan/page.html)
   ───────────────────────────────────────────── */
   function parseSitemap(xml) {
     const cats = new Map();
@@ -576,10 +432,12 @@ body { top: 0 !important; }
       if (!cats.has(cat)) cats.set(cat, []);
 
       if (parts.length === 1) {
-        // skip category root
+        // Category root — skip (covered by "View all")
       } else if (parts.length === 2) {
+        // Direct page: travels/cultural-guide.html
         cats.get(cat).push({ name: toTitleCase(parts[1]), url, group: '' });
       } else {
+        // Nested page: travels/japan/cultural-guide.html
         cats.get(cat).push({
           name:  toTitleCase(parts[parts.length - 1]),
           url,
@@ -591,168 +449,7 @@ body { top: 0 !important; }
   }
 
   /* ─────────────────────────────────────────────
-     5. LANGUAGE MENU
-  ───────────────────────────────────────────── */
-  function getCurrentLang() {
-    // GT may rewrite cookie to /tr/tr — grab last segment only.
-    // Also handle zh-CN style codes with a hyphen.
-    const m = document.cookie.match(/googtrans=\/[^/]+\/([^;,\s]+)/i);
-    const code = m ? m[1] : 'en';
-    return LANGUAGES.find(l => l.code === code) ? code : 'en';
-  }
-
-  function nukeGTCookies() {
-    const hostname = location.hostname;           // test.yasirbilgin.com
-    const bare     = hostname.replace(/^www\./, '').replace(/^[^.]+\./, ''); // yasirbilgin.com
-    const sub      = hostname;                    // test.yasirbilgin.com
-    const exp      = 'expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0';
-
-    // Every realistic domain GT might have used to set the cookie
-    const domains = [
-      '',           // no domain attr
-      sub,          // test.yasirbilgin.com
-      '.'+ sub,     // .test.yasirbilgin.com
-      bare,         // yasirbilgin.com
-      '.'+ bare,    // .yasirbilgin.com
-    ];
-
-    const paths     = ['/'];
-    const sameSites = ['', '; SameSite=Lax', '; SameSite=None; Secure'];
-
-    domains.forEach(d => {
-      const dc = d ? 'domain='+ d +'; ' : '';
-      paths.forEach(p => {
-        sameSites.forEach(ss => {
-          document.cookie = 'googtrans=; path='+ p +'; '+ dc + exp + ss;
-        });
-      });
-    });
-  }
-
-  function switchLanguage(code) {
-    nukeGTCookies();
-
-    if (code !== 'en') {
-      const hostname = location.hostname;
-      const bare     = hostname.replace(/^www\./, '').replace(/^[^.]+\./, '');
-      // Write on every domain variation with every SameSite variant
-      [hostname, '.'+ hostname, bare, '.'+ bare].forEach(d => {
-        document.cookie = 'googtrans=/en/'+ code +'; path=/; domain='+ d;
-        document.cookie = 'googtrans=/en/'+ code +'; path=/; domain='+ d +'; SameSite=None; Secure';
-      });
-      document.cookie = 'googtrans=/en/'+ code +'; path=/';
-    }
-
-    // Small wait to ensure cookie writes are committed, then navigate fresh
-    setTimeout(() => {
-      const url = location.href.split('#')[0];
-      location.href = url;
-    }, 50);
-  }
-
-  function loadGoogleTranslate() {
-    const anchor = document.createElement('div');
-    anchor.id = 'google_translate_element';
-    anchor.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;overflow:hidden;';
-    document.body.appendChild(anchor);
-
-    window.googleTranslateElementInit = function () {
-      new google.translate.TranslateElement(
-        {
-          pageLanguage: 'en',
-          autoDisplay: false,
-          // Suppress the floating GT toolbar entirely
-          gaTrack: false,
-        },
-        'google_translate_element'
-      );
-    };
-
-    const s = document.createElement('script');
-    s.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
-    s.async = true;
-    document.head.appendChild(s);
-  }
-
-  function buildLangMenu() {
-    const current = getCurrentLang();
-    const currentLang = LANGUAGES.find(l => l.code === current) || LANGUAGES[0];
-
-    /* ── Desktop widget ── */
-    const wrap = el('div', { className: 'ynb-lang-wrap' });
-    wrap.setAttribute('aria-label', 'Language selector');
-
-    const btn = document.createElement('button');
-    btn.className = 'ynb-lang-btn';
-    btn.setAttribute('aria-haspopup', 'true');
-    btn.setAttribute('aria-expanded', 'false');
-    btn.appendChild(globeSVG());
-    const btnLabel = document.createElement('span');
-    btnLabel.setAttribute('translate', 'no');
-    btnLabel.textContent = currentLang.label;
-    btn.appendChild(btnLabel);
-    btn.appendChild(chevronSVG('ynb-lang-chevron'));
-
-    const panel = el('div', { className: 'ynb-lang-panel', role: 'menu' });
-
-    LANGUAGES.forEach(lang => {
-      const opt = document.createElement('button');
-      opt.className = 'ynb-lang-option' + (lang.code === current ? ' ynb-lang-active' : '');
-      opt.setAttribute('role', 'menuitem');
-      opt.setAttribute('translate', 'no');
-      opt.textContent = lang.label;
-      opt.addEventListener('click', () => switchLanguage(lang.code));
-      panel.appendChild(opt);
-    });
-
-    btn.addEventListener('click', e => {
-      e.stopPropagation();
-      const isOpen = wrap.classList.contains('ynb-lang-open');
-      // Close any open nav dropdowns first
-      document.dispatchEvent(new MouseEvent('click'));
-      if (!isOpen) {
-        wrap.classList.add('ynb-lang-open');
-        btn.setAttribute('aria-expanded', 'true');
-      }
-    });
-
-    document.addEventListener('click', () => {
-      wrap.classList.remove('ynb-lang-open');
-      btn.setAttribute('aria-expanded', 'false');
-    });
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') {
-        wrap.classList.remove('ynb-lang-open');
-        btn.setAttribute('aria-expanded', 'false');
-      }
-    });
-
-    wrap.appendChild(btn);
-    wrap.appendChild(panel);
-    return wrap;
-  }
-
-  function buildDrawerLangSection(drawerInner) {
-    const current = getCurrentLang();
-    const section = el('div', { className: 'ynb-drawer-lang' });
-    section.appendChild(el('span', { className: 'ynb-drawer-lang-label', textContent: 'Language' }));
-    const grid = el('div', { className: 'ynb-drawer-lang-grid' });
-
-    LANGUAGES.forEach(lang => {
-      const btn = document.createElement('button');
-      btn.className = 'ynb-drawer-lang-opt' + (lang.code === current ? ' ynb-lang-active' : '');
-      btn.setAttribute('translate', 'no');
-      btn.textContent = lang.label;
-      btn.addEventListener('click', () => switchLanguage(lang.code));
-      grid.appendChild(btn);
-    });
-
-    section.appendChild(grid);
-    drawerInner.appendChild(section);
-  }
-
-  /* ─────────────────────────────────────────────
-     6. DESKTOP ITEMS
+     5. DESKTOP ITEMS
   ───────────────────────────────────────────── */
   function buildDesktopItems(list, cats) {
     let openDrop = null, openLi = null;
@@ -778,6 +475,7 @@ body { top: 0 !important; }
         btn.appendChild(document.createTextNode(label));
         btn.appendChild(chevronSVG('ynb-chevron'));
 
+        // Group pages by their group field, preserving insertion order
         const groupMap = new Map();
         subs.forEach(p => {
           const g = p.group || '';
@@ -835,7 +533,7 @@ body { top: 0 !important; }
   }
 
   /* ─────────────────────────────────────────────
-     7. MOBILE DRAWER
+     6. MOBILE DRAWER
   ───────────────────────────────────────────── */
   function buildDrawerContent(drawer, cats) {
     const inner = el('div', { className: 'ynb-drawer-inner' });
@@ -854,6 +552,7 @@ body { top: 0 !important; }
 
         const sub = el('div', { className: 'ynb-drawer-sub' });
 
+        // Group by subfolder
         const groupMap = new Map();
         subs.forEach(p => {
           const g = p.group || '';
@@ -891,15 +590,12 @@ body { top: 0 !important; }
       inner.appendChild(item);
     });
 
-    // Language section at the bottom of the mobile drawer
-    buildDrawerLangSection(inner);
-
     drawer.innerHTML = '';
     drawer.appendChild(inner);
   }
 
   /* ─────────────────────────────────────────────
-     8. INJECT
+     7. INJECT
   ───────────────────────────────────────────── */
   function injectNav() {
     const style = document.createElement('style');
@@ -923,9 +619,6 @@ body { top: 0 !important; }
     });
     list.appendChild(skel);
     nav.appendChild(list);
-
-    // Language menu — desktop (right side, before hamburger)
-    nav.appendChild(buildLangMenu());
 
     const ham = el('button', {
       className: 'ynb-hamburger',
@@ -971,11 +664,10 @@ body { top: 0 !important; }
   }
 
   /* ─────────────────────────────────────────────
-     9. INIT
+     8. INIT
   ───────────────────────────────────────────── */
   async function init() {
     const { list, drawer, skel } = injectNav();
-    loadGoogleTranslate();
     const xml = await fetchSitemap();
     skel.remove();
     if (!xml) return;
