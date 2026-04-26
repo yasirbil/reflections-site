@@ -39,13 +39,13 @@
     padding: 64px 40px 56px;
     text-align: center;
     position: relative;
-    overflow: hidden;
   }
 
   header::before {
     content: '';
     position: absolute;
     inset: 0;
+    pointer-events: none;
     background: repeating-linear-gradient(
       45deg,
       transparent,
@@ -88,6 +88,9 @@
 
   /* NAV */
   nav {
+    position: sticky;
+    top: 62px;        /* sits flush under global nav.js bar */
+    z-index: 50;      /* well below nav.js z-index */
     background: var(--ink);
     border-top: 1px solid rgba(255,255,255,0.08);
     padding: 0 40px;
@@ -97,7 +100,7 @@
     scrollbar-width: none;
     justify-content: center;
     flex-wrap: wrap;
-  }
+    }
 
   nav a {
     font-family: 'IBM Plex Mono', monospace;
@@ -110,7 +113,7 @@
     transition: color 0.2s;
     white-space: nowrap;
     cursor: pointer;
-  }
+    }
 
   nav a:hover { color: var(--amber); }
 
