@@ -363,26 +363,95 @@ body {
 </footer>
 
 <script>
+const BASE = 'https://test.yasirbilgin.com';
+
 const SECTIONS = [
-  { icon: '📖', name: "Study Qur'an",     desc: "In-depth Qur'anic study and guides",         url: 'https://www.quran.yasirbilgin.com',           display: 'quran.yasirbilgin.com' },
-  { icon: '🤝', name: 'Hizmet Community', desc: 'Resources and info for the Hizmet movement', url: 'https://www.hizmet-community.yasirbilgin.com', display: 'hizmet-community.yasirbilgin.com' },
-  { icon: '🖥️', name: 'DevOps / SRE',     desc: 'DevOps and infrastructure notes',            url: 'https://devops.yasirbilgin.com',              display: 'devops.yasirbilgin.com' },
-  { icon: '✈️', name: 'Travels',          desc: 'Journey through civilizations',              url: 'https://www.travels.yasirbilgin.com/home',    display: 'travels.yasirbilgin.com' },
-  { icon: '🧠', name: 'MBTI',             desc: 'Personality and reflection resources',       url: 'https://mbti.yasirbilgin.com',                display: 'mbti.yasirbilgin.com' },
-  { icon: '🎨', name: 'Arts & Crafts',    desc: 'Creative and handmade works',                url: 'https://arts.yasirbilgin.com',                display: 'arts.yasirbilgin.com' },
-  { icon: '🗣️', name: 'Linguistics',      desc: 'Language and communication studies',         url: 'https://www.linguistics.yasirbilgin.com',     display: 'linguistics.yasirbilgin.com' },
+  {
+    icon: '🕌',
+    name: 'Islamic Studies',
+    desc: 'Disciplines, Qur\'an, and scholarly tradition',
+    url: BASE + '/islamic-studies/disciplines/usul-fiqh.html',
+    display: 'test.yasirbilgin.com/islamic-studies'
+  },
+  {
+    icon: '🤲',
+    name: 'Spirituality',
+    desc: 'Fasting, the heart, and inner preparation',
+    url: BASE + '/spirituality/preparing-the-vessel.html',
+    display: 'test.yasirbilgin.com/spirituality'
+  },
+  {
+    icon: '🛐',
+    name: 'Religion',
+    desc: 'Comparative religion, shared themes, and truth',
+    url: BASE + '/religion/shared-themes-of-religions.html',
+    display: 'test.yasirbilgin.com/religion'
+  },
+  {
+    icon: '🤝',
+    name: 'Hizmet Community',
+    desc: 'Resources and toolbox for the Hizmet movement',
+    url: BASE + '/hizmet-community/resources-and-toolbox.html',
+    display: 'test.yasirbilgin.com/hizmet-community'
+  },
+  {
+    icon: '✈️',
+    name: 'Travels',
+    desc: 'Journey through civilizations and cultures',
+    url: BASE + '/travels/influential-cultures.html',
+    display: 'test.yasirbilgin.com/travels'
+  },
+  {
+    icon: '📚',
+    name: 'Essentials',
+    desc: 'Essential books, global history, and universal principles',
+    url: BASE + '/essentials/essential-books.html',
+    display: 'test.yasirbilgin.com/essentials'
+  },
+  {
+    icon: '🎨',
+    name: 'Arts & Crafts',
+    desc: 'Calligraphy, music, culinary arts, and design',
+    url: BASE + '/arts/the-five-arts.html',
+    display: 'test.yasirbilgin.com/arts'
+  },
+  {
+    icon: '🧠',
+    name: 'MBTI',
+    desc: 'Personality, the ideal person, and Ramadan guides',
+    url: BASE + '/mbti/insan-kamil.html',
+    display: 'test.yasirbilgin.com/mbti'
+  },
+  {
+    icon: '🗣️',
+    name: 'Linguistics',
+    desc: 'World languages and communication studies',
+    url: BASE + '/linguistics/world-languages.html',
+    display: 'test.yasirbilgin.com/linguistics'
+  },
+  {
+    icon: '🖥️',
+    name: 'DevOps / SRE',
+    desc: 'DevOps responsibilities and infrastructure notes',
+    url: BASE + '/devops/responsibilities.html',
+    display: 'test.yasirbilgin.com/devops'
+  },
 ];
 
 const REFERENCES = [
-  { icon: '📰', name: 'Medium Articles',         url: 'https://medium.com/@yasirbil' },
-  { icon: '💡', name: 'First Principles',        url: 'https://www.reflections.yasirbilgin.com/pages/first-principles' },
-  { icon: '📚', name: 'Essential Books',         url: 'https://www.reflections.yasirbilgin.com/pages/essential-books' },
-  { icon: '🕌', name: 'Essential Books — Islam', url: 'https://reflections.yasirbilgin.com/pages/essential-books-islam' },
-  { icon: '🎓', name: 'Madrasa Books',           url: 'https://www.reflections.yasirbilgin.com/pages/medrese-books' },
-  { icon: '📜', name: 'Historical Chronology',   url: 'https://www.reflections.yasirbilgin.com/pages/chronology' },
-  { icon: '📄', name: 'CRISD Papers',            url: 'https://mailchi.mp/939b3b8716af/ktphane' },
-  { icon: '🔗', name: 'Usul.ai',                 url: 'https://usul.ai/' },
-  { icon: '🔗', name: 'OpenAlex Works',          url: 'https://openalex.org/works' },
+  { icon: '📰', name: 'Medium Articles',         url: 'https://medium.com/@yasirbil',           external: true },
+  { icon: '🌍', name: 'Global History',          url: BASE + '/essentials/global-history.html', external: false },
+  { icon: '💡', name: 'Universal Principles',    url: BASE + '/essentials/universal-principles.html', external: false },
+  { icon: '📚', name: 'Essential Books',         url: BASE + '/essentials/essential-books.html', external: false },
+  { icon: '🕌', name: 'Essential Books — Islam', url: BASE + '/essentials/essential-books--islam.html', external: false },
+  { icon: '🎓', name: 'Madrasa Books',           url: BASE + '/islamic-studies/madrasa-books.html', external: false },
+  { icon: '🔬', name: 'Science of the Heart',    url: BASE + '/islamic-studies/disciplines/science-of-the-heart.html', external: false },
+  { icon: '📜', name: 'Usul al-Fiqh',            url: BASE + '/islamic-studies/disciplines/usul-fiqh.html', external: false },
+  { icon: '📖', name: 'Usul al-Hadith',          url: BASE + '/islamic-studies/disciplines/usul-hadith.html', external: false },
+  { icon: '🔢', name: '500 Facts',               url: BASE + '/essentials/500-facts.html', external: false },
+  { icon: '📄', name: 'CRISD Papers',            url: 'https://mailchi.mp/939b3b8716af/ktphane', external: true },
+  { icon: '🔗', name: 'Usul.ai',                 url: 'https://usul.ai/', external: true },
+  { icon: '🔗', name: 'OpenAlex Works',          url: 'https://openalex.org/works', external: true },
 ];
 
 // Render section cards
@@ -391,7 +460,6 @@ SECTIONS.forEach(s => {
   const a = document.createElement('a');
   a.className = 'card';
   a.href = s.url;
-  a.target = '_blank';
   a.innerHTML = `
     <div class="card-icon">${s.icon}</div>
     <div class="card-name">${s.name}</div>
@@ -407,8 +475,8 @@ REFERENCES.forEach(r => {
   const a = document.createElement('a');
   a.className = 'ref-btn';
   a.href = r.url;
-  a.target = '_blank';
-  a.innerHTML = `<span class="ref-btn-dot"></span>${r.icon} ${r.name} ↗`;
+  if (r.external) a.target = '_blank';
+  a.innerHTML = `<span class="ref-btn-dot"></span>${r.icon} ${r.name}${r.external ? ' ↗' : ''}`;
   refGrid.appendChild(a);
 });
 
