@@ -34,10 +34,7 @@
   padding: 0 1.5rem;
   font-family: 'Lato', sans-serif;
   -webkit-font-smoothing: antialiased;
-  /* Prevent any foreign injected widget from stretching the nav */
-  overflow: hidden;
 }
-
 
 /* ── BRAND ── */
 .ynb-brand {
