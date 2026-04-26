@@ -34,6 +34,12 @@
   padding: 0 1.5rem;
   font-family: 'Lato', sans-serif;
   -webkit-font-smoothing: antialiased;
+  /* Prevent any foreign injected widget from stretching the nav */
+  overflow: hidden;
+}
+/* Isolate all direct children that are NOT nav.js elements */
+.ynb-nav > *:not(.ynb-brand):not(.ynb-divider):not(.ynb-list):not(.ynb-hamburger):not(.ynb-skeleton) {
+  display: none !important;
 }
 
 /* ── BRAND ── */
@@ -64,8 +70,9 @@
   display: flex;
   align-items: center;
   list-style: none;
-  flex: 1;
+  flex: 1 1 0;           /* grow but start from zero, not content size */
   min-width: 0;          /* allow shrinking below content size */
+  max-width: calc(100vw - 220px); /* never push past brand + padding */
   overflow: hidden;      /* clip rather than overflow into other elements */
 }
 .ynb-item { position: relative; }
