@@ -37,10 +37,7 @@
   /* Prevent any foreign injected widget from stretching the nav */
   overflow: hidden;
 }
-/* Isolate all direct children that are NOT nav.js elements */
-.ynb-nav > *:not(.ynb-brand):not(.ynb-divider):not(.ynb-list):not(.ynb-hamburger):not(.ynb-skeleton) {
-  display: none !important;
-}
+
 
 /* ── BRAND ── */
 .ynb-brand {
