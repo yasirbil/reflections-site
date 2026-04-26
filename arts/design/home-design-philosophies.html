@@ -15,11 +15,11 @@ body{
   background:var(--bg);color:var(--text);
   font-family:'Crimson Pro',Georgia,serif;
   font-size:18px;line-height:1.7;min-height:100vh;
-  display:flex;
-  padding-top:var(--nav-h); /* ← key fix: body clears the 62px global nav */
+  /* NO display:flex here — flex on body interferes with nav.js dropdown stacking */
+  padding-top:var(--nav-h); /* clears the 62px global nav */
 }
 
-body::before{content:'';position:fixed;inset:0;top:var(--nav-h);background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:1000;opacity:.4;}
+body::before{content:'';position:fixed;inset:0;top:var(--nav-h);background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:999;opacity:.4;}
 
 header{position:relative;padding:80px 40px 60px;text-align:center;border-bottom:1px solid var(--border);overflow:visible;}
 header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(201,168,76,.08) 0%,transparent 70%);pointer-events:none;}
@@ -34,7 +34,7 @@ header h1 em{color:var(--gold);font-style:italic;}
 .search-icon{position:absolute;right:16px;top:50%;transform:translateY(-50%);color:var(--text-dim);font-size:1.1rem;pointer-events:none;}
 #search-count{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);text-align:center;margin-top:10px;letter-spacing:.1em;min-height:18px;}
 
-.layout{display:flex;max-width:1300px;margin:0 auto;}
+.layout{display:flex;max-width:1300px;margin:0 auto;min-height:calc(100vh - var(--nav-h));}
 
 /* ── SIDEBAR: sits below the global nav bar ── */
 nav{
@@ -109,7 +109,6 @@ main{flex:1;min-width:0;padding:60px 60px 100px;}
 mark{background:rgba(201,168,76,.25);color:var(--gold-light);border-radius:1px;padding:0 1px;}
 
 @media(max-width:900px){
-  body{display:block;padding-top:var(--nav-h);}
   .layout{flex-direction:column;}
   nav{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--border);padding:16px 0;display:flex;flex-wrap:wrap;}
   nav a{font-size:.8rem;padding:5px 14px;}
