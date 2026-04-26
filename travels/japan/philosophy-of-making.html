@@ -12,6 +12,7 @@
     --paper: #f5f0e8;
     --sidebar-bg: #1e1a16;
     --sidebar-w: 260px;
+    --nav-h: 62px;        /* global nav.js bar height */
     --warm-mid: #8c7b6b;
     --red: #c0392b;
     --gold: #b8960c;
@@ -30,18 +31,22 @@
     line-height: 1.8;
     min-height: 100vh;
     display: flex;
+    /* push body below the fixed global nav */
+    padding-top: var(--nav-h);
   }
 
   /* ── SIDEBAR ── */
   .sidebar {
     width: var(--sidebar-w);
-    min-height: 100vh;
     background: var(--sidebar-bg);
     display: flex;
     flex-direction: column;
     position: fixed;
-    top: 0; left: 0; bottom: 0;
-    z-index: 100;
+    /* sit flush below the global nav bar */
+    top: var(--nav-h);
+    left: 0;
+    bottom: 0;
+    z-index: 100;   /* well below nav.js z-index of 2147483646 */
     overflow-y: auto;
   }
 
@@ -193,6 +198,7 @@
     content: '';
     position: fixed;
     inset: 0;
+    top: var(--nav-h);
     left: var(--sidebar-w);
     background-image: repeating-linear-gradient(0deg, transparent, transparent 31px, rgba(0,0,0,0.013) 31px, rgba(0,0,0,0.013) 32px);
     pointer-events: none;
@@ -474,8 +480,10 @@
   .mobile-menu-btn {
     display: none;
     position: fixed;
-    top: 14px; left: 14px;
-    z-index: 200;
+    /* sit below the global nav */
+    top: calc(var(--nav-h) + 10px);
+    left: 14px;
+    z-index: 98;   /* below sidebar (100) but above page content */
     background: var(--sidebar-bg);
     color: rgba(245,240,232,0.8);
     border: none;
@@ -489,6 +497,7 @@
   .sidebar-overlay {
     display: none;
     position: fixed;
+    top: var(--nav-h);
     inset: 0;
     background: rgba(0,0,0,0.45);
     z-index: 99;
@@ -672,18 +681,14 @@
         </div>
         <p class="p-tagline">"How can this be 1% better today?"</p>
       </div>
-
       <p class="p-desc">Kaizen — literally "change for better" — is the practice of small, constant, never-ending improvement. Crucially, everyone participates, not just management. The focus is on refining the <em>process</em>, not just optimising the output. Over decades, these tiny increments compound into extraordinary quality.</p>
       <p class="p-desc">Rather than seeking big, disruptive breakthroughs, kaizen asks: what small friction can be removed today? What step can be made slightly smoother, faster, or clearer? The question is asked daily — by engineers, factory workers, store clerks, and product managers alike.</p>
-
       <div class="section-label">In Practice</div>
       <div class="example-block">
         <div class="example-label">Toyota — Andon Cord</div>
-        <p>Toyota factory workers have the authority — and the duty — to stop the entire production line the moment they spot a flaw. Rather than letting a defect pass to the next stage, they surface it immediately. Each stoppage becomes a learning event that permanently improves the system. Thousands of these micro-corrections, over decades, produced some of the most reliable vehicles ever built.</p>
+        <p>Toyota factory workers have the authority — and the duty — to stop the entire production line the moment they spot a flaw. Rather than letting a defect pass to the next stage, they surface it immediately. Each stoppage becomes a learning event that permanently improves the system.</p>
       </div>
-
       <p class="key-insight">"Big disruptive changes are rare. The compounding of small right decisions is how excellence is actually built."</p>
-
       <div class="panel-nav">
         <button class="panel-nav-btn ghost">← Prev</button>
         <button class="panel-nav-btn" data-goto="p2">Next: Monozukuri →</button>
@@ -700,20 +705,17 @@
         </div>
         <p class="p-tagline">A product reflects the character of its maker.</p>
       </div>
-
-      <p class="p-desc">Monozukuri goes far beyond "manufacturing." It is an emotional and spiritual commitment to the act of creation — pride in invisible details, deep respect for materials, and a sense of duty to the person who will ultimately use the object. A well-made product is understood as an expression of the maker's integrity.</p>
-      <p class="p-desc">The concept blends two ideas: <em>mono</em> (thing, object) and <em>zukuri</em> (the act of making). But its spirit is closer to "the art of making things with soul." To cut corners is to deceive — not just the customer, but oneself.</p>
-
+      <p class="p-desc">Monozukuri goes far beyond "manufacturing." It is an emotional and spiritual commitment to the act of creation — pride in invisible details, deep respect for materials, and a sense of duty to the person who will ultimately use the object.</p>
+      <p class="p-desc">The concept blends two ideas: <em>mono</em> (thing, object) and <em>zukuri</em> (the act of making). To cut corners is to deceive — not just the customer, but oneself.</p>
       <div class="section-label">In Practice</div>
       <div class="example-block">
         <div class="example-label">Zojirushi — Invisible Engineering</div>
-        <p>Zojirushi rice cookers are engineered with pressure seals and steam valves that the average user will never see or think about. The engineers who design them know the user will not notice — and they do it anyway. The quality is intrinsic, not performative.</p>
+        <p>Zojirushi rice cookers are engineered with pressure seals and steam valves that the average user will never see. The engineers who design them know the user will not notice — and they do it anyway.</p>
       </div>
       <div class="example-block">
         <div class="example-label">Japanese Knives — Tamahagane Steel</div>
-        <p>Traditional Japanese knife makers fold and hammer steel hundreds of times — a process that takes days for a single blade. The resulting edge holds its sharpness far longer than mass-produced equivalents. Most buyers will never know why. The maker does.</p>
+        <p>Traditional Japanese knife makers fold and hammer steel hundreds of times — a process that takes days for a single blade. Most buyers will never know why. The maker does.</p>
       </div>
-
       <div class="panel-nav">
         <button class="panel-nav-btn" data-goto="p1">← Kaizen</button>
         <button class="panel-nav-btn" data-goto="p3">Next: Mottainai →</button>
@@ -730,20 +732,16 @@
         </div>
         <p class="p-tagline">Inefficiency feels morally wrong.</p>
       </div>
-
-      <p class="p-desc">Mottainai is an untranslatable expression of grief at wastefulness — of materials, of effort, of potential. This runs deep enough to feel like a moral failing, not merely a practical inconvenience. The result is design that eliminates everything superfluous: tighter packaging, multipurpose objects, and a profound respect for the resources embedded in every product.</p>
-      <p class="p-desc">The word is spoken when food is thrown away, when a good tool is carelessly broken, when a product is over-packaged. It implies that the object carried value — labour, material, care — and that discarding it disrespects all of that accumulated worth.</p>
-
+      <p class="p-desc">Mottainai is an untranslatable expression of grief at wastefulness — of materials, of effort, of potential. The result is design that eliminates everything superfluous: tighter packaging, multipurpose objects, and a profound respect for resources.</p>
       <div class="section-label">In Practice</div>
       <div class="example-block">
         <div class="example-label">Convenience Store Bento Packaging</div>
-        <p>Japanese convenience store bento boxes are engineered so the packaging doubles as a tray, requires minimal material, and stacks perfectly to maximise shelf space — while still feeling elegant to the customer. Every gram of material is deliberate. Nothing is included that doesn't serve a purpose.</p>
+        <p>Japanese convenience store bento boxes are engineered so the packaging doubles as a tray, requires minimal material, and stacks perfectly to maximise shelf space — while still feeling elegant to the customer.</p>
       </div>
       <div class="example-block">
         <div class="example-label">Furoshiki — The Reusable Wrapping Cloth</div>
-        <p>For centuries, Japanese people wrapped gifts and goods in <em>furoshiki</em> — a square cloth that can be tied into countless configurations and reused indefinitely. No tape. No box. No waste. The cloth itself becomes part of the gift.</p>
+        <p>For centuries, Japanese people wrapped gifts in <em>furoshiki</em> — a square cloth that can be tied into countless configurations and reused indefinitely. No tape. No box. No waste.</p>
       </div>
-
       <div class="panel-nav">
         <button class="panel-nav-btn" data-goto="p2">← Monozukuri</button>
         <button class="panel-nav-btn" data-goto="p4">Next: Omotenashi →</button>
@@ -760,22 +758,17 @@
         </div>
         <p class="p-tagline">Remove friction before the user feels it.</p>
       </div>
-
-      <p class="p-desc">Omotenashi is hospitality without expectation of recognition or return. The host's goal is to anticipate every need before it arises, and to resolve it silently — without making the guest feel attended to. Applied to product design, this produces interfaces that seem to read your mind, environments that feel effortlessly comfortable, and systems that simply work.</p>
-      <p class="p-desc">The key distinction from Western notions of "customer service" is that omotenashi is not transactional. There is no performance of service. There is simply care, expressed through invisible preparation.</p>
-
+      <p class="p-desc">Omotenashi is hospitality without expectation of recognition or return. The host's goal is to anticipate every need before it arises — and to resolve it silently. Applied to product design, this produces interfaces that seem to read your mind and systems that simply work.</p>
       <div class="section-label">In Practice</div>
       <div class="example-block">
         <div class="example-label">Japanese Toilets — TOTO Washlet</div>
-        <p>Japanese toilet control panels use internationally readable pictograms rather than text labels, warm the seat before you sit down, and remember your preferences — all without requiring a manual. The user is served, but never made to feel serviced. Every anticipated discomfort has been quietly eliminated.</p>
+        <p>Japanese toilet control panels use internationally readable pictograms, warm the seat before you sit down, and remember your preferences — all without requiring a manual. Every anticipated discomfort has been quietly eliminated.</p>
       </div>
       <div class="example-block">
         <div class="example-label">Shinkansen Staff — Bowing Before Leaving</div>
-        <p>Shinkansen (bullet train) staff bow to passengers as they exit each car — even when no passenger is watching. The gesture is not for performance. It reflects a standard of conduct maintained regardless of observation. This is omotenashi internalised.</p>
+        <p>Shinkansen staff bow to passengers as they exit each car — even when no passenger is watching. The gesture is not for performance. It reflects a standard of conduct maintained regardless of observation.</p>
       </div>
-
       <p class="key-insight">"Good design is like good service: you only notice it when it's absent."</p>
-
       <div class="panel-nav">
         <button class="panel-nav-btn" data-goto="p3">← Mottainai</button>
         <button class="panel-nav-btn" data-goto="p5">Next: Shokunin →</button>
@@ -792,20 +785,16 @@
         </div>
         <p class="p-tagline">Mastery as a lifelong obligation.</p>
       </div>
-
-      <p class="p-desc">The shokunin — craftsperson, artisan, specialist — understands their work as a form of social duty. Excellence is not optional, and shortcuts are a betrayal not only of the craft but of the people who will use the work. This mindset persists even in industrial and corporate contexts: the goal is to do the work properly, regardless of whether anyone will notice.</p>
-      <p class="p-desc">Shokunin kishitsu ("the spirit of the craftsperson") is less about tradition than about <em>commitment to standard</em>. A shokunin is defined not by their tools or trade, but by their relationship with their own work: reverent, uncompromising, and perpetually improving.</p>
-
+      <p class="p-desc">The shokunin understands their work as a form of social duty. Excellence is not optional, and shortcuts are a betrayal not only of the craft but of the people who will use the work.</p>
       <div class="section-label">In Practice</div>
       <div class="example-block">
         <div class="example-label">Jiro Ono — Sukiyabashi Jiro</div>
-        <p>Jiro Ono, the sushi master documented in <em>Jiro Dreams of Sushi</em>, spent decades refining a single dish — adjusting rice temperature, fish pressure, and nigiri timing with microscopic precision. His restaurant seats ten people and has held three Michelin stars. He has not stopped refining. The shokunin does not retire from the pursuit of mastery.</p>
+        <p>Jiro Ono spent decades refining a single dish — adjusting rice temperature, fish pressure, and nigiri timing with microscopic precision. His restaurant seats ten people and has held three Michelin stars. He has not stopped refining.</p>
       </div>
       <div class="example-block">
         <div class="example-label">Soba Masters — A Decade Before the Noodles</div>
-        <p>Traditional soba apprentices in Japan spend their first years doing everything except making noodles — cleaning, watching, preparing. The master determines when they are ready to touch the dough. Impatience is seen not as ambition but as a lack of readiness. The discipline precedes the craft.</p>
+        <p>Traditional soba apprentices spend their first years doing everything except making noodles — cleaning, watching, preparing. Impatience is seen not as ambition but as a lack of readiness.</p>
       </div>
-
       <div class="panel-nav">
         <button class="panel-nav-btn" data-goto="p4">← Omotenashi</button>
         <button class="panel-nav-btn" data-goto="p6">Next: Toyota System →</button>
@@ -822,20 +811,16 @@
         </div>
         <p class="p-tagline">Cultural values, institutionalised.</p>
       </div>
-
-      <p class="p-desc">The Toyota Production System — widely known in the West as "lean manufacturing" — translated traditional Japanese values into a rigorous operational framework. Eliminate waste at every step. Standardise the best current method and make it easy to improve. Empower every worker to surface and solve problems at the source.</p>
-      <p class="p-desc">What makes this significant is not that it was clever, but that it worked at scale. Toyota took the values embedded in kaizen, monozukuri, and mottainai and encoded them into a repeatable system. The same principles now govern Japanese logistics, retail, healthcare, and hospitality.</p>
-
+      <p class="p-desc">The Toyota Production System translated traditional Japanese values into a rigorous operational framework: eliminate waste at every step, standardise the best current method, and empower every worker to surface and solve problems at the source.</p>
       <div class="section-label">In Practice</div>
       <div class="example-block">
         <div class="example-label">7-Eleven Japan — Precision Restocking</div>
-        <p>A 7-Eleven in Japan restocks three times daily using real-time point-of-sale data. Each store carries roughly 3,000 SKUs — tightly curated. Items that underperform are removed within days. The result is a small store that somehow always has exactly what you need, with almost no excess.</p>
+        <p>A 7-Eleven in Japan restocks three times daily using real-time point-of-sale data. Each store carries roughly 3,000 SKUs — tightly curated. Items that underperform are removed within days.</p>
       </div>
       <div class="example-block">
         <div class="example-label">Just-in-Time Manufacturing</div>
-        <p>Toyota pioneered delivering components to the assembly line precisely when needed — no earlier, no later. This eliminates storage costs, reduces defects, and forces suppliers to maintain consistent quality. A single low-quality part halts the entire line, making quality everyone's problem simultaneously.</p>
+        <p>Toyota pioneered delivering components to the assembly line precisely when needed — no earlier, no later. A single low-quality part halts the entire line, making quality everyone's problem simultaneously.</p>
       </div>
-
       <div class="panel-nav">
         <button class="panel-nav-btn" data-goto="p5">← Shokunin</button>
         <button class="panel-nav-btn" data-goto="p7">Next: Wa →</button>
@@ -852,22 +837,17 @@
         </div>
         <p class="p-tagline">Everything must fit — naturally.</p>
       </div>
-
-      <p class="p-desc">Wa — harmony — is the deepest value underlying all the others. Products should integrate smoothly into human life and their environment. Design should not demand attention or create friction. Systems should coexist without conflict. The result is a characteristic aesthetic: quiet, unobtrusive, deeply considered.</p>
-      <p class="p-desc">Where Western design often asserts itself — making the product visible, impressive, unmistakably present — Japanese design shaped by wa tends to recede. The object serves the person, and then gets out of the way. Nothing shouts. Everything fits.</p>
-
+      <p class="p-desc">Wa — harmony — is the deepest value underlying all the others. Products should integrate smoothly into human life. Design should not demand attention. The result is a characteristic aesthetic: quiet, unobtrusive, deeply considered.</p>
       <div class="section-label">In Practice</div>
       <div class="example-block">
         <div class="example-label">Muji — Design That Disappears</div>
-        <p>Muji's entire product philosophy is built on wa: neutral colours, unbranded surfaces, and forms that recede into daily life rather than asserting themselves. A Muji pen doesn't announce itself. It simply writes well, feels balanced in the hand, and disappears into your day. The brand's name — <em>Mujirushi Ryohin</em> — literally means "no-brand quality goods."</p>
+        <p>Muji's entire product philosophy is built on wa: neutral colours, unbranded surfaces, and forms that recede into daily life. A Muji pen doesn't announce itself. It simply writes well and disappears into your day.</p>
       </div>
       <div class="example-block">
         <div class="example-label">Japanese Urban Sound Design</div>
-        <p>Many Japanese trains, crosswalks, and public spaces use carefully composed sound cues — melodic jingles rather than harsh beeps, ambient tones rather than alarms. The goal is to communicate information without disrupting the collective environment. Even the sounds are designed to coexist harmoniously.</p>
+        <p>Many Japanese trains and public spaces use carefully composed sound cues — melodic jingles rather than harsh beeps. The goal is to communicate information without disrupting the collective environment.</p>
       </div>
-
       <p class="key-insight">"The best design is the design you never think about."</p>
-
       <div class="panel-nav">
         <button class="panel-nav-btn" data-goto="p6">← Toyota System</button>
         <button class="panel-nav-btn" data-goto="summary">See Summary →</button>
@@ -878,13 +858,9 @@
     <div class="panel summary-panel" id="panel-summary">
       <span class="overview-kana">The Bigger Picture</span>
       <h2>A civilisation-level habit of respecting process, people, and detail</h2>
-
-      <p>These are not corporate values posted on a wall — they are patterns baked into culture over centuries. The discipline of kaizen, the duty embedded in shokunin kishitsu, the hospitality of omotenashi: they are practised daily, at every level, in businesses large and small.</p>
-
+      <p>These are not corporate values posted on a wall — they are patterns baked into culture over centuries. The discipline of kaizen, the duty embedded in shokunin kishitsu, the hospitality of omotenashi: they are practised daily, at every level.</p>
       <p>The quality visible in Japanese products is the cumulative output of millions of people asking, over and over: <em>how can this be a little more right?</em> Not faster. Not cheaper. More right.</p>
-
       <p>These mindsets reinforce each other. Kaizen provides the engine. Monozukuri provides the spirit. Mottainai removes the excess. Omotenashi orients everything toward the user. Shokunin kishitsu sets the individual standard. The Toyota system scales it all. And wa gives the whole thing a coherent aesthetic logic.</p>
-
       <div class="contrast">
         <div class="contrast-col">
           <div class="contrast-header">Dominant Western Defaults</div>
@@ -907,7 +883,6 @@
           </ul>
         </div>
       </div>
-
       <footer>Neither approach is universally superior — but Japan optimises for consistency, trust, and long-term excellence in ways that become visible the moment you pay close attention.</footer>
     </div>
 
@@ -953,7 +928,6 @@
   searchBox.addEventListener('input', () => {
     const q = searchBox.value.toLowerCase().trim();
     let anyVisible = false;
-
     navItems.forEach(item => {
       const panel = item.dataset.panel;
       if (!panel || panel === 'overview' || panel === 'summary') {
@@ -961,14 +935,13 @@
         return;
       }
       if (!q) { item.classList.remove('hidden'); anyVisible = true; return; }
-      const jp = (item.querySelector('.nav-jp')?.textContent || '').toLowerCase();
-      const en = (item.querySelector('.nav-en')?.textContent || '').toLowerCase();
+      const jp   = (item.querySelector('.nav-jp')?.textContent || '').toLowerCase();
+      const en   = (item.querySelector('.nav-en')?.textContent || '').toLowerCase();
       const tags = (item.dataset.tags || '').toLowerCase();
       const match = jp.includes(q) || en.includes(q) || tags.includes(q);
       item.classList.toggle('hidden', !match);
       if (match) anyVisible = true;
     });
-
     noResults.style.display = (q && !anyVisible) ? 'block' : 'none';
   });
 
