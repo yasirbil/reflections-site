@@ -151,6 +151,60 @@ body {
   flex-shrink: 0;
 }
 
+/* SEARCH DROPDOWN */
+.search-results {
+  margin-top: 0.75rem;
+  border-top: 0.5px solid var(--border);
+  padding-top: 0.75rem;
+  max-height: 340px;
+  overflow-y: auto;
+  flex-direction: column;
+  gap: 2px;
+  display: none;
+}
+
+.search-results.visible {
+  display: flex;
+}
+
+.search-result-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0.55rem 0.75rem;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  transition: background 0.12s;
+}
+
+.search-result-item:hover {
+  background: var(--accent-light);
+}
+
+.result-title {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.result-title mark {
+  background: transparent;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.result-path {
+  font-size: 11.5px;
+  color: var(--text-faint);
+}
+
+.search-status {
+  font-size: 12px;
+  color: var(--text-faint);
+  padding: 0.4rem 0.75rem;
+  text-align: center;
+}
+
 /* SECTION */
 .section-wrap {
   width: 100%;
@@ -334,9 +388,10 @@ body {
       />
       <button class="search-btn" id="searchBtn">
         <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        Search site
+        Search
       </button>
     </div>
+    <div class="search-results" id="searchResults"></div>
   </div>
 </div>
 
@@ -477,18 +532,131 @@ REFERENCES.forEach(r => {
   refGrid.appendChild(a);
 });
 
-// Search — opens Google CSE in a new tab
-const searchInput = document.getElementById('searchInput');
-const searchBtn   = document.getElementById('searchBtn');
+// ── Sitemap-powered live search ──────────────────────────────────────────────
 
-function doSearch() {
-  const q = searchInput.value.trim();
-  if (!q) return;
-  window.open('https://cse.google.com/cse?cx=94589d4b6bd3d4d58&q=' + encodeURIComponent(q), '_blank');
+const searchInput   = document.getElementById('searchInput');
+const searchBtn     = document.getElementById('searchBtn');
+const searchResults = document.getElementById('searchResults');
+
+let sitemapPages = []; // { title, path, url }
+let sitemapLoaded = false;
+
+// Convert a URL path into a readable title
+// e.g. "/travels/japan/spiritual-japan.html" → "Spiritual Japan"
+function pathToTitle(url) {
+  try {
+    const path = new URL(url).pathname;
+    const file = path.split('/').pop().replace('.html', '');
+    return file
+      .replace(/[-_]/g, ' ')
+      .replace(/\b\w/g, c => c.toUpperCase())
+      .trim() || path;
+  } catch {
+    return url;
+  }
 }
 
-searchBtn.addEventListener('click', doSearch);
-searchInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') doSearch(); });
+// Extract section from path, e.g. "/travels/japan/..." → "travels › japan"
+function pathToBreadcrumb(url) {
+  try {
+    const parts = new URL(url).pathname.split('/').filter(Boolean);
+    parts.pop(); // remove filename
+    return parts.join(' › ') || 'home';
+  } catch {
+    return '';
+  }
+}
+
+// Fetch and parse the sitemap once
+async function loadSitemap() {
+  if (sitemapLoaded) return;
+  searchResults.classList.add('visible');
+  searchResults.innerHTML = '<span class="search-status">Loading pages…</span>';
+  try {
+    const res  = await fetch('https://test.yasirbilgin.com/sitemap.xml');
+    const text = await res.text();
+    const parser = new DOMParser();
+    const xml    = parser.parseFromString(text, 'application/xml');
+    const locs   = Array.from(xml.querySelectorAll('url > loc'));
+    sitemapPages = locs.map(el => {
+      const url = el.textContent.trim();
+      return { url, title: pathToTitle(url), breadcrumb: pathToBreadcrumb(url) };
+    });
+    sitemapLoaded = true;
+  } catch (e) {
+    searchResults.innerHTML = '<span class="search-status">Could not load pages — check your connection.</span>';
+    return;
+  }
+  // Re-run search now that pages are loaded
+  runSearch(searchInput.value.trim());
+}
+
+// Highlight matching substring in text
+function highlight(text, query) {
+  if (!query) return text;
+  const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return text.replace(new RegExp(`(${escaped})`, 'gi'), '<mark>$1</mark>');
+}
+
+function runSearch(q) {
+  if (!q) {
+    searchResults.classList.remove('visible');
+    searchResults.innerHTML = '';
+    return;
+  }
+
+  if (!sitemapLoaded) {
+    loadSitemap();
+    return;
+  }
+
+  const lower   = q.toLowerCase();
+  const matches = sitemapPages.filter(p =>
+    p.title.toLowerCase().includes(lower) ||
+    p.breadcrumb.toLowerCase().includes(lower) ||
+    p.url.toLowerCase().includes(lower)
+  ).slice(0, 12);
+
+  searchResults.classList.add('visible');
+
+  if (!matches.length) {
+    searchResults.innerHTML = '<span class="search-status">No pages found.</span>';
+    return;
+  }
+
+  searchResults.innerHTML = matches.map(p => `
+    <a class="search-result-item" href="${p.url}">
+      <span class="result-title">${highlight(p.title, q)}</span>
+      <span class="result-path">${highlight(p.breadcrumb, q)}</span>
+    </a>
+  `).join('');
+}
+
+// Trigger search as user types (debounced)
+let debounceTimer;
+searchInput.addEventListener('input', function() {
+  clearTimeout(debounceTimer);
+  const q = this.value.trim();
+  if (!q) { searchResults.classList.remove('visible'); searchResults.innerHTML = ''; return; }
+  debounceTimer = setTimeout(() => runSearch(q), 180);
+});
+
+// Also trigger on button click or Enter
+searchBtn.addEventListener('click', () => runSearch(searchInput.value.trim()));
+searchInput.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') runSearch(this.value.trim());
+  if (e.key === 'Escape') { searchResults.classList.remove('visible'); searchResults.innerHTML = ''; }
+});
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.search-box-container')) {
+    searchResults.classList.remove('visible');
+  }
+});
+
+// Pre-load sitemap in background after page settles
+setTimeout(loadSitemap, 1000);
 </script>
 
 </body>
