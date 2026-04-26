@@ -12,6 +12,22 @@
   const MOBILE_BP = 768;
 
   /* ─────────────────────────────────────────────
+     LANGUAGE MENU CONFIG
+  ───────────────────────────────────────────── */
+  const LANGUAGES = [
+    { code: 'en',    label: 'English'   },
+    { code: 'tr',    label: 'Türkçe'    },
+    { code: 'ar',    label: 'العربية'   },
+    { code: 'fr',    label: 'Français'  },
+    { code: 'de',    label: 'Deutsch'   },
+    { code: 'es',    label: 'Español'   },
+    { code: 'zh-CN', label: '中文'      },
+    { code: 'ja',    label: '日本語'    },
+    { code: 'ru',    label: 'Русский'   },
+    { code: 'pt',    label: 'Português' },
+  ];
+
+  /* ─────────────────────────────────────────────
      1. STYLES
   ───────────────────────────────────────────── */
   const CSS = `
@@ -326,6 +342,48 @@
   .ynb-drawer { display: none !important; }
   .ynb-scrim  { display: none !important; }
 }
+
+/* ── LANGUAGE SELECTOR ── */
+.ynb-lang-wrap {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  flex-shrink: 0;
+  padding-left: 0.5rem;
+}
+.ynb-lang-select {
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  border: 1px solid #d5c9b5;
+  border-radius: 4px;
+  color: #38322a;
+  cursor: pointer;
+  font-size: 0.68rem;
+  font-family: 'Lato', sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 0.28rem 1.6rem 0.28rem 0.6rem;
+  min-height: 30px;
+  outline: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%238B4513' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.45rem center;
+  background-size: 8px;
+  transition: border-color 0.15s, color 0.15s;
+}
+.ynb-lang-select:hover { border-color: #8B4513; color: #8B4513; }
+.ynb-lang-select option { background: #f7f3ec; color: #1c1812; }
+
+/* Hide Google Translate injected toolbar */
+.goog-te-banner-frame,
+.skiptranslate { display: none !important; }
+body { top: 0 !important; }
+
+@media (max-width: ${MOBILE_BP}px) {
+  .ynb-lang-wrap { padding-left: 0.25rem; }
+  .ynb-lang-select { font-size: 0.62rem; padding: 0.25rem 1.4rem 0.25rem 0.4rem; }
+}
 `;
 
   /* ─────────────────────────────────────────────
@@ -574,7 +632,69 @@
   }
 
   /* ─────────────────────────────────────────────
-     7. INJECT
+     7. LANGUAGE WIDGET
+  ───────────────────────────────────────────── */
+  function buildLangWidget() {
+    // Hidden GT element
+    const gtDiv = document.createElement('div');
+    gtDiv.id = 'google_translate_element';
+    gtDiv.style.display = 'none';
+    document.body.appendChild(gtDiv);
+
+    // Load Google Translate script
+    window.googleTranslateElementInit = function () {
+      new google.translate.TranslateElement(
+        { pageLanguage: 'en', autoDisplay: false },
+        'google_translate_element'
+      );
+    };
+    const gtScript = document.createElement('script');
+    gtScript.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+    gtScript.async = true;
+    document.head.appendChild(gtScript);
+
+    // Read current language from cookie
+    function getCurrentLang() {
+      const m = document.cookie.match(/googtrans=\/en\/([a-zA-Z-]+)/);
+      return m ? m[1] : 'en';
+    }
+
+    // Set language via cookie + reload
+    function setLang(code) {
+      if (code === 'en') {
+        document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/';
+        document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=' + location.hostname;
+      } else {
+        document.cookie = 'googtrans=/en/' + code + '; path=/';
+        document.cookie = 'googtrans=/en/' + code + '; path=/; domain=' + location.hostname;
+      }
+      location.reload();
+    }
+
+    // Build the select element
+    const wrap = document.createElement('div');
+    wrap.className = 'ynb-lang-wrap';
+
+    const select = document.createElement('select');
+    select.className = 'ynb-lang-select';
+    select.setAttribute('aria-label', 'Select language');
+
+    const currentLang = getCurrentLang();
+    LANGUAGES.forEach(({ code, label }) => {
+      const opt = document.createElement('option');
+      opt.value = code;
+      opt.textContent = label;
+      if (code === currentLang) opt.selected = true;
+      select.appendChild(opt);
+    });
+
+    select.addEventListener('change', () => setLang(select.value));
+    wrap.appendChild(select);
+    return wrap;
+  }
+
+  /* ─────────────────────────────────────────────
+     8. INJECT
   ───────────────────────────────────────────── */
   function injectNav() {
     const style = document.createElement('style');
@@ -606,6 +726,9 @@
     });
     ham.innerHTML = '<span></span><span></span><span></span>';
     nav.appendChild(ham);
+
+    // Language selector — right side of nav
+    nav.appendChild(buildLangWidget());
 
     const drawer = el('div', { className: 'ynb-drawer' });
     const scrim  = el('div', { className: 'ynb-scrim'  });
