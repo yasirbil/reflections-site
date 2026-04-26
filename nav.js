@@ -65,23 +65,20 @@
   display: flex;
   align-items: center;
   list-style: none;
-  /* Take available space but never push outside nav bounds */
-  flex: 1 1 auto;
-  min-width: 0;
-  overflow: hidden;
+  flex: 1;
 }
 .ynb-item { position: relative; }
 
 .ynb-trigger {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
-  padding: 0 0.65rem;
+  gap: 0.28rem;
+  padding: 0 0.85rem;
   height: ${NAV_H}px;
   font-family: 'Lato', sans-serif;
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: #38322a;
   text-decoration: none;
@@ -91,12 +88,11 @@
   white-space: nowrap;
   transition: color 0.18s;
   position: relative;
-  flex-shrink: 1;
 }
 .ynb-trigger::after {
   content: '';
   position: absolute;
-  bottom: 0; left: 0.65rem; right: 0.65rem;
+  bottom: 0; left: 0.85rem; right: 0.85rem;
   height: 2px;
   background: #8B4513;
   transform: scaleX(0);
@@ -325,13 +321,6 @@
   .ynb-divider   { display: none; }
   .ynb-list      { display: none; }
   .ynb-hamburger { display: flex; }
-}
-@media (min-width: ${MOBILE_BP + 1}px) and (max-width: 1100px) {
-  .ynb-trigger {
-    padding: 0 0.4rem;
-    font-size: 0.6rem;
-    letter-spacing: 0.05em;
-  }
 }
 @media (min-width: ${MOBILE_BP + 1}px) {
   .ynb-drawer { display: none !important; }
