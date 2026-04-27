@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Dark background with rounded corners -->
+  <rect width="64" height="64" rx="14" fill="#1a1410"/>
+  <!-- Parchment border ring -->
+  <rect x="2" y="2" width="60" height="60" rx="12" fill="none" stroke="#f5f0e8" stroke-width="1.5"/>
+  <!-- YB monogram — Lato-style sans-serif, tight tracking -->
+  <text
+    x="8"
+    y="46"
+    font-family="Lato, 'DM Sans', system-ui, sans-serif"
+    font-size="33"
+    font-weight="700"
+    fill="#f5f0e8"
+    letter-spacing="-2"
+  >YB</text>
+</svg>

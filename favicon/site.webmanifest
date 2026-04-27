@@ -1,0 +1,14 @@
+{
+  "name": "Yasir Bilgin",
+  "short_name": "YB",
+  "description": "Yasir Bilgin — Knowledge, Reflection, Community",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#1a1410",
+  "theme_color": "#1a1410",
+  "icons": [
+    { "src": "/favicon/icon-192x192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/favicon/icon-512x512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/favicon/favicon.svg",      "sizes": "any",      "type": "image/svg+xml" }
+  ]
+}
