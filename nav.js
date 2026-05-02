@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  const SITE      = 'https://test.yasirbilgin.com';
+  const SITE      = 'https://yasirbilgin.com';
   const SITEMAP   = SITE + '/sitemap.xml';
   const NAV_H     = 62;
   const MOBILE_BP = 768;
@@ -602,16 +602,16 @@ body { top: 0 !important; }
   }
 
   function nukeGTCookies() {
-    const hostname = location.hostname;           // test.yasirbilgin.com
+    const hostname = location.hostname;           // yasirbilgin.com
     const bare     = hostname.replace(/^www\./, '').replace(/^[^.]+\./, ''); // yasirbilgin.com
-    const sub      = hostname;                    // test.yasirbilgin.com
+    const sub      = hostname;                    // yasirbilgin.com
     const exp      = 'expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0';
 
     // Every realistic domain GT might have used to set the cookie
     const domains = [
       '',           // no domain attr
-      sub,          // test.yasirbilgin.com
-      '.'+ sub,     // .test.yasirbilgin.com
+      sub,          // yasirbilgin.com
+      '.'+ sub,     // .yasirbilgin.com
       bare,         // yasirbilgin.com
       '.'+ bare,    // .yasirbilgin.com
     ];

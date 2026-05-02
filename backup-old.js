@@ -6,7 +6,7 @@
 (function () {
   'use strict';
 
-  const SITE      = 'https://test.yasirbilgin.com';
+  const SITE      = 'https://yasirbilgin.com';
   const SITEMAP   = SITE + '/sitemap.xml';
   const NAV_H     = 62;
   const MOBILE_BP = 768;

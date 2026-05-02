@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Yasir Bilgin</title>
 
-<script src="https://test.yasirbilgin.com/nav.js"></script> 
+<script src="https://yasirbilgin.com/nav.js"></script> 
 <link rel="icon" type="image/x-icon"   href="/favicon/favicon.ico">
 <link rel="icon" type="image/svg+xml"  href="/favicon/favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
@@ -423,7 +423,7 @@ body {
 </footer>
 
 <script>
-const BASE = 'https://test.yasirbilgin.com';
+const BASE = 'https://yasirbilgin.com';
 
 const SECTIONS = [
   {
@@ -431,70 +431,70 @@ const SECTIONS = [
     name: 'Islamic Studies',
     desc: 'Disciplines, Qur\'an, and scholarly tradition',
     url: BASE + '/islamic-studies/disciplines/usul-fiqh.html',
-    display: 'test.yasirbilgin.com/islamic-studies'
+    display: 'yasirbilgin.com/islamic-studies'
   },
   {
     icon: '🤲',
     name: 'Spirituality',
     desc: 'Fasting, the heart, and inner preparation',
     url: BASE + '/spirituality/preparing-the-vessel.html',
-    display: 'test.yasirbilgin.com/spirituality'
+    display: 'yasirbilgin.com/spirituality'
   },
   {
     icon: '🛐',
     name: 'Religion',
     desc: 'Comparative religion, shared themes, and truth',
     url: BASE + '/religion/shared-themes-of-religions.html',
-    display: 'test.yasirbilgin.com/religion'
+    display: 'yasirbilgin.com/religion'
   },
   {
     icon: '🤝',
     name: 'Hizmet Community',
     desc: 'Resources and toolbox for the Hizmet movement',
     url: BASE + '/hizmet-community/resources-and-toolbox.html',
-    display: 'test.yasirbilgin.com/hizmet-community'
+    display: 'yasirbilgin.com/hizmet-community'
   },
   {
     icon: '✈️',
     name: 'Travels',
     desc: 'Journey through civilizations and cultures',
     url: BASE + '/travels/influential-cultures.html',
-    display: 'test.yasirbilgin.com/travels'
+    display: 'yasirbilgin.com/travels'
   },
   {
     icon: '📚',
     name: 'Essentials',
     desc: 'Essential books, global history, and universal principles',
     url: BASE + '/essentials/essential-books.html',
-    display: 'test.yasirbilgin.com/essentials'
+    display: 'yasirbilgin.com/essentials'
   },
   {
     icon: '🎨',
     name: 'Arts & Crafts',
     desc: 'Calligraphy, music, culinary arts, and design',
     url: BASE + '/arts/the-five-arts.html',
-    display: 'test.yasirbilgin.com/arts'
+    display: 'yasirbilgin.com/arts'
   },
   {
     icon: '🧠',
     name: 'MBTI',
     desc: 'Personality, the ideal person, and Ramadan guides',
     url: BASE + '/mbti/insan-kamil.html',
-    display: 'test.yasirbilgin.com/mbti'
+    display: 'yasirbilgin.com/mbti'
   },
   {
     icon: '🗣️',
     name: 'Linguistics',
     desc: 'World languages and communication studies',
     url: BASE + '/linguistics/world-languages.html',
-    display: 'test.yasirbilgin.com/linguistics'
+    display: 'yasirbilgin.com/linguistics'
   },
   {
     icon: '🖥️',
     name: 'DevOps / SRE',
     desc: 'DevOps responsibilities and infrastructure notes',
     url: BASE + '/devops/responsibilities.html',
-    display: 'test.yasirbilgin.com/devops'
+    display: 'yasirbilgin.com/devops'
   },
 ];
 
@@ -578,7 +578,7 @@ async function loadSitemap() {
   searchResults.classList.add('visible');
   searchResults.innerHTML = '<span class="search-status">Loading pages…</span>';
   try {
-    const res  = await fetch('https://test.yasirbilgin.com/sitemap.xml');
+    const res  = await fetch('https://yasirbilgin.com/sitemap.xml');
     const text = await res.text();
     const parser = new DOMParser();
     const xml    = parser.parseFromString(text, 'application/xml');
