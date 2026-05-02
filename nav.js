@@ -538,6 +538,8 @@ body { top: 0 !important; }
 
   /* ─────────────────────────────────────────────
      3. FETCH — with localStorage cache
+     Falls back gracefully when localStorage is
+     blocked (incognito, Safari private, etc.)
   ───────────────────────────────────────────── */
   function getCached() {
     try {
@@ -551,17 +553,27 @@ body { top: 0 !important; }
   function setCache(xml) {
     try { localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), xml })); } catch (_) {}
   }
+  async function tryFetch(url, opts) {
+    try {
+      const r = await fetch(url, opts || {});
+      if (r.ok) return await r.text();
+    } catch (_) {}
+    return null;
+  }
   async function fetchSitemap() {
+    // 1. Serve from cache instantly if available
     const cached = getCached();
     if (cached) {
-      // Serve instantly; refresh silently in background
-      fetch(SITEMAP).then(r => r.ok && r.text()).then(xml => xml && setCache(xml)).catch(() => {});
+      // Refresh in background — fully wrapped so nothing can throw
+      setTimeout(() => {
+        tryFetch(SITEMAP).then(xml => { if (xml) setCache(xml); }).catch(() => {});
+      }, 1000);
       return cached;
     }
-    try {
-      const r = await fetch(SITEMAP, { cache: 'no-cache' });
-      if (r.ok) { const xml = await r.text(); setCache(xml); return xml; }
-    } catch (_) {}
+    // 2. No cache — fetch now (works in incognito too, just no caching)
+    let xml = await tryFetch(SITEMAP, { cache: 'no-cache' });
+    if (xml) { setCache(xml); return xml; }
+    // 3. Proxy fallbacks
     try {
       const r = await fetch(
         `https://api.allorigins.win/get?url=${encodeURIComponent(SITEMAP)}`,
@@ -569,13 +581,8 @@ body { top: 0 !important; }
       );
       if (r.ok) { const j = await r.json(); if (j?.contents) { setCache(j.contents); return j.contents; } }
     } catch (_) {}
-    try {
-      const r = await fetch(
-        `https://corsproxy.io/?${encodeURIComponent(SITEMAP)}`,
-        { cache: 'no-cache' }
-      );
-      if (r.ok) { const xml = await r.text(); setCache(xml); return xml; }
-    } catch (_) {}
+    xml = await tryFetch(`https://corsproxy.io/?${encodeURIComponent(SITEMAP)}`, { cache: 'no-cache' });
+    if (xml) { setCache(xml); return xml; }
     return null;
   }
 
