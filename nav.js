@@ -7,12 +7,10 @@
 (function () {
   'use strict';
 
-  const SITE      = 'https://www.yasirbilgin.com';
+  const SITE      = 'https://yasirbilgin.com';
   const SITEMAP   = SITE + '/sitemap.xml';
   const NAV_H     = 62;
   const MOBILE_BP = 768;
-  const CACHE_KEY = 'ynb_sitemap_v2';
-  const CACHE_TTL = 15 * 60 * 1000; // 15 minutes
 
   /* ─────────────────────────────────────────────
      LANGUAGE MENU CONFIG
@@ -537,60 +535,27 @@ body { top: 0 !important; }
   }
 
   /* ─────────────────────────────────────────────
-     3. FETCH — with localStorage cache
-     Falls back gracefully when localStorage is
-     blocked (incognito, Safari private, etc.)
+     3. FETCH
   ───────────────────────────────────────────── */
-  function getCached() {
+  async function fetchSitemap() {
     try {
-      const raw = localStorage.getItem(CACHE_KEY);
-      if (!raw) return null;
-      const { ts, xml } = JSON.parse(raw);
-      if (Date.now() - ts < CACHE_TTL) return xml;
-    } catch (_) {}
-    return null;
-  }
-  function setCache(xml) {
-    try { localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), xml })); } catch (_) {}
-  }
-  async function tryFetch(url, opts) {
-    try {
-      const r = await fetch(url, opts || {});
+      const r = await fetch(SITEMAP, { cache: 'no-cache' });
       if (r.ok) return await r.text();
     } catch (_) {}
-    return null;
-  }
-  async function fetchSitemap() {
-    // 1. Serve from cache instantly if available
-    const cached = getCached();
-    if (cached) {
-      setTimeout(() => {
-        tryFetch(SITEMAP).then(xml => { if (xml) setCache(xml); }).catch(() => {});
-      }, 1000);
-      return cached;
-    }
-    // 2. Try www and non-www — one will be same-origin depending on how page is served
-    const urls = [
-      'https://www.yasirbilgin.com/sitemap.xml',
-      'https://yasirbilgin.com/sitemap.xml',
-    ];
-    for (const url of urls) {
-      const xml = await tryFetch(url, { cache: 'no-cache' });
-      if (xml) { setCache(xml); return xml; }
-    }
-    // 3. Proxy fallbacks (cross-origin last resort)
     try {
       const r = await fetch(
-        `https://api.allorigins.win/get?url=${encodeURIComponent('https://www.yasirbilgin.com/sitemap.xml')}`,
+        `https://api.allorigins.win/get?url=${encodeURIComponent(SITEMAP)}`,
         { cache: 'no-cache' }
       );
-      if (r.ok) { const j = await r.json(); if (j?.contents) { setCache(j.contents); return j.contents; } }
+      if (r.ok) { const j = await r.json(); if (j?.contents) return j.contents; }
     } catch (_) {}
-    const xml2 = await tryFetch(
-      `https://corsproxy.io/?${encodeURIComponent('https://www.yasirbilgin.com/sitemap.xml')}`,
-      { cache: 'no-cache' }
-    );
-    if (xml2) { setCache(xml2); return xml2; }
+    try {
+      const r = await fetch(
+        `https://corsproxy.io/?${encodeURIComponent(SITEMAP)}`,
+        { cache: 'no-cache' }
+      );
+      if (r.ok) return await r.text();
+    } catch (_) {}
     return null;
   }
 
@@ -629,19 +594,31 @@ body { top: 0 !important; }
      5. LANGUAGE MENU
   ───────────────────────────────────────────── */
   function getCurrentLang() {
+    // GT may rewrite cookie to /tr/tr — grab last segment only.
+    // Also handle zh-CN style codes with a hyphen.
     const m = document.cookie.match(/googtrans=\/[^/]+\/([^;,\s]+)/i);
     const code = m ? m[1] : 'en';
     return LANGUAGES.find(l => l.code === code) ? code : 'en';
   }
 
   function nukeGTCookies() {
-    const hostname = location.hostname;
-    const bare     = hostname.replace(/^www\./, '').replace(/^[^.]+\./, '');
-    const sub      = hostname;
+    const hostname = location.hostname;           // yasirbilgin.com
+    const bare     = hostname.replace(/^www\./, '').replace(/^[^.]+\./, ''); // yasirbilgin.com
+    const sub      = hostname;                    // yasirbilgin.com
     const exp      = 'expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0';
-    const domains = ['', sub, '.'+ sub, bare, '.'+ bare];
+
+    // Every realistic domain GT might have used to set the cookie
+    const domains = [
+      '',           // no domain attr
+      sub,          // yasirbilgin.com
+      '.'+ sub,     // .yasirbilgin.com
+      bare,         // yasirbilgin.com
+      '.'+ bare,    // .yasirbilgin.com
+    ];
+
     const paths     = ['/'];
     const sameSites = ['', '; SameSite=Lax', '; SameSite=None; Secure'];
+
     domains.forEach(d => {
       const dc = d ? 'domain='+ d +'; ' : '';
       paths.forEach(p => {
@@ -654,15 +631,19 @@ body { top: 0 !important; }
 
   function switchLanguage(code) {
     nukeGTCookies();
+
     if (code !== 'en') {
       const hostname = location.hostname;
       const bare     = hostname.replace(/^www\./, '').replace(/^[^.]+\./, '');
+      // Write on every domain variation with every SameSite variant
       [hostname, '.'+ hostname, bare, '.'+ bare].forEach(d => {
         document.cookie = 'googtrans=/en/'+ code +'; path=/; domain='+ d;
         document.cookie = 'googtrans=/en/'+ code +'; path=/; domain='+ d +'; SameSite=None; Secure';
       });
       document.cookie = 'googtrans=/en/'+ code +'; path=/';
     }
+
+    // Small wait to ensure cookie writes are committed, then navigate fresh
     setTimeout(() => {
       const url = location.href.split('#')[0];
       location.href = url;
@@ -674,12 +655,19 @@ body { top: 0 !important; }
     anchor.id = 'google_translate_element';
     anchor.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;overflow:hidden;';
     document.body.appendChild(anchor);
+
     window.googleTranslateElementInit = function () {
       new google.translate.TranslateElement(
-        { pageLanguage: 'en', autoDisplay: false, gaTrack: false },
+        {
+          pageLanguage: 'en',
+          autoDisplay: false,
+          // Suppress the floating GT toolbar entirely
+          gaTrack: false,
+        },
         'google_translate_element'
       );
     };
+
     const s = document.createElement('script');
     s.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
     s.async = true;
@@ -690,6 +678,7 @@ body { top: 0 !important; }
     const current = getCurrentLang();
     const currentLang = LANGUAGES.find(l => l.code === current) || LANGUAGES[0];
 
+    /* ── Desktop widget ── */
     const wrap = el('div', { className: 'ynb-lang-wrap' });
     wrap.setAttribute('aria-label', 'Language selector');
 
@@ -719,6 +708,7 @@ body { top: 0 !important; }
     btn.addEventListener('click', e => {
       e.stopPropagation();
       const isOpen = wrap.classList.contains('ynb-lang-open');
+      // Close any open nav dropdowns first
       document.dispatchEvent(new MouseEvent('click'));
       if (!isOpen) {
         wrap.classList.add('ynb-lang-open');
@@ -812,7 +802,7 @@ body { top: 0 !important; }
         });
 
         const footerDiv = el('div', { className: 'ynb-drop-footer' });
-        footerDiv.appendChild(el('a', { href: catUrl, textContent: `View all in ${label} \u2192` }));
+        footerDiv.appendChild(el('a', { href: catUrl, textContent: `View all in ${label} →` }));
 
         const drop = el('div', { className: 'ynb-dropdown', role: 'region' }, [colsDiv, footerDiv]);
         document.documentElement.appendChild(drop);
@@ -881,7 +871,7 @@ body { top: 0 !important; }
           })));
         });
 
-        sub.appendChild(el('a', { className: 'ynb-drawer-view-all', href: catUrl, textContent: `View all in ${label} \u2192` }));
+        sub.appendChild(el('a', { className: 'ynb-drawer-view-all', href: catUrl, textContent: `View all in ${label} →` }));
 
         trig.addEventListener('click', () => {
           const isOpen = item.classList.contains('ynb-drawer-open');
