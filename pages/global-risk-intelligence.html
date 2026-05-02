@@ -1,0 +1,1487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Global Risk Intelligence Report 2026 | Yasir Bilgin</title>
+
+  <!-- ① Global nav — always first -->
+  <script src="https://yasirbilgin.com/nav.js"></script>
+
+  <!-- ② Favicons -->
+  <link rel="icon" type="image/x-icon"   href="/favicon/favicon.ico">
+  <link rel="icon" type="image/svg+xml"  href="/favicon/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180"    href="/favicon/apple-touch-icon.png">
+  <link rel="manifest" href="/favicon/site.webmanifest">
+
+  <!-- ③ Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #0a0d0f;
+      --surface: #0f1318;
+      --surface2: #151b22;
+      --border: rgba(255,255,255,0.07);
+      --border2: rgba(255,255,255,0.12);
+      --text: #d4cfc8;
+      --text-dim: #7a7870;
+      --text-bright: #f0ebe3;
+      --accent: #c8922a;
+      --accent2: #8b4a2a;
+      --red: #c0392b;
+      --amber: #d4892a;
+      --green: #2e7d52;
+      --blue: #2a5a8b;
+      --purple: #6a3a8b;
+      --teal: #2a7a7a;
+      --mono: 'IBM Plex Mono', monospace;
+      --serif: 'Source Serif 4', Georgia, serif;
+      --display: 'Playfair Display', Georgia, serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--serif);
+      font-size: 17px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── Progress bar ── */
+    #progressBar {
+      position: fixed;
+      top: 62px;
+      left: 0;
+      height: 2px;
+      background: var(--accent);
+      width: 0%;
+      z-index: 100;
+      transition: width 0.1s linear;
+    }
+
+    /* ── TOC Overlay ── */
+    .toc-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9000;
+      background: rgba(10,13,15,0.7);
+    }
+    .toc-overlay.open {
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-end;
+      backdrop-filter: blur(4px);
+    }
+    .toc-panel {
+      background: var(--surface);
+      border-left: 1px solid var(--border2);
+      width: min(380px, 92vw);
+      height: 100vh;
+      overflow-y: auto;
+      padding: 2rem 1.8rem;
+      margin-top: 62px;
+    }
+    .toc-panel h3 {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.4rem;
+    }
+    .toc-close {
+      position: absolute;
+      top: 72px;
+      right: min(380px, 92vw);
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      color: var(--text-dim);
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .toc-list { list-style: none; }
+    .toc-list li { border-bottom: 1px solid var(--border); }
+    .toc-list a {
+      display: block;
+      padding: 0.7rem 0;
+      color: var(--text-dim);
+      text-decoration: none;
+      font-family: var(--serif);
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+    .toc-list a:hover { color: var(--accent); }
+    .toc-list a.toc-main { color: var(--text); font-weight: 600; }
+    .toc-list a.toc-main:hover { color: var(--accent); }
+
+    /* ── Article sub-header ── */
+    .article-header {
+      position: sticky;
+      top: 62px;
+      z-index: 50;
+      background: rgba(10,13,15,0.95);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.6rem 2.5rem;
+      backdrop-filter: blur(8px);
+    }
+    .article-header .site-name {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      text-decoration: none;
+    }
+    .header-right { display: flex; align-items: center; gap: 1rem; }
+    .read-time {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      letter-spacing: 0.05em;
+    }
+    .toc-btn {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: transparent;
+      border: 1px solid var(--border2);
+      color: var(--accent);
+      padding: 0.4rem 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      min-height: 44px;
+    }
+    .toc-btn:hover { background: var(--accent); color: #000; border-color: var(--accent); }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 5rem 2.5rem 3.5rem;
+      max-width: 900px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .hero-eyebrow {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .hero-eyebrow::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border2);
+    }
+    .hero h1 {
+      font-family: var(--display);
+      font-size: clamp(2.4rem, 6vw, 5rem);
+      font-weight: 900;
+      line-height: 1.08;
+      color: var(--text-bright);
+      margin-bottom: 1.2rem;
+    }
+    .hero h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+    .hero-sub {
+      font-size: 1.15rem;
+      color: var(--text-dim);
+      max-width: 620px;
+      margin-bottom: 2rem;
+      font-weight: 300;
+    }
+    .byline-row {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+    }
+    .avatar {
+      width: 42px;
+      height: 42px;
+      background: var(--accent2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--text-bright);
+      flex-shrink: 0;
+    }
+    .byline-text { display: flex; flex-direction: column; }
+    .byline-name { font-size: 0.9rem; color: var(--text-bright); font-weight: 600; }
+    .byline-meta { font-family: var(--mono); font-size: 0.68rem; color: var(--text-dim); }
+    .hero-rule {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0 2.5rem;
+    }
+
+    /* ── AI generation panel ── */
+    .generate-panel {
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      margin: 3rem auto;
+      max-width: 900px;
+      padding: 2rem 2.5rem;
+    }
+    .generate-panel h2 {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+    .generate-panel p {
+      color: var(--text-dim);
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+    }
+    .gen-btn {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: var(--accent);
+      border: none;
+      color: #000;
+      padding: 0.8rem 2rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      min-height: 44px;
+      font-weight: 500;
+    }
+    .gen-btn:hover { background: #e0a830; }
+    .gen-btn:disabled { background: var(--surface2); color: var(--text-dim); cursor: not-allowed; }
+    .gen-status {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      margin-top: 0.8rem;
+      min-height: 1.2em;
+    }
+    .gen-status.active { color: var(--accent); }
+    .gen-status.error { color: var(--red); }
+
+    /* ── Filter Bar ── */
+    .filter-bar {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 2.5rem;
+    }
+    .filter-bar-inner {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      padding: 1.2rem 1.8rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+    }
+    .filter-label {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      flex-shrink: 0;
+    }
+    .filter-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .chip {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.06em;
+      padding: 0.35rem 0.8rem;
+      border: 1px solid var(--border2);
+      background: transparent;
+      color: var(--text-dim);
+      cursor: pointer;
+      transition: all 0.15s;
+      min-height: 32px;
+    }
+    .chip:hover { border-color: var(--accent); color: var(--accent); }
+    .chip.active { background: var(--accent); color: #000; border-color: var(--accent); }
+    .chip.cat-geo.active   { background: #2a5a8b; border-color: #2a5a8b; color: #fff; }
+    .chip.cat-eco.active   { background: #2e7d52; border-color: #2e7d52; color: #fff; }
+    .chip.cat-tech.active  { background: #6a3a8b; border-color: #6a3a8b; color: #fff; }
+    .chip.cat-env.active   { background: #2a7a7a; border-color: #2a7a7a; color: #fff; }
+    .chip.cat-soc.active   { background: #8b4a2a; border-color: #8b4a2a; color: #fff; }
+    .chip.cat-gov.active   { background: #7a5a2a; border-color: #7a5a2a; color: #fff; }
+    .filter-search {
+      flex: 1;
+      min-width: 200px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      padding: 0.45rem 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .filter-search:focus { border-color: var(--accent); }
+    .filter-search::placeholder { color: var(--text-dim); }
+    .filter-count {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      margin-left: auto;
+    }
+
+    /* ── Risk Grid ── */
+    .risk-grid {
+      max-width: 1200px;
+      margin: 0 auto 4rem;
+      padding: 0 2.5rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1.2rem;
+    }
+
+    .risk-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 1.6rem;
+      transition: border-color 0.2s, transform 0.2s;
+      cursor: default;
+      position: relative;
+      overflow: hidden;
+    }
+    .risk-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 3px;
+      height: 100%;
+    }
+    .risk-card[data-cat="geo"]::before   { background: #2a5a8b; }
+    .risk-card[data-cat="eco"]::before   { background: #2e7d52; }
+    .risk-card[data-cat="tech"]::before  { background: #6a3a8b; }
+    .risk-card[data-cat="env"]::before   { background: #2a7a7a; }
+    .risk-card[data-cat="soc"]::before   { background: #8b4a2a; }
+    .risk-card[data-cat="gov"]::before   { background: #7a5a2a; }
+    .risk-card:hover { border-color: var(--border2); transform: translateY(-1px); }
+    .risk-card.hidden { display: none; }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 0.9rem;
+      flex-wrap: wrap;
+    }
+    .cat-badge {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.6rem;
+      border: 1px solid;
+    }
+    .cat-badge.geo   { color: #4a8abf; border-color: #2a5a8b; }
+    .cat-badge.eco   { color: #4aaf7a; border-color: #2e7d52; }
+    .cat-badge.tech  { color: #9a6abf; border-color: #6a3a8b; }
+    .cat-badge.env   { color: #4aafaf; border-color: #2a7a7a; }
+    .cat-badge.soc   { color: #bf8a5a; border-color: #8b4a2a; }
+    .cat-badge.gov   { color: #af9a5a; border-color: #7a5a2a; }
+
+    .horizon-badge {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.6rem;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+    }
+
+    .severity-pip {
+      margin-left: auto;
+      display: flex;
+      gap: 3px;
+    }
+    .pip {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--border);
+    }
+    .risk-card[data-sev="critical"] .pip:nth-child(-n+5) { background: var(--red); }
+    .risk-card[data-sev="high"]     .pip:nth-child(-n+4) { background: var(--amber); }
+    .risk-card[data-sev="medium"]   .pip:nth-child(-n+3) { background: #7a9a5a; }
+    .risk-card[data-sev="low"]      .pip:nth-child(-n+2) { background: #4a7a8a; }
+
+    .card-rank {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      margin-bottom: 0.3rem;
+    }
+    .card-title {
+      font-family: var(--display);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-bright);
+      line-height: 1.25;
+      margin-bottom: 0.8rem;
+    }
+    .card-desc {
+      font-size: 0.88rem;
+      color: var(--text-dim);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+    .card-impact {
+      font-size: 0.83rem;
+      color: var(--text);
+      padding: 0.7rem;
+      background: var(--surface2);
+      border-left: 2px solid var(--border2);
+      margin-bottom: 0.9rem;
+      line-height: 1.5;
+    }
+    .card-sources {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+    .source-tag {
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.06em;
+      padding: 0.15rem 0.5rem;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+    }
+    .card-expand-btn {
+      background: none;
+      border: none;
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--accent);
+      cursor: pointer;
+      padding: 0.4rem 0;
+      margin-top: 0.4rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .card-detail { display: none; margin-top: 1rem; border-top: 1px solid var(--border); padding-top: 1rem; }
+    .card-detail.open { display: block; }
+    .card-detail h4 {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+      margin-top: 0.8rem;
+    }
+    .card-detail p { font-size: 0.85rem; color: var(--text-dim); line-height: 1.6; }
+    .card-detail ul { font-size: 0.85rem; color: var(--text-dim); padding-left: 1.2rem; }
+    .card-detail ul li { margin-bottom: 0.3rem; }
+
+    /* ── Section headers ── */
+    .section-header {
+      max-width: 900px;
+      margin: 4rem auto 2rem;
+      padding: 0 2.5rem;
+    }
+    .section-eyebrow {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+    .section-header h2 {
+      font-family: var(--display);
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 700;
+      color: var(--text-bright);
+      line-height: 1.2;
+    }
+    .section-header p {
+      margin-top: 0.7rem;
+      color: var(--text-dim);
+      max-width: 600px;
+      font-weight: 300;
+    }
+
+    /* ── Full report section ── */
+    .report-section {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 2.5rem 6rem;
+    }
+    .report-content {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 2.5rem;
+      min-height: 200px;
+      position: relative;
+    }
+    .report-content.loading::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent 0%, rgba(200,146,42,0.06) 50%, transparent 100%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    .report-content h3 {
+      font-family: var(--display);
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text-bright);
+      margin: 1.8rem 0 0.7rem;
+    }
+    .report-content h3:first-child { margin-top: 0; }
+    .report-content h4 {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin: 1.4rem 0 0.5rem;
+    }
+    .report-content p { color: var(--text-dim); font-size: 0.95rem; line-height: 1.8; margin-bottom: 0.9rem; }
+    .report-content ul { padding-left: 1.5rem; margin-bottom: 0.9rem; }
+    .report-content ul li { color: var(--text-dim); font-size: 0.95rem; line-height: 1.7; margin-bottom: 0.3rem; }
+    .report-content strong { color: var(--text-bright); font-weight: 600; }
+    .placeholder-text { color: var(--text-dim); font-style: italic; font-size: 0.95rem; }
+
+    /* ── Scenario cards ── */
+    .scenarios-grid {
+      max-width: 1200px;
+      margin: 0 auto 4rem;
+      padding: 0 2.5rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+    .scenario-card {
+      border: 1px solid var(--border);
+      padding: 1.8rem;
+      position: relative;
+    }
+    .scenario-card.best  { border-top: 3px solid var(--green); }
+    .scenario-card.base  { border-top: 3px solid var(--amber); }
+    .scenario-card.worst { border-top: 3px solid var(--red); }
+    .scenario-label {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+    .scenario-card.best  .scenario-label { color: var(--green); }
+    .scenario-card.base  .scenario-label { color: var(--amber); }
+    .scenario-card.worst .scenario-label { color: var(--red); }
+    .scenario-card h3 {
+      font-family: var(--display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-bright);
+      margin-bottom: 0.8rem;
+    }
+    .scenario-card p { font-size: 0.88rem; color: var(--text-dim); line-height: 1.6; }
+    .scenario-card.loading { min-height: 200px; }
+
+    /* ── Comparison table ── */
+    .table-wrap { overflow-x: auto; margin: 0 2.5rem 3rem; }
+    .risk-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+      min-width: 600px;
+    }
+    .risk-table th {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      border-bottom: 1px solid var(--border2);
+      padding: 0.7rem 1rem;
+      text-align: left;
+      background: var(--surface);
+    }
+    .risk-table td {
+      padding: 0.7rem 1rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+      vertical-align: top;
+    }
+    .risk-table tr:hover td { background: var(--surface2); }
+    .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; }
+    .dot.yes { background: var(--accent); }
+    .dot.partial { background: var(--amber); opacity: 0.6; }
+    .dot.no { background: var(--border2); }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .footer-logo {
+      font-family: var(--display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-bright);
+    }
+    .footer-copy {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--text-dim);
+    }
+
+    /* ── No results ── */
+    .no-results {
+      grid-column: 1/-1;
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--text-dim);
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+    }
+
+    /* ── Loading skeleton ── */
+    .skeleton-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 1.6rem;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    .skel-line {
+      height: 12px;
+      background: var(--surface2);
+      border-radius: 2px;
+      margin-bottom: 0.6rem;
+    }
+    .skel-line.short { width: 40%; }
+    .skel-line.med { width: 70%; }
+    .skel-line.full { width: 100%; }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    section[id] { scroll-margin-top: 130px; }
+
+    @media (max-width: 720px) {
+      .hero { padding: 3rem 1.4rem 2.5rem; }
+      .hero-rule { margin: 0 1.4rem; }
+      .article-header { padding: 0.6rem 1.2rem; }
+      .filter-bar { padding: 0 1.2rem; }
+      .risk-grid { padding: 0 1.2rem; grid-template-columns: 1fr; }
+      .section-header { padding: 0 1.2rem; }
+      .report-section { padding: 0 1.2rem 4rem; }
+      .scenarios-grid { padding: 0 1.2rem; }
+      .table-wrap { margin: 0 1.2rem 2rem; }
+      footer { padding: 2rem 1.2rem; }
+    }
+
+    /* ── Streaming text ── */
+    .stream-cursor::after {
+      content: '▊';
+      animation: blink 0.8s step-end infinite;
+      color: var(--accent);
+      font-size: 0.8em;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="progressBar"></div>
+
+<!-- TOC Overlay -->
+<div class="toc-overlay" id="tocOverlay"
+     onclick="if(event.target===this)this.classList.remove('open')">
+  <button class="toc-close" onclick="document.getElementById('tocOverlay').classList.remove('open')">✕</button>
+  <div class="toc-panel">
+    <h3>Table of Contents</h3>
+    <ul class="toc-list">
+      <li><a href="#s-overview" class="toc-main">I. Risk Landscape Overview</a></li>
+      <li><a href="#s-top10" class="toc-main">II. Top 10 Synthesized Risks</a></li>
+      <li><a href="#s-comparison" class="toc-main">III. Cross-Report Comparison</a></li>
+      <li><a href="#s-scenarios" class="toc-main">IV. Scenario Analysis</a></li>
+      <li><a href="#s-meta" class="toc-main">V. Meta-Insights</a></li>
+      <li><a href="#s-synthesis" class="toc-main">VI. Final Synthesis</a></li>
+    </ul>
+  </div>
+</div>
+
+<!-- Article sub-header -->
+<header class="article-header">
+  <a class="site-name" href="#">Yasir Bilgin</a>
+  <div class="header-right">
+    <span class="read-time">~25 min read</span>
+    <button class="toc-btn" onclick="document.getElementById('tocOverlay').classList.add('open')">Contents</button>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-eyebrow">Global Risk Intelligence · 2026 Edition</div>
+  <h1>The Global <em>Risk</em><br>Intelligence Report</h1>
+  <p class="hero-sub">A synthesized, AI-generated strategic assessment drawn from the world's leading risk publications — filterable, searchable, and continuously generatable.</p>
+  <div class="byline-row">
+    <div class="avatar">YB</div>
+    <div class="byline-text">
+      <span class="byline-name">Yasir Bilgin</span>
+      <span class="byline-meta">Yasir Bilgin · May 2026 · AI-Synthesized Intelligence</span>
+    </div>
+  </div>
+</section>
+<hr class="hero-rule">
+
+<!-- Generate Panel -->
+<div class="generate-panel" id="generatePanel">
+  <h2>⚡ AI Intelligence Engine</h2>
+  <p>Generate a full, live-synthesized global risk report using Claude. The AI will analyze frameworks from WEF, IMF, Eurasia Group, OECD, IPCC, BlackRock, CFR, IISS, UNDRR and more — producing original strategic analysis, not just summaries.</p>
+  <button class="gen-btn" id="generateBtn" onclick="generateFullReport()">
+    Generate Full Intelligence Report
+  </button>
+  <div class="gen-status" id="genStatus">Ready to generate — click to synthesize</div>
+</div>
+
+<!-- ── SECTION I: Overview ── -->
+<section id="s-overview">
+  <div class="section-header">
+    <div class="section-eyebrow">Section I</div>
+    <h2>Global Risk <em>Landscape</em></h2>
+    <p>Synthesized risk assessment across short, medium, and long-term horizons. Filter and search by category, severity, or keyword.</p>
+  </div>
+
+  <!-- Filter Bar -->
+  <div class="filter-bar">
+    <div class="filter-bar-inner">
+      <span class="filter-label">Category</span>
+      <div class="filter-chips" id="catChips">
+        <button class="chip active" data-cat="all" onclick="filterCat('all')">All</button>
+        <button class="chip cat-geo" data-cat="geo" onclick="filterCat('geo')">Geopolitical</button>
+        <button class="chip cat-eco" data-cat="eco" onclick="filterCat('eco')">Economic</button>
+        <button class="chip cat-tech" data-cat="tech" onclick="filterCat('tech')">Technology</button>
+        <button class="chip cat-env" data-cat="env" onclick="filterCat('env')">Environmental</button>
+        <button class="chip cat-soc" data-cat="soc" onclick="filterCat('soc')">Societal</button>
+        <button class="chip cat-gov" data-cat="gov" onclick="filterCat('gov')">Governance</button>
+      </div>
+      <span class="filter-label">Horizon</span>
+      <div class="filter-chips" id="horizonChips">
+        <button class="chip active" data-horizon="all" onclick="filterHorizon('all')">All</button>
+        <button class="chip" data-horizon="short" onclick="filterHorizon('short')">0–2 yr</button>
+        <button class="chip" data-horizon="medium" onclick="filterHorizon('medium')">3–5 yr</button>
+        <button class="chip" data-horizon="long" onclick="filterHorizon('long')">5–10+ yr</button>
+      </div>
+      <span class="filter-label">Severity</span>
+      <div class="filter-chips" id="sevChips">
+        <button class="chip active" data-sev="all" onclick="filterSev('all')">All</button>
+        <button class="chip" data-sev="critical" onclick="filterSev('critical')" style="border-color:#c0392b;color:#c0392b">Critical</button>
+        <button class="chip" data-sev="high" onclick="filterSev('high')" style="border-color:#d4892a;color:#d4892a">High</button>
+        <button class="chip" data-sev="medium" onclick="filterSev('medium')">Medium</button>
+      </div>
+      <input type="text" class="filter-search" id="searchInput" placeholder="Search risks, descriptions, sources…" oninput="applyFilters()">
+      <span class="filter-count" id="filterCount">Loading…</span>
+    </div>
+  </div>
+
+  <!-- Risk Grid -->
+  <div class="risk-grid" id="riskGrid">
+    <!-- Skeleton loaders -->
+    <div class="skeleton-card"><div class="skel-line short"></div><div class="skel-line med"></div><div class="skel-line full"></div><div class="skel-line full"></div></div>
+    <div class="skeleton-card"><div class="skel-line short"></div><div class="skel-line med"></div><div class="skel-line full"></div><div class="skel-line full"></div></div>
+    <div class="skeleton-card"><div class="skel-line short"></div><div class="skel-line med"></div><div class="skel-line full"></div><div class="skel-line full"></div></div>
+    <div class="skeleton-card"><div class="skel-line short"></div><div class="skel-line med"></div><div class="skel-line full"></div><div class="skel-line full"></div></div>
+    <div class="skeleton-card"><div class="skel-line short"></div><div class="skel-line med"></div><div class="skel-line full"></div><div class="skel-line full"></div></div>
+    <div class="skeleton-card"><div class="skel-line short"></div><div class="skel-line med"></div><div class="skel-line full"></div><div class="skel-line full"></div></div>
+  </div>
+</section>
+
+<!-- ── SECTION II: Top 10 ── -->
+<section id="s-top10">
+  <div class="section-header">
+    <div class="section-eyebrow">Section II</div>
+    <h2>Top 10 Synthesized <em>Risks</em></h2>
+    <p>A unified, ranked list drawn from cross-report consensus. Generate report above to populate with AI analysis.</p>
+  </div>
+  <div class="report-section">
+    <div class="report-content" id="top10Content">
+      <p class="placeholder-text">Generate the full report above to see the ranked Top 10 Global Risks with cross-source analysis, time horizons, and strategic implications.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION III: Comparison ── -->
+<section id="s-comparison">
+  <div class="section-header">
+    <div class="section-eyebrow">Section III</div>
+    <h2>Cross-Report <em>Comparison</em></h2>
+    <p>How key risks are rated across major global risk publications.</p>
+  </div>
+
+  <div class="table-wrap">
+    <table class="risk-table" id="compTable">
+      <thead>
+        <tr>
+          <th>Risk</th>
+          <th>WEF</th>
+          <th>IMF</th>
+          <th>Eurasia Group</th>
+          <th>OECD</th>
+          <th>IPCC/UN</th>
+          <th>BlackRock / CFR</th>
+        </tr>
+      </thead>
+      <tbody id="compTableBody">
+        <tr><td colspan="7" style="text-align:center;color:var(--text-dim);font-style:italic;font-size:0.85rem;padding:2rem">Generate report to populate comparison matrix</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ── SECTION IV: Scenarios ── -->
+<section id="s-scenarios">
+  <div class="section-header">
+    <div class="section-eyebrow">Section IV</div>
+    <h2>Scenario <em>Analysis</em></h2>
+    <p>Three plausible futures, from resilient cooperation to systemic breakdown.</p>
+  </div>
+  <div class="scenarios-grid">
+    <div class="scenario-card best" id="scenBest">
+      <div class="scenario-label">Best Case</div>
+      <h3>Resilient Cooperation</h3>
+      <p class="placeholder-text">Generate report to see scenario analysis.</p>
+    </div>
+    <div class="scenario-card base" id="scenBase">
+      <div class="scenario-label">Base Case</div>
+      <h3>Fragmented Adaptation</h3>
+      <p class="placeholder-text">Generate report to see scenario analysis.</p>
+    </div>
+    <div class="scenario-card worst" id="scenWorst">
+      <div class="scenario-label">Worst Case</div>
+      <h3>Systemic Breakdown</h3>
+      <p class="placeholder-text">Generate report to see scenario analysis.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION V: Meta-Insights ── -->
+<section id="s-meta">
+  <div class="section-header">
+    <div class="section-eyebrow">Section V</div>
+    <h2>Meta-<em>Insights</em></h2>
+    <p>Higher-order patterns, structural shifts, and systemic observations.</p>
+  </div>
+  <div class="report-section">
+    <div class="report-content" id="metaContent">
+      <p class="placeholder-text">Generate the full report above to see meta-level insights on global fragmentation, systemic fragility, and structural shifts.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION VI: Final Synthesis ── -->
+<section id="s-synthesis">
+  <div class="section-header">
+    <div class="section-eyebrow">Section VI</div>
+    <h2>Final <em>Synthesis</em></h2>
+    <p>The single most important dynamic, most underestimated risk, and most dangerous combination.</p>
+  </div>
+  <div class="report-section">
+    <div class="report-content" id="synthesisContent">
+      <p class="placeholder-text">Generate the full report above to see the final strategic synthesis.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span class="footer-logo">Yasir Bilgin</span>
+  <span class="footer-copy">© 2026 Yasir Bilgin Editorial · AI-Synthesized Global Intelligence</span>
+</footer>
+
+<script>
+// ── State ──────────────────────────────────────────────────────────────
+let activecat = 'all';
+let activeHorizon = 'all';
+let activeSev = 'all';
+let riskData = [];
+
+// ── Static risk data (pre-loaded) ──────────────────────────────────────
+const staticRisks = [
+  {
+    id: 1, rank: 1, title: "Geostrategic Confrontation & Bloc Fragmentation",
+    cat: "geo", horizon: "short", sev: "critical",
+    desc: "The structural fracture between US-led and China/Russia-aligned blocs is deepening into a semi-permanent division of the global order — reshaping trade, technology, and security architectures simultaneously.",
+    impact: "Risk of direct inter-great-power conflict elevated to highest levels since Cold War. Multipolar instability creates vacuum for proxy conflicts, arms races, and nuclear risk escalation.",
+    sources: ["WEF", "Eurasia Group", "CFR", "IISS", "BlackRock"],
+    detail: {
+      drivers: ["Taiwan Strait tensions", "NATO-Russia permanent confrontation", "Middle East realignment", "Technology decoupling (semiconductors, AI)"],
+      cascade: "Geostrategic fracture → trade route disruption → supply chain nationalisation → technology fragmentation → financial balkanisation → global governance paralysis",
+      signals: ["Taiwan Strait naval incidents", "BRICS+ expansion pace", "Yuan internationalisation rate", "Bilateral sanctions volume"]
+    }
+  },
+  {
+    id: 2, rank: 2, title: "AI Disruption & Governance Vacuum",
+    cat: "tech", horizon: "short", sev: "critical",
+    desc: "Artificial general intelligence capabilities are advancing faster than any governance framework. The absence of binding international AI regulation creates systemic risks across labour markets, information ecosystems, and national security.",
+    impact: "Mass displacement of cognitive labour without social safety net transition. AI-enabled disinformation at unprecedented scale. Autonomous weapons proliferation with unclear attribution.",
+    sources: ["WEF", "OECD", "CFR", "IISS"],
+    detail: {
+      drivers: ["Racing dynamic between US and China labs", "No global equivalent of IAEA for AI", "Rapid capability jumps outpacing policy cycles"],
+      cascade: "AI capability surge → labour market shock → social unrest → political extremism → governance breakdown",
+      signals: ["Frontier model capability benchmarks", "AI-generated content share of web traffic", "Autonomous weapons treaty progress", "Unemployment in cognitive sectors"]
+    }
+  },
+  {
+    id: 3, rank: 3, title: "Debt-Driven Financial Instability",
+    cat: "eco", horizon: "short", sev: "critical",
+    desc: "Global public debt has reached historic highs across advanced and emerging economies. With rates remaining elevated and fiscal deficits structural, refinancing stress and sovereign debt crises are increasingly likely trigger points.",
+    impact: "Cascading sovereign defaults could freeze global credit markets. Emerging market contagion amplified by strong dollar and capital flight. Recession risk in multiple major economies simultaneously.",
+    sources: ["IMF", "BlackRock", "OECD", "WEF"],
+    detail: {
+      drivers: ["Post-COVID fiscal expansion", "Ageing population spending pressures", "Defence spending ramp-up", "Higher-for-longer rates"],
+      cascade: "Debt stress → sovereign downgrades → banking sector contagion → credit contraction → recession → political instability",
+      signals: ["US 10Y-2Y yield spread", "EM CDS spreads", "IMF exceptional access requests", "Bank capital adequacy ratios"]
+    }
+  },
+  {
+    id: 4, rank: 4, title: "Extreme Weather & Climate Tipping Points",
+    cat: "env", horizon: "medium", sev: "critical",
+    desc: "Climate science now identifies multiple tipping points — Amazon dieback, West Antarctic ice sheet collapse, permafrost methane release — that could trigger non-linear, irreversible warming acceleration beyond current models.",
+    impact: "Food and water security crises at civilisational scale. Mass displacement of hundreds of millions. Permanent economic losses exceeding any previous shock in modern history.",
+    sources: ["IPCC", "UNDRR", "WEF", "IMF"],
+    detail: {
+      drivers: ["Continued fossil fuel reliance", "Carbon budget exhaustion timeline", "Feedback loop acceleration", "Insufficient green transition investment"],
+      cascade: "Tipping point crossing → agricultural collapse → water wars → mass migration → state failure → geopolitical conflict",
+      signals: ["IPCC overshoot probability", "Arctic sea ice minimum extent", "Frequency of 1-in-100-year events", "COP commitment compliance rates"]
+    }
+  },
+  {
+    id: 5, rank: 5, title: "Information Ecosystem Collapse",
+    cat: "soc", horizon: "short", sev: "high",
+    desc: "The combination of synthetic media, algorithmic amplification, and state-sponsored influence operations has destabilised shared epistemic foundations. Democracies are increasingly unable to form coherent public consensus.",
+    impact: "Electoral integrity compromised at scale. Policy paralysis on existential challenges (climate, AI). Social cohesion erosion enabling authoritarian alternatives.",
+    sources: ["WEF", "CFR", "Eurasia Group", "OECD"],
+    detail: {
+      drivers: ["Generative AI enabling cheap deepfakes", "Platform business model alignment with outrage", "State actors (Russia, China, Iran) running influence ops"],
+      cascade: "Epistemic collapse → democratic dysfunction → populist capture → international cooperation breakdown",
+      signals: ["Trust in institutions polling (Edelman Trust Barometer)", "Fact-check organisation volume", "Electoral integrity index", "AI-generated news share"]
+    }
+  },
+  {
+    id: 6, rank: 6, title: "Critical Infrastructure & Cyberwarfare",
+    cat: "tech", horizon: "short", sev: "high",
+    desc: "State-sponsored cyber operations targeting power grids, water systems, financial infrastructure, and healthcare networks have graduated from espionage to sabotage, with dramatically escalated deniability and impact.",
+    impact: "Single successful attack on interconnected financial infrastructure could trigger systemic market failure. Energy grid disruption in winter could cause mass civilian casualties.",
+    sources: ["WEF", "IISS", "CFR", "Control Risks"],
+    detail: {
+      drivers: ["Nation-state cyber programmes (China, Russia, DPRK, Iran)", "Critical infrastructure digital transformation outpacing security", "Lack of binding cyberwarfare treaty"],
+      cascade: "Critical infrastructure attack → energy/financial disruption → economic shock → political crisis → military escalation",
+      signals: ["CISA critical infrastructure alerts", "Ransomware attack frequency on OT systems", "SWIFT anomaly reports", "Insurance market cyber pricing"]
+    }
+  },
+  {
+    id: 7, rank: 7, title: "Fragmentation of Global Trade Architecture",
+    cat: "eco", horizon: "medium", sev: "high",
+    desc: "Friend-shoring, industrial policy nationalism, and technology export controls are systematically dismantling the post-1945 rules-based trade order, replacing it with a patchwork of bilateral and bloc arrangements.",
+    impact: "Estimated 5–7% permanent reduction in global GDP from full decoupling scenarios (IMF). Supply chain resilience paradox — diversification reduces efficiency without eliminating fragility.",
+    sources: ["IMF", "WEF", "OECD", "WTO"],
+    detail: {
+      drivers: ["US IRA and CHIPS Act industrial policy", "China's dual circulation strategy", "Technology supply chain weaponisation", "WTO dispute settlement paralysis"],
+      cascade: "Trade fragmentation → efficiency loss → inflation persistence → emerging market exclusion → development setback → instability",
+      signals: ["Global trade growth vs GDP ratio", "Number of active trade restrictions", "FDI flows by bloc alignment", "Semiconductor supply chain concentration"]
+    }
+  },
+  {
+    id: 8, rank: 8, title: "State Fragility & Governance Collapse",
+    cat: "gov", horizon: "medium", sev: "high",
+    desc: "A widening cohort of states — from sub-Saharan Africa to parts of the Middle East and South Asia — face simultaneous climate stress, debt distress, and democratic backsliding, creating conditions for cascading state failure.",
+    impact: "Failed states become vectors for terrorism, mass migration, and resource conflicts. Their absence from global governance frameworks creates policy black holes at precisely the moments interdependency demands coordination.",
+    sources: ["UNDP", "WEF", "CFR", "Verisk Maplecroft"],
+    detail: {
+      drivers: ["Climate stress on agricultural systems", "Post-COVID debt trap", "Youth unemployment bulge", "External power competition destabilising domestic politics"],
+      cascade: "State fragility → humanitarian crisis → mass migration → host country political destabilisation → regional conflict",
+      signals: ["Fragile States Index", "IMF debt restructuring requests", "Climate vulnerability index intersection with low-income states", "UNHCR displacement trends"]
+    }
+  },
+  {
+    id: 9, rank: 9, title: "Pandemic & Biosecurity Risk",
+    cat: "soc", horizon: "medium", sev: "high",
+    desc: "The post-COVID global health architecture remains dangerously underinvested. The combination of zoonotic spillover acceleration (driven by deforestation and wildlife trade), biotech democratisation, and geopolitical mistrust creates multi-pathway pandemic risk.",
+    impact: "A pathogen with COVID-19 transmissibility and 1918 influenza mortality could cause 50–100M deaths within 18 months. Economic disruption would dwarf 2020.",
+    sources: ["WHO/UN", "WEF", "IISS", "Johns Hopkins"],
+    detail: {
+      drivers: ["Accelerating deforestation-driven zoonotic spillover", "Dual-use biotechnology accessibility", "Fragmented global surveillance", "Vaccine nationalism degrading collective immunity"],
+      cascade: "Novel pathogen → healthcare system overflow → economic lockdown → social unrest → supply chain collapse → geopolitical blame-shifting",
+      signals: ["WHO Disease Outbreak News", "Dual-use research of concern publications", "Pandemic Treaty ratification progress", "CEPI funding levels"]
+    }
+  },
+  {
+    id: 10, rank: 10, title: "Social Polarisation & Democratic Erosion",
+    cat: "soc", horizon: "short", sev: "high",
+    desc: "Economic inequality, identity fragmentation, and information ecosystem collapse are driving political polarisation to levels that impair democratic function across both advanced and emerging democracies.",
+    impact: "Rise of authoritarian-populist governments in key democracies. Breakdown of checks and balances. International organisations losing legitimacy. Policy paralysis on generational challenges.",
+    sources: ["WEF", "Eurasia Group", "OECD", "Freedom House"],
+    detail: {
+      drivers: ["Wealth concentration post-financialisation", "Identity politics amplified by social media", "Elite-mass disconnect", "Erosion of middle-class economic security by automation"],
+      cascade: "Polarisation → electoral instability → policy incoherence → economic underperformance → more polarisation (feedback loop)",
+      signals: ["Polarisation indices (Pew, V-Dem)", "Government approval ratings", "Freedom House global freedom score", "Voter turnout and protest frequency"]
+    }
+  },
+  {
+    id: 11, rank: 11, title: "Nuclear Escalation Risk",
+    cat: "geo", horizon: "short", sev: "critical",
+    desc: "The simultaneous breakdown of arms control architecture (New START suspended, INF dead), Russia's Ukraine war nuclear signalling, North Korea's arsenal expansion, and India-Pakistan tensions represent the highest aggregate nuclear risk since the 1980s.",
+    impact: "Even a 'limited' regional nuclear exchange would cause global nuclear winter, famine affecting 2 billion people, and civilisational disruption far beyond the conflict zone.",
+    sources: ["IISS", "CFR", "Bulletin of Atomic Scientists", "SIPRI"],
+    detail: {
+      drivers: ["Arms control treaty collapse", "Tactical nuclear weapon normalisation", "Technology lowering launch thresholds (hypersonic, cyber)", "Crisis instability in multipolar environment"],
+      cascade: "Arms race → miscalculation risk → limited use → escalation → global nuclear winter",
+      signals: ["Doomsday Clock setting", "Nuclear posture review language", "Arms control treaty compliance", "North Korea test schedule"]
+    }
+  },
+  {
+    id: 12, rank: 12, title: "Water & Food System Stress",
+    cat: "env", horizon: "medium", sev: "high",
+    desc: "Aquifer depletion, river system disruption from glacial melt, and agricultural land degradation are converging with climate volatility to create structural food insecurity across large swaths of the Global South.",
+    impact: "Political instability in food-importing nations. Commodity price shocks cascading through low-income household budgets globally. Climate migration pressure multiplying.",
+    sources: ["UNDRR", "IMF", "WEF", "IPCC"],
+    detail: {
+      drivers: ["Glacial melt disrupting Himalayan/Andean river systems", "Ogallala Aquifer depletion in US breadbasket", "Topsoil loss from industrial agriculture", "Climate-driven crop failure frequency"],
+      cascade: "Water stress → crop failure → food price spike → poverty → political instability → conflict over water resources",
+      signals: ["FAO Food Price Index", "Aquifer level monitoring", "Crop yield anomaly vs 20-yr average", "Water conflict incident database"]
+    }
+  },
+  {
+    id: 13, rank: 13, title: "Energy Transition Disruption",
+    cat: "eco", horizon: "medium", sev: "medium",
+    desc: "The green energy transition is simultaneously necessary and economically destabilising — stranding trillions in fossil fuel assets, creating new critical mineral dependencies, and risking energy poverty in developing economies that cannot afford transition costs.",
+    impact: "Stranded asset write-downs could trigger financial sector stress. Critical mineral supply concentration (lithium, cobalt, rare earths) creates new geopolitical vulnerabilities mirroring oil dependency.",
+    sources: ["IEA", "IMF", "WEF", "BlackRock"],
+    detail: {
+      drivers: ["$75T in fossil fuel stranded assets by 2030 (IEA)", "Critical mineral supply chain concentration in unstable jurisdictions", "Developing world energy poverty vs transition cost tradeoff"],
+      cascade: "Stranded assets → financial sector stress → credit tightening → transition investment shortfall → climate miss",
+      signals: ["Fossil fuel asset write-down announcements", "Critical mineral price volatility", "Energy access index (developing world)", "Green bond spread vs conventional"]
+    }
+  },
+  {
+    id: 14, rank: 14, title: "Demographic Divergence",
+    cat: "soc", horizon: "long", sev: "medium",
+    desc: "The simultaneous occurrence of population ageing in advanced economies and youth bulges in the developing world creates a structural mismatch — fiscal insolvency in the north, underemployment and instability in the south.",
+    impact: "Pension system insolvency in Japan, South Korea, and Southern Europe. Youth unemployment over 30% driving political radicalisation across MENA and Sub-Saharan Africa.",
+    sources: ["IMF", "OECD", "UN/UNDP", "WEF"],
+    detail: {
+      drivers: ["Total fertility rate collapse in East Asia, Southern Europe", "High fertility rates persisting in Sub-Saharan Africa", "Migration political barriers preventing equilibration"],
+      cascade: "Ageing crisis → pension/healthcare fiscal collapse → austerity → social contract breakdown → political extremism",
+      signals: ["Old-age dependency ratios", "Youth unemployment indices", "Pension fund solvency ratios", "Migration policy restrictiveness index"]
+    }
+  },
+  {
+    id: 15, rank: 15, title: "Multilateral Governance Paralysis",
+    cat: "gov", horizon: "medium", sev: "high",
+    desc: "The UN Security Council veto paralysis, WTO appellate body dysfunction, and multipolar geopolitical competition have rendered the core global governance architecture effectively non-functional for managing systemic risks.",
+    impact: "No mechanism to coordinate global responses to climate, AI, pandemic, or nuclear risks. Each global commons challenge escalates unchecked. Trust deficit makes future coordination harder.",
+    sources: ["CFR", "OECD", "WEF", "Eurasia Group"],
+    detail: {
+      drivers: ["China-US strategic competition corrupting international institutions", "Multilateralism fatigue post-COVID", "Rise of alternative platforms (SCO, BRICS) fragmenting coordination"],
+      cascade: "Governance failure → commons tragedies multiply → global public goods underprovision → systemic risk accumulation",
+      signals: ["UN vote consensus ratios", "Multilateral treaty ratification speed", "WTO dispute resolution case backlog", "G20 communiqué policy specificity"]
+    }
+  },
+  {
+    id: 16, rank: 16, title: "Biodiversity Collapse & Ecosystem Services Loss",
+    cat: "env", horizon: "long", sev: "high",
+    desc: "The sixth mass extinction — proceeding 100–1000x faster than background rates — threatens to unravel ecosystem services (pollination, water purification, carbon sequestration) on which the entire global economy depends.",
+    impact: "Half of global GDP is moderately or highly dependent on nature (World Economic Forum). Pollinator loss alone threatens food system collapse.",
+    sources: ["IPBES", "UNDRR", "WEF", "IPCC"],
+    detail: {
+      drivers: ["Agricultural land use change destroying habitat", "Climate change range shifts", "Pollution and invasive species", "Overfishing collapsing marine ecosystems"],
+      cascade: "Biodiversity loss → ecosystem service collapse → agricultural productivity decline → food crisis → mass displacement",
+      signals: ["Living Planet Index", "Pollinator population trends", "Marine fish stock depletion rates", "Deforestation satellite monitoring"]
+    }
+  }
+];
+
+// ── Render risk cards ──────────────────────────────────────────────────
+function renderCards() {
+  riskData = staticRisks;
+  const grid = document.getElementById('riskGrid');
+  grid.innerHTML = '';
+
+  riskData.forEach(risk => {
+    const card = document.createElement('div');
+    card.className = `risk-card`;
+    card.dataset.cat = risk.cat;
+    card.dataset.horizon = risk.horizon;
+    card.dataset.sev = risk.sev;
+    card.dataset.id = risk.id;
+    card.dataset.searchtext = [risk.title, risk.desc, risk.impact, ...risk.sources].join(' ').toLowerCase();
+
+    card.innerHTML = `
+      <div class="card-meta">
+        <span class="cat-badge ${risk.cat}">${catLabel(risk.cat)}</span>
+        <span class="horizon-badge">${horizonLabel(risk.horizon)}</span>
+        <div class="severity-pip">
+          <div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div>
+        </div>
+      </div>
+      <div class="card-rank">Risk #${risk.rank}</div>
+      <div class="card-title">${risk.title}</div>
+      <div class="card-desc">${risk.desc}</div>
+      <div class="card-impact">${risk.impact}</div>
+      <div class="card-sources">
+        ${risk.sources.map(s => `<span class="source-tag">${s}</span>`).join('')}
+      </div>
+      <button class="card-expand-btn" onclick="toggleDetail(${risk.id})">+ Show Detail</button>
+      <div class="card-detail" id="detail-${risk.id}">
+        <h4>Key Drivers</h4>
+        <ul>${risk.detail.drivers.map(d => `<li>${d}</li>`).join('')}</ul>
+        <h4>Cascade Chain</h4>
+        <p>${risk.detail.cascade}</p>
+        <h4>Early Warning Signals</h4>
+        <ul>${risk.detail.signals.map(s => `<li>${s}</li>`).join('')}</ul>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+
+  updateCount();
+}
+
+function toggleDetail(id) {
+  const detail = document.getElementById(`detail-${id}`);
+  const btn = detail.previousElementSibling;
+  detail.classList.toggle('open');
+  btn.textContent = detail.classList.contains('open') ? '− Hide Detail' : '+ Show Detail';
+}
+
+function catLabel(c) {
+  const map = { geo:'Geopolitical', eco:'Economic', tech:'Technology', env:'Environmental', soc:'Societal', gov:'Governance' };
+  return map[c] || c;
+}
+function horizonLabel(h) {
+  const map = { short:'0–2 Years', medium:'3–5 Years', long:'5–10+ Years' };
+  return map[h] || h;
+}
+
+// ── Filters ───────────────────────────────────────────────────────────
+function filterCat(val) {
+  activecat = val;
+  document.querySelectorAll('#catChips .chip').forEach(c => c.classList.toggle('active', c.dataset.cat === val));
+  applyFilters();
+}
+function filterHorizon(val) {
+  activeHorizon = val;
+  document.querySelectorAll('#horizonChips .chip').forEach(c => c.classList.toggle('active', c.dataset.horizon === val));
+  applyFilters();
+}
+function filterSev(val) {
+  activeSev = val;
+  document.querySelectorAll('#sevChips .chip').forEach(c => c.classList.toggle('active', c.dataset.sev === val));
+  applyFilters();
+}
+
+function applyFilters() {
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  const cards = document.querySelectorAll('#riskGrid .risk-card');
+  let visible = 0;
+
+  cards.forEach(card => {
+    const catMatch = activecat === 'all' || card.dataset.cat === activecat;
+    const horizonMatch = activeHorizon === 'all' || card.dataset.horizon === activeHorizon;
+    const sevMatch = activeSev === 'all' || card.dataset.sev === activeSev;
+    const searchMatch = !search || card.dataset.searchtext.includes(search);
+    const show = catMatch && horizonMatch && sevMatch && searchMatch;
+    card.classList.toggle('hidden', !show);
+    if (show) visible++;
+  });
+
+  const grid = document.getElementById('riskGrid');
+  const noRes = grid.querySelector('.no-results');
+  if (visible === 0) {
+    if (!noRes) {
+      const div = document.createElement('div');
+      div.className = 'no-results';
+      div.textContent = 'NO RISKS MATCH CURRENT FILTERS';
+      grid.appendChild(div);
+    }
+  } else if (noRes) {
+    noRes.remove();
+  }
+
+  updateCount();
+}
+
+function updateCount() {
+  const total = document.querySelectorAll('#riskGrid .risk-card').length;
+  const visible = document.querySelectorAll('#riskGrid .risk-card:not(.hidden)').length;
+  document.getElementById('filterCount').textContent = `${visible} / ${total} risks`;
+}
+
+// ── AI Report Generation ────────────────────────────────────────────
+async function generateFullReport() {
+  const btn = document.getElementById('generateBtn');
+  const status = document.getElementById('genStatus');
+  btn.disabled = true;
+  status.className = 'gen-status active';
+  status.textContent = 'Initialising AI synthesis engine…';
+
+  const sections = [
+    { id: 'top10Content', label: 'Top 10 Risks', key: 'top10' },
+    { id: 'metaContent', label: 'Meta-Insights', key: 'meta' },
+    { id: 'synthesisContent', label: 'Final Synthesis', key: 'synthesis' }
+  ];
+
+  sections.forEach(s => {
+    document.getElementById(s.id).classList.add('loading');
+    document.getElementById(s.id).innerHTML = '<p class="placeholder-text stream-cursor">Generating…</p>';
+  });
+
+  // Scenario cards
+  ['scenBest','scenBase','scenWorst'].forEach(id => {
+    const card = document.getElementById(id);
+    card.querySelector('p').classList.add('placeholder-text');
+    card.querySelector('p').textContent = 'Generating…';
+  });
+
+  const prompt = `You are a senior global strategist synthesizing insights from: WEF Global Risks Report, IMF World Economic Outlook & GFSR, OECD Economic Outlook, UN/UNDP/UNDRR, Eurasia Group Top Risks, Control Risks RiskMap, Verisk Maplecroft, BlackRock Investment Institute, CFR, CSIS, IISS, and IPCC reports.
+
+Produce a structured intelligence report in HTML (using only <h3>, <h4>, <p>, <ul>, <li>, <strong> tags — no markdown). The report covers:
+
+**SECTION A — TOP10**: A ranked Top 10 Global Risks list. For each: brief title, 2-sentence description, time horizon (short/medium/long), cross-report consensus sources (which of the above organisations flag this), and one key strategic implication. Format as clear HTML with <h3> for each risk number and title.
+
+**SECTION B — COMPARISON_TABLE_DATA**: Return ONLY a valid JSON array (no HTML around it) of 8–10 key risks for the comparison matrix. Each item: { "risk": "short name", "wef": true/false/"partial", "imf": true/false/"partial", "eurasia": true/false/"partial", "oecd": true/false/"partial", "un": true/false/"partial", "blackrock": true/false/"partial" }
+
+**SECTION C — SCENARIOS**: Three scenario descriptions in HTML.
+Best Case (h3 title + 2 paragraphs): "Resilient Cooperation" — what conditions enable it, what it looks like by 2030.
+Base Case (h3 title + 2 paragraphs): "Fragmented Adaptation" — muddling through with costs.
+Worst Case (h3 title + 2 paragraphs): "Systemic Cascade" — how cascading failures compound.
+
+**SECTION D — META**: Meta-insights in HTML. Cover: Is the world becoming more fragmented/fragile/complex? What structural shifts are happening? What patterns are emerging? 3–4 key insights with <h3> headers, each with 2 paragraphs of depth.
+
+**SECTION E — SYNTHESIS**: Final synthesis in HTML. Three sub-sections with <h3> headers:
+1. "The Single Most Important Risk Dynamic" — your primary diagnosis
+2. "The Most Underestimated Risk" — what institutions systematically miss
+3. "The Most Dangerous Risk Combination" — specific cascading scenario
+
+Format your response EXACTLY as:
+[TOP10_START]
+(html here)
+[TOP10_END]
+[TABLE_START]
+(json array here)
+[TABLE_END]
+[SCENARIOS_START]
+(html for all 3 scenarios separated by [BEST_END][BASE_START] etc)
+[SCENARIOS_END]
+[META_START]
+(html here)
+[META_END]
+[SYNTHESIS_START]
+(html here)
+[SYNTHESIS_END]
+
+Write with the precision of a McKinsey partner, the strategic depth of a geopolitical analyst, and the systems thinking of a complexity theorist. Avoid generic AI summaries — produce genuine insight.`;
+
+  try {
+    status.textContent = 'Sending to AI synthesis engine…';
+
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 4000,
+        messages: [{ role: "user", content: prompt }]
+      })
+    });
+
+    if (!response.ok) throw new Error(`API error: ${response.status}`);
+
+    status.textContent = 'Processing intelligence synthesis…';
+    const data = await response.json();
+    const text = data.content.map(b => b.text || '').join('');
+
+    // Parse sections
+    const extract = (start, end) => {
+      const s = text.indexOf(start);
+      const e = text.indexOf(end);
+      if (s === -1 || e === -1) return null;
+      return text.slice(s + start.length, e).trim();
+    };
+
+    // Top 10
+    const top10Html = extract('[TOP10_START]', '[TOP10_END]');
+    if (top10Html) {
+      document.getElementById('top10Content').classList.remove('loading');
+      document.getElementById('top10Content').innerHTML = top10Html;
+    }
+
+    // Table
+    const tableJson = extract('[TABLE_START]', '[TABLE_END]');
+    if (tableJson) {
+      try {
+        const tableData = JSON.parse(tableJson.replace(/```json|```/g,'').trim());
+        populateTable(tableData);
+      } catch(e) { console.warn('Table parse error', e); }
+    }
+
+    // Scenarios
+    const scenariosHtml = extract('[SCENARIOS_START]', '[SCENARIOS_END]');
+    if (scenariosHtml) {
+      const bestMatch = scenariosHtml.match(/\[BEST_START\]([\s\S]*?)\[BEST_END\]/);
+      const baseMatch = scenariosHtml.match(/\[BASE_START\]([\s\S]*?)\[BASE_END\]/);
+      const worstMatch = scenariosHtml.match(/\[WORST_START\]([\s\S]*?)\[WORST_END\]/);
+
+      // Fallback: split by scenario markers in content
+      function updateScenario(id, html) {
+        if (!html) return;
+        const card = document.getElementById(id);
+        const label = card.querySelector('.scenario-label').outerHTML;
+        card.innerHTML = label + html;
+      }
+
+      if (bestMatch) updateScenario('scenBest', bestMatch[1].trim());
+      else if (scenariosHtml.includes('Best Case') || scenariosHtml.includes('Resilient')) {
+        document.getElementById('scenBest').querySelector('p').textContent = '';
+        document.getElementById('scenBest').innerHTML = document.getElementById('scenBest').innerHTML.replace('<p class="placeholder-text">Generating…</p>', scenariosHtml.split('[BASE')[0] || '');
+      }
+      if (baseMatch) updateScenario('scenBase', baseMatch[1].trim());
+      if (worstMatch) updateScenario('scenWorst', worstMatch[1].trim());
+
+      // Simple fallback if tags not found — just populate all three with chunks
+      if (!bestMatch && !baseMatch && !worstMatch) {
+        const chunks = scenariosHtml.split(/<h3/i).filter(Boolean);
+        if (chunks.length >= 3) {
+          ['scenBest','scenBase','scenWorst'].forEach((id, i) => {
+            const card = document.getElementById(id);
+            const label = card.querySelector('.scenario-label').outerHTML;
+            card.innerHTML = label + '<h3' + chunks[i];
+          });
+        } else {
+          // Just put it all in best case
+          const card = document.getElementById('scenBest');
+          const label = card.querySelector('.scenario-label').outerHTML;
+          card.innerHTML = label + scenariosHtml;
+          ['scenBase','scenWorst'].forEach(id => {
+            document.getElementById(id).querySelector('p').textContent = 'See scenario analysis above.';
+          });
+        }
+      }
+    }
+
+    // Meta
+    const metaHtml = extract('[META_START]', '[META_END]');
+    if (metaHtml) {
+      document.getElementById('metaContent').classList.remove('loading');
+      document.getElementById('metaContent').innerHTML = metaHtml;
+    }
+
+    // Synthesis
+    const synthesisHtml = extract('[SYNTHESIS_START]', '[SYNTHESIS_END]');
+    if (synthesisHtml) {
+      document.getElementById('synthesisContent').classList.remove('loading');
+      document.getElementById('synthesisContent').innerHTML = synthesisHtml;
+    }
+
+    // Fallback if parsing failed — put full text somewhere visible
+    if (!top10Html && !metaHtml && !synthesisHtml) {
+      document.getElementById('top10Content').classList.remove('loading');
+      document.getElementById('top10Content').innerHTML = text.replace(/\[.*?\]/g,'');
+    }
+
+    status.className = 'gen-status';
+    status.textContent = '✓ Intelligence report generated successfully';
+    btn.disabled = false;
+    btn.textContent = 'Regenerate Report';
+
+  } catch(err) {
+    status.className = 'gen-status error';
+    status.textContent = `Error: ${err.message}`;
+    btn.disabled = false;
+    sections.forEach(s => {
+      document.getElementById(s.id).classList.remove('loading');
+      document.getElementById(s.id).innerHTML = `<p style="color:var(--red)">Generation failed: ${err.message}</p>`;
+    });
+  }
+}
+
+function populateTable(data) {
+  const tbody = document.getElementById('compTableBody');
+  tbody.innerHTML = data.map(row => `
+    <tr>
+      <td><strong>${row.risk}</strong></td>
+      <td>${dot(row.wef)}</td>
+      <td>${dot(row.imf)}</td>
+      <td>${dot(row.eurasia)}</td>
+      <td>${dot(row.oecd)}</td>
+      <td>${dot(row.un)}</td>
+      <td>${dot(row.blackrock)}</td>
+    </tr>
+  `).join('');
+}
+
+function dot(val) {
+  if (val === true || val === 'true') return '<span class="dot yes" title="Flagged"></span>';
+  if (val === 'partial') return '<span class="dot partial" title="Partially flagged"></span>';
+  return '<span class="dot no" title="Not prominently flagged"></span>';
+}
+
+// ── Progress bar ───────────────────────────────────────────────────────
+const bar = document.getElementById('progressBar');
+window.addEventListener('scroll', () => {
+  const scrollTop = window.scrollY;
+  const docH = document.documentElement.scrollHeight - window.innerHeight;
+  bar.style.width = (scrollTop / docH * 100) + '%';
+}, { passive: true });
+
+// ── Init ───────────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  renderCards();
+});
+</script>
+</body>
+</html>
