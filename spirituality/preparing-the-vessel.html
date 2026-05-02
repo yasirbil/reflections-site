@@ -1,688 +1,700 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Preparing the Vessel — Yasir Bilgin</title>
-<script src="https://yasirbilgin.com/nav.js"></script> 
-<link rel="icon" type="image/x-icon"   href="/favicon/favicon.ico">
-<link rel="icon" type="image/svg+xml"  href="/favicon/favicon.svg">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
-<link rel="apple-touch-icon" sizes="180x180"    href="/favicon/apple-touch-icon.png">
-<link rel="manifest" href="/favicon/site.webmanifest">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Preparing the Vessel — Yasir Bilgin</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cinzel:wght@400;500;600&family=Lato:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet" />
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  <!-- ① Global nav — always first -->
+  <script src="https://yasirbilgin.com/nav.js"></script>
 
-  :root {
-    --ink: #1c1812;
-    --ink-soft: #38322a;
-    --ink-muted: #7a7060;
-    --accent: #8B4513;
-    --accent-mid: #b5651d;
-    --accent-light: #d4853a;
-    --accent-pale: #f2e8da;
-    --gold: #b8860b;
-    --bg: #f7f3ec;
-    --bg-warm: #efe8db;
-    --bg-card: #e8dfd0;
-    --border: #d5c9b5;
-    --serif: 'Lora', Georgia, serif;
-    --display: 'Cinzel', serif;
-    --sans: 'Lato', sans-serif;
-  }
+  <!-- ② Favicons -->
+  <link rel="icon" type="image/x-icon"   href="/favicon/favicon.ico">
+  <link rel="icon" type="image/svg+xml"  href="/favicon/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180"    href="/favicon/apple-touch-icon.png">
+  <link rel="manifest" href="/favicon/site.webmanifest">
 
-  html { font-size: 18px; scroll-behavior: smooth; }
+  <!-- ③ Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cinzel:wght@400;500;600&family=Lato:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet" />
 
-  body {
-    background: var(--bg);
-    color: var(--ink-soft);
-    font-family: var(--serif);
-    line-height: 1.85;
-    opacity: 0;
-    animation: reveal 1.1s ease forwards;
-  }
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  @keyframes reveal { to { opacity: 1; } }
+    :root {
+      --ink: #1c1812;
+      --ink-soft: #38322a;
+      --ink-muted: #7a7060;
+      --accent: #8B4513;
+      --accent-mid: #b5651d;
+      --accent-light: #d4853a;
+      --accent-pale: #f2e8da;
+      --gold: #b8860b;
+      --bg: #f7f3ec;
+      --bg-warm: #efe8db;
+      --bg-card: #e8dfd0;
+      --border: #d5c9b5;
+      --serif: 'Lora', Georgia, serif;
+      --display: 'Cinzel', serif;
+      --sans: 'Lato', sans-serif;
+    }
 
-  /* HEADER */
-  .site-header {
-    position: sticky; top: 0; z-index: 100;
-    background: rgba(247,243,236,0.96);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0.75rem 2rem;
-  }
-  .pub-name {
-    font-family: var(--display);
-    font-size: 0.68rem;
-    letter-spacing: 0.25em;
-    color: var(--ink-muted);
-  }
-  .read-time {
-    font-family: var(--sans);
-    font-size: 0.72rem;
-    color: var(--ink-muted);
-    letter-spacing: 0.05em;
-    font-weight: 300;
-  }
+    html { font-size: 18px; scroll-behavior: smooth; }
 
-  /* HERO */
-  .hero {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 5rem 2rem 3rem;
-    animation: riseUp 1s ease 0.2s both;
-  }
-  @keyframes riseUp {
-    from { opacity: 0; transform: translateY(22px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
+    body {
+      background: var(--bg);
+      color: var(--ink-soft);
+      font-family: var(--serif);
+      line-height: 1.85;
+      opacity: 0;
+      animation: reveal 1.1s ease forwards;
+    }
 
-  .kicker {
-    font-family: var(--display);
-    font-size: 0.62rem;
-    letter-spacing: 0.25em;
-    color: var(--accent-mid);
-    margin-bottom: 1.8rem;
-    display: block;
-  }
+    @keyframes reveal { to { opacity: 1; } }
 
-  .hero h1 {
-    font-family: var(--display);
-    font-size: clamp(2rem, 5vw, 3.4rem);
-    font-weight: 500;
-    line-height: 1.22;
-    color: var(--ink);
-    margin-bottom: 0.6rem;
-    letter-spacing: 0.03em;
-  }
+    /* ④ Article sub-header (category + read time) — sticky BELOW the global nav */
+    .article-header {
+      position: sticky;
+      top: 62px;        /* ← exactly the nav.js bar height */
+      z-index: 50;      /* ← well below nav's z-index */
+      background: rgba(247,243,236,0.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 2rem;
+    }
+    .pub-name {
+      font-family: var(--display);
+      font-size: 0.68rem;
+      letter-spacing: 0.25em;
+      color: var(--ink-muted);
+    }
+    .read-time {
+      font-family: var(--sans);
+      font-size: 0.72rem;
+      color: var(--ink-muted);
+      letter-spacing: 0.05em;
+      font-weight: 300;
+    }
 
-  .hero h1 em {
-    font-style: italic;
-    font-family: var(--serif);
-    color: var(--accent-mid);
-    font-weight: 400;
-    letter-spacing: 0;
-  }
+    /* HERO */
+    .hero {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 5rem 2rem 3rem;
+      animation: riseUp 1s ease 0.2s both;
+    }
+    @keyframes riseUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
 
-  .hero-sub {
-    font-family: var(--serif);
-    font-size: 1.08rem;
-    font-style: italic;
-    color: var(--ink-muted);
-    max-width: 580px;
-    margin-bottom: 2.5rem;
-    line-height: 1.7;
-    font-weight: 400;
-  }
+    .kicker {
+      font-family: var(--display);
+      font-size: 0.62rem;
+      letter-spacing: 0.25em;
+      color: var(--accent-mid);
+      margin-bottom: 1.8rem;
+      display: block;
+    }
 
-  .byline {
-    display: flex;
-    align-items: center;
-    gap: 0.9rem;
-    padding-top: 1.4rem;
-    border-top: 1px solid var(--border);
-  }
-  .avatar {
-    width: 42px; height: 42px;
-    background: var(--accent);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    color: white;
-    font-family: var(--display);
-    font-size: 0.85rem;
-    letter-spacing: 0.05em;
-    flex-shrink: 0;
-  }
-  .byline-meta { font-size: 0.82rem; }
-  .byline-meta strong { display: block; font-family: var(--sans); font-weight: 700; color: var(--ink-soft); font-size: 0.85rem; }
-  .byline-meta span { color: var(--ink-muted); font-family: var(--sans); font-weight: 300; }
+    .hero h1 {
+      font-family: var(--display);
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      font-weight: 500;
+      line-height: 1.22;
+      color: var(--ink);
+      margin-bottom: 0.6rem;
+      letter-spacing: 0.03em;
+    }
 
-  /* DIVIDER */
-  .divider-wrap { max-width: 800px; margin: 0 auto 4rem; padding: 0 2rem; }
-  .divider-wrap hr { border: none; border-top: 1px solid var(--border); }
+    .hero h1 em {
+      font-style: italic;
+      font-family: var(--serif);
+      color: var(--accent-mid);
+      font-weight: 400;
+      letter-spacing: 0;
+    }
 
-  /* BODY */
-  .article-body {
-    max-width: 680px;
-    margin: 0 auto;
-    padding: 0 2rem 6rem;
-  }
+    .hero-sub {
+      font-family: var(--serif);
+      font-size: 1.08rem;
+      font-style: italic;
+      color: var(--ink-muted);
+      max-width: 580px;
+      margin-bottom: 2.5rem;
+      line-height: 1.7;
+      font-weight: 400;
+    }
 
-  .article-body > p {
-    font-size: 1.04rem;
-    color: var(--ink-soft);
-    margin-bottom: 1.6rem;
-    font-weight: 400;
-  }
+    .byline {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      padding-top: 1.4rem;
+      border-top: 1px solid var(--border);
+    }
+    .avatar {
+      width: 42px; height: 42px;
+      background: var(--accent);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: white;
+      font-family: var(--display);
+      font-size: 0.85rem;
+      letter-spacing: 0.05em;
+      flex-shrink: 0;
+    }
+    .byline-meta { font-size: 0.82rem; }
+    .byline-meta strong { display: block; font-family: var(--sans); font-weight: 700; color: var(--ink-soft); font-size: 0.85rem; }
+    .byline-meta span { color: var(--ink-muted); font-family: var(--sans); font-weight: 300; }
 
-  .article-body > p:first-of-type::first-letter {
-    font-family: var(--display);
-    font-size: 4rem;
-    font-weight: 500;
-    float: left;
-    line-height: 0.82;
-    margin-right: 0.12em;
-    margin-top: 0.1em;
-    color: var(--accent);
-  }
+    /* DIVIDER */
+    .divider-wrap { max-width: 800px; margin: 0 auto 4rem; padding: 0 2rem; }
+    .divider-wrap hr { border: none; border-top: 1px solid var(--border); }
 
-  /* SECTION HEADINGS */
-  .section-label {
-    font-family: var(--display);
-    font-size: 0.6rem;
-    letter-spacing: 0.28em;
-    color: var(--accent-mid);
-    display: block;
-    margin-top: 3.5rem;
-    margin-bottom: 0.5rem;
-  }
+    /* BODY */
+    .article-body {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 2rem 6rem;
+    }
 
-  .article-body h2 {
-    font-family: var(--display);
-    font-size: 1.55rem;
-    font-weight: 500;
-    color: var(--ink);
-    margin-bottom: 1.2rem;
-    line-height: 1.3;
-    letter-spacing: 0.04em;
-  }
+    .article-body > p {
+      font-size: 1.04rem;
+      color: var(--ink-soft);
+      margin-bottom: 1.6rem;
+      font-weight: 400;
+    }
 
-  .article-body h3 {
-    font-family: var(--serif);
-    font-size: 1.05rem;
-    font-weight: 600;
-    font-style: italic;
-    color: var(--accent);
-    margin-top: 2.2rem;
-    margin-bottom: 0.7rem;
-  }
+    .article-body > p:first-of-type::first-letter {
+      font-family: var(--display);
+      font-size: 4rem;
+      font-weight: 500;
+      float: left;
+      line-height: 0.82;
+      margin-right: 0.12em;
+      margin-top: 0.1em;
+      color: var(--accent);
+    }
 
-  /* PULL QUOTE */
-  .pull-quote {
-    margin: 3rem -1.5rem;
-    padding: 1.8rem 2rem 1.8rem 2.4rem;
-    border-left: 3px solid var(--accent-mid);
-    background: var(--accent-pale);
-    position: relative;
-  }
-  .pull-quote p {
-    font-family: var(--serif);
-    font-size: 1.18rem;
-    font-style: italic;
-    color: var(--ink);
-    line-height: 1.65;
-    margin: 0 !important;
-  }
-  .pull-quote::before {
-    content: '\201C';
-    font-family: var(--serif);
-    font-size: 4.5rem;
-    line-height: 0;
-    position: absolute;
-    top: 1.8rem; left: 1rem;
-    color: var(--accent-mid);
-    opacity: 0.2;
-  }
+    /* SECTION HEADINGS */
+    .section-label {
+      font-family: var(--display);
+      font-size: 0.6rem;
+      letter-spacing: 0.28em;
+      color: var(--accent-mid);
+      display: block;
+      margin-top: 3.5rem;
+      margin-bottom: 0.5rem;
+    }
 
-  /* PRACTICE CARDS */
-  .practice-grid {
-    margin: 2.5rem 0;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
+    .article-body h2 {
+      font-family: var(--display);
+      font-size: clamp(1.2rem, 3vw, 1.55rem);
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 1.2rem;
+      line-height: 1.3;
+      letter-spacing: 0.04em;
+    }
 
-  .practice-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    padding: 1.4rem 1.6rem;
-    position: relative;
-    display: grid;
-    grid-template-columns: 3rem 1fr;
-    gap: 0 1.2rem;
-    align-items: start;
-    transition: box-shadow 0.2s ease;
-  }
-  .practice-card:hover { box-shadow: 0 4px 20px rgba(139,69,19,0.08); }
+    .article-body h3 {
+      font-family: var(--serif);
+      font-size: 1.05rem;
+      font-weight: 600;
+      font-style: italic;
+      color: var(--accent);
+      margin-top: 2.2rem;
+      margin-bottom: 0.7rem;
+    }
 
-  .practice-num {
-    font-family: var(--display);
-    font-size: 1.6rem;
-    font-weight: 400;
-    color: var(--accent-mid);
-    line-height: 1.1;
-    padding-top: 0.1rem;
-  }
+    /* PULL QUOTE */
+    .pull-quote {
+      margin: 3rem 0 3rem -2rem;
+      padding: 1.8rem 2rem 1.8rem 2.4rem;
+      border-left: 3px solid var(--accent-mid);
+      background: var(--accent-pale);
+      position: relative;
+    }
+    .pull-quote p {
+      font-family: var(--serif);
+      font-size: 1.18rem;
+      font-style: italic;
+      color: var(--ink);
+      line-height: 1.65;
+      margin: 0 !important;
+    }
+    .pull-quote::before {
+      content: '\201C';
+      font-family: var(--serif);
+      font-size: 4.5rem;
+      line-height: 0;
+      position: absolute;
+      top: 1.8rem; left: 1rem;
+      color: var(--accent-mid);
+      opacity: 0.2;
+    }
+    @media (max-width: 640px) { .pull-quote { margin-left: 0; } }
 
-  .practice-content h4 {
-    font-family: var(--sans);
-    font-size: 0.82rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink);
-    margin-bottom: 0.4rem;
-  }
+    /* PRACTICE CARDS */
+    .practice-grid {
+      margin: 2.5rem 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
 
-  .practice-content p {
-    font-size: 0.92rem !important;
-    line-height: 1.7;
-    color: var(--ink-soft);
-    margin: 0 !important;
-  }
+    .practice-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 1.4rem 1.6rem;
+      position: relative;
+      display: grid;
+      grid-template-columns: 3rem 1fr;
+      gap: 0 1.2rem;
+      align-items: start;
+      transition: box-shadow 0.2s ease;
+    }
+    .practice-card:hover { box-shadow: 0 4px 20px rgba(139,69,19,0.08); }
 
-  .practice-content .term-tag {
-    display: inline-block;
-    margin-top: 0.6rem;
-    font-family: var(--serif);
-    font-size: 0.78rem;
-    font-style: italic;
-    color: var(--accent-mid);
-    background: var(--bg-warm);
-    padding: 0.15rem 0.5rem;
-    border: 1px solid var(--border);
-  }
+    .practice-num {
+      font-family: var(--display);
+      font-size: 1.6rem;
+      font-weight: 400;
+      color: var(--accent-mid);
+      line-height: 1.1;
+      padding-top: 0.1rem;
+    }
 
-  /* FACULTY BANNER */
-  .faculty-banner {
-    background: var(--ink);
-    color: white;
-    padding: 1.6rem 2rem;
-    margin: 3rem -1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-  }
-  .faculty-label {
-    font-family: var(--display);
-    font-size: 2.2rem;
-    color: var(--accent-light);
-    flex-shrink: 0;
-    line-height: 1;
-  }
-  .faculty-desc h3 {
-    font-family: var(--display);
-    font-size: 0.75rem;
-    letter-spacing: 0.18em;
-    color: var(--accent-light);
-    margin-bottom: 0.3rem;
-    font-weight: 400;
-    font-style: normal !important;
-    margin-top: 0 !important;
-  }
-  .faculty-desc p {
-    font-size: 0.88rem !important;
-    color: rgba(255,255,255,0.7);
-    line-height: 1.6;
-    margin: 0 !important;
-    font-style: italic;
-  }
+    .practice-content h4 {
+      font-family: var(--sans);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink);
+      margin-bottom: 0.4rem;
+    }
 
-  /* BREAK */
-  .section-break {
-    text-align: center;
-    margin: 3rem 0;
-    color: var(--accent-mid);
-    font-size: 1rem;
-    letter-spacing: 0.6em;
-    opacity: 0.5;
-  }
+    .practice-content p {
+      font-size: 0.92rem !important;
+      line-height: 1.7;
+      color: var(--ink-soft);
+      margin: 0 !important;
+    }
 
-  /* CLOSING PANEL */
-  .closing-panel {
-    background: var(--bg-warm);
-    border: 1px solid var(--border);
-    border-top: 3px solid var(--accent);
-    padding: 2rem 2.2rem;
-    margin: 3.5rem 0 0;
-  }
-  .closing-panel .cp-kicker {
-    font-family: var(--display);
-    font-size: 0.6rem;
-    letter-spacing: 0.25em;
-    color: var(--accent-mid);
-    display: block;
-    margin-bottom: 0.8rem;
-  }
-  .closing-panel p {
-    font-family: var(--serif);
-    font-size: 1.05rem;
-    font-style: italic;
-    color: var(--ink);
-    line-height: 1.7;
-    margin: 0 !important;
-  }
+    .practice-content .term-tag {
+      display: inline-block;
+      margin-top: 0.6rem;
+      font-family: var(--serif);
+      font-size: 0.78rem;
+      font-style: italic;
+      color: var(--accent-mid);
+      background: var(--bg-warm);
+      padding: 0.15rem 0.5rem;
+      border: 1px solid var(--border);
+    }
 
-  /* FOOTER */
-  .article-footer {
-    max-width: 680px;
-    margin: 0 auto;
-    padding: 3rem 2rem 5rem;
-    border-top: 1px solid var(--border);
-    text-align: center;
-  }
-  .footer-author {
-    display: inline-flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1.2rem;
-  }
-  .footer-avatar {
-    width: 52px; height: 52px;
-    background: var(--accent);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    color: white;
-    font-family: var(--display);
-    font-size: 1rem;
-    letter-spacing: 0.05em;
-  }
-  .footer-author-text { text-align: left; }
-  .footer-author-text strong { display: block; font-family: var(--display); font-size: 0.95rem; color: var(--ink); letter-spacing: 0.06em; }
-  .footer-author-text span { font-size: 0.78rem; color: var(--ink-muted); font-family: var(--sans); font-weight: 300; }
-  .footer-note { font-size: 0.8rem; color: var(--ink-muted); font-style: italic; font-family: var(--serif); }
+    /* FACULTY BANNER */
+    .faculty-banner {
+      background: var(--ink);
+      color: white;
+      padding: 1.6rem 2rem;
+      margin: 3rem 0;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    .faculty-label {
+      font-family: var(--display);
+      font-size: 2.2rem;
+      color: var(--accent-light);
+      flex-shrink: 0;
+      line-height: 1;
+    }
+    .faculty-desc h3 {
+      font-family: var(--display);
+      font-size: 0.75rem;
+      letter-spacing: 0.18em;
+      color: var(--accent-light);
+      margin-bottom: 0.3rem;
+      font-weight: 400;
+      font-style: normal !important;
+      margin-top: 0 !important;
+    }
+    .faculty-desc p {
+      font-size: 0.88rem !important;
+      color: rgba(255,255,255,0.7);
+      line-height: 1.6;
+      margin: 0 !important;
+      font-style: italic;
+    }
 
-  @media (max-width: 640px) {
-    .hero { padding: 3.5rem 1.2rem 2rem; }
-    .article-body { padding: 0 1.2rem 4rem; }
-    .pull-quote { margin: 2.5rem -1.2rem; }
-    .faculty-banner { margin: 2.5rem -1.2rem; flex-direction: column; gap: 0.8rem; }
-    .divider-wrap { padding: 0 1.2rem; }
-  }
-</style>
+    /* BREAK */
+    .section-break {
+      text-align: center;
+      margin: 3rem 0;
+      color: var(--accent-mid);
+      font-size: 1rem;
+      letter-spacing: 0.6em;
+      opacity: 0.5;
+    }
+
+    /* CLOSING PANEL */
+    .closing-panel {
+      background: var(--bg-warm);
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--accent);
+      padding: 2rem 2.2rem;
+      margin: 3.5rem 0 0;
+    }
+    .closing-panel .cp-kicker {
+      font-family: var(--display);
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      color: var(--accent-mid);
+      display: block;
+      margin-bottom: 0.8rem;
+    }
+    .closing-panel p {
+      font-family: var(--serif);
+      font-size: 1.05rem;
+      font-style: italic;
+      color: var(--ink);
+      line-height: 1.7;
+      margin: 0 !important;
+    }
+
+    /* FOOTER */
+    .article-footer {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 3rem 2rem 5rem;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+    .footer-author {
+      display: inline-flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.2rem;
+    }
+    .footer-avatar {
+      width: 52px; height: 52px;
+      background: var(--accent);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: white;
+      font-family: var(--display);
+      font-size: 1rem;
+      letter-spacing: 0.05em;
+    }
+    .footer-author-text { text-align: left; }
+    .footer-author-text strong { display: block; font-family: var(--display); font-size: 0.95rem; color: var(--ink); letter-spacing: 0.06em; }
+    .footer-author-text span { font-size: 0.78rem; color: var(--ink-muted); font-family: var(--sans); font-weight: 300; }
+    .footer-note { font-size: 0.8rem; color: var(--ink-muted); font-style: italic; font-family: var(--serif); }
+
+    @media (max-width: 640px) {
+      .hero { padding: 3.5rem 1.2rem 2rem; }
+      .article-body { padding: 0 1.2rem 4rem; }
+      .faculty-banner { flex-direction: column; gap: 0.8rem; }
+      .divider-wrap { padding: 0 1.2rem; }
+      .article-header { padding: 0.6rem 1.2rem; }
+    }
+  </style>
 </head>
 <body>
 
-<header class="site-header">
-  <span class="pub-name">Spirituality</span>
-  <span class="read-time">11 min read</span>
-</header>
+  <!-- Article sub-header — sticky at top: 62px, below nav.js -->
+  <header class="article-header">
+    <span class="pub-name">Spirituality</span>
+    <span class="read-time">11 min read</span>
+  </header>
 
-<div class="hero">
-  <span class="kicker">Spiritual Practice · Sacred Presence · Preparation</span>
-  <h1>Preparing the <em>Vessel</em></h1>
-  <p class="hero-sub">How to ready the body, heart, mind, and will before entering a sacred space — so that what wants to arrive can actually find you.</p>
-  <div class="byline">
-    <div class="avatar">YB</div>
-    <div class="byline-meta">
-      <strong>Yasir Bilgin</strong>
-      <span>March 2026 · Islamic Psychology Series</span>
-    </div>
-  </div>
-</div>
-
-<div class="divider-wrap"><hr /></div>
-
-<article class="article-body">
-
-  <p>There is a difference between arriving somewhere and entering it. You can be physically present in a sacred space — a circle of remembrance, a day of spiritual retreat, a moment of communal prayer — while remaining entirely elsewhere internally. The body has crossed the threshold. The heart has not. The vessel is in the room. Nothing is being received.</p>
-
-  <p>Most of us know this experience. We have attended gatherings that left us untouched not because the gathering failed but because we were not actually there. We were too full of the previous context — still processing the last conversation, still mentally composing responses to unanswered messages, still carrying the weight of unresolved obligations — to have any interior space available for what the sacred moment was offering.</p>
-
-  <p>Preparation is the practice of crossing the threshold before you cross it. It is the gradual work — beginning hours or days before the sacred space opens — of emptying what needs to be emptied, orienting what needs to be oriented, and quieting what needs to be quieted, so that when you arrive, the vessel is genuinely ready to receive what the experience has to offer.</p>
-
-  <p>The model I have been developing — mapping the four cognitive faculties of Extraverted Sensing (SE), Introverted Feeling (FI), Introverted Intuition (NI), and Extraverted Thinking (TE) onto Said Nursî's anthropology in the Risale-i Nur — offers a precise framework for understanding what genuine preparation requires. Because each faculty plays a distinct role in sacred reception, each requires its own form of preparation. Together, the four forms of readiness constitute what it means to arrive as a complete and oriented vessel.</p>
-
-  <div class="pull-quote">
-    <p>Preparation is not the work you do before the sacred space opens. It is the first movement of the opening itself — the gradual turning of the vessel toward the light, so that when the light arrives, the mirror is already oriented to receive it.</p>
-  </div>
-
-  <p>But before the four faculties, one principle must be stated that governs everything beneath it.</p>
-
-  <div class="section-break">· · ·</div>
-
-  <span class="section-label">The Core Principle</span>
-  <h2>Preparation Is Already the Beginning</h2>
-
-  <p>Preparation is not a checklist completed before the real thing begins. It is the gradual reorientation of the entire person toward a quality of receptivity that the sacred moment requires. You are not preparing <em>for</em> hudhur. You are already beginning to enter it.</p>
-
-  <p>This means the preparation and the experience are on a continuum — not separated by a threshold. The person who arrives having genuinely prepared is already partially present. The person who arrives unprepared will spend the first hours of the experience simply decelerating — burning off the accumulated noise of ordinary life before they can begin to receive anything.</p>
-
-  <p>The quality of what you receive is therefore determined not at the moment of arrival but in the hours and days that precede it. This is both a sobering and a liberating truth: sobering because it means the spiritual life cannot be approached casually, as though the sacred is available on demand regardless of how you have been living. Liberating because it means the preparation itself is already a form of presence — already a beginning of what you are preparing for.</p>
-
-  <div class="section-break">· · ·</div>
-
-  <!-- SE -->
-  <div class="faculty-banner">
-    <div class="faculty-label">SE</div>
-    <div class="faculty-desc">
-      <h3>Extraverted Sensing — Nazar · Isti'dad</h3>
-      <p>The vessel's physical and perceptual readiness. Preparing the body so the soul can fully dwell and manifest through it.</p>
-    </div>
-  </div>
-
-  <span class="section-label">First Preparation</span>
-  <h2>Preparing the Body and the Gaze</h2>
-
-  <p>SE is the faculty that governs the body's receptive capacity — its attentiveness, its physical integrity, its availability to the subtle. Because SE is the foundation upon which everything else rests, its preparation is the most basic and the most commonly neglected.</p>
-
-  <h3>Lower the noise floor</h3>
-  <p>The body carries the residue of how it has been living. A body that has been sleep-deprived, overfed with stimulation, or saturated with screens arrives with reduced receptive capacity — not as a moral failure but as a perceptual reality. SE preparation therefore begins in the days before the sacred gathering: sleep taken seriously, food chosen for nourishment rather than distraction, screen exposure deliberately reduced. This is not asceticism. It is engineering. You are lowering the noise floor of the body so that subtler signals can be received.</p>
-
-  <h3>Sensory fasting</h3>
-  <p>In the 24 hours before entering the sacred space, deliberately reduce sensory input. Less music, less news, fewer conversations that are not genuinely necessary. Not because these things are harmful in themselves, but because they fill the perceptual space that preparation requires to be gradually emptied. The ear saturated with noise all day cannot suddenly hear the subtle. The eye that has been scrolling cannot suddenly attend to the quality of light on a wall. Sensory fasting creates the interior quiet that genuine reception requires.</p>
-
-  <h3>Ghusl — the ritual bath as re-inscription</h3>
-  <p>The full ritual bath before a sacred gathering is not merely a legal requirement in Islamic practice. It is one of the most profound SE preparation practices available to us. The complete immersion of the body in water, performed with genuine intention, is a physical re-inscription of the entire vessel — a bodily statement that what is coming requires a different quality of presence than what has preceded it. The clean body arriving in clean clothes communicates to the entire person, at a pre-verbal level, that something real is about to begin.</p>
-
-  <h3>Arriving before you arrive</h3>
-  <p>The person who arrives rushed, slightly late, still mentally in the previous context, has not yet crossed the interior threshold. Arriving early — early enough to sit quietly in the space before others arrive, to let the body settle, to feel the atmosphere of the place — is one of the simplest and most powerful SE preparations available. The space speaks. But you have to be still long enough to hear it.</p>
-
-  <div class="practice-grid">
-    <div class="practice-card">
-      <div class="practice-num">1</div>
-      <div class="practice-content">
-        <h4>Two nights before</h4>
-        <p>Protect your sleep. Go to bed earlier than usual. Reduce screen exposure after Maghrib. The body needs actual rest, not managed exhaustion.</p>
-        <span class="term-tag">Isti'dad — preparedness, readiness of the vessel</span>
-      </div>
-    </div>
-    <div class="practice-card">
-      <div class="practice-num">2</div>
-      <div class="practice-content">
-        <h4>The day before</h4>
-        <p>Begin sensory fasting. Reduce social media, news, and unnecessary consumption. Eat simply. Spend at least 20 minutes outside in unhurried attention to creation.</p>
-        <span class="term-tag">Nazar — the wakeful, attentive gaze</span>
-      </div>
-    </div>
-    <div class="practice-card">
-      <div class="practice-num">3</div>
-      <div class="practice-content">
-        <h4>Morning of</h4>
-        <p>Perform ghusl with genuine intention. Wear clean, simple clothes. Eat lightly. Arrive at the space at least 15 minutes early and sit in silence before the gathering begins.</p>
-        <span class="term-tag">Tahara — purification as a physical and spiritual act</span>
+  <div class="hero">
+    <span class="kicker">Spiritual Practice · Sacred Presence · Preparation</span>
+    <h1>Preparing the <em>Vessel</em></h1>
+    <p class="hero-sub">How to ready the body, heart, mind, and will before entering a sacred space — so that what wants to arrive can actually find you.</p>
+    <div class="byline">
+      <div class="avatar">YB</div>
+      <div class="byline-meta">
+        <strong>Yasir Bilgin</strong>
+        <span>March 2026 · Islamic Psychology Series</span>
       </div>
     </div>
   </div>
 
-  <!-- FI -->
-  <div class="faculty-banner">
-    <div class="faculty-label">FI</div>
-    <div class="faculty-desc">
-      <h3>Introverted Feeling — Fıtrat · İhlâs · Zevk</h3>
-      <p>The heart's orientation. Polishing the interior mirror so it can receive rather than project.</p>
+  <div class="divider-wrap"><hr /></div>
+
+  <article class="article-body">
+
+    <p>There is a difference between arriving somewhere and entering it. You can be physically present in a sacred space — a circle of remembrance, a day of spiritual retreat, a moment of communal prayer — while remaining entirely elsewhere internally. The body has crossed the threshold. The heart has not. The vessel is in the room. Nothing is being received.</p>
+
+    <p>Most of us know this experience. We have attended gatherings that left us untouched not because the gathering failed but because we were not actually there. We were too full of the previous context — still processing the last conversation, still mentally composing responses to unanswered messages, still carrying the weight of unresolved obligations — to have any interior space available for what the sacred moment was offering.</p>
+
+    <p>Preparation is the practice of crossing the threshold before you cross it. It is the gradual work — beginning hours or days before the sacred space opens — of emptying what needs to be emptied, orienting what needs to be oriented, and quieting what needs to be quieted, so that when you arrive, the vessel is genuinely ready to receive what the experience has to offer.</p>
+
+    <p>The model I have been developing — mapping the four cognitive faculties of Extraverted Sensing (SE), Introverted Feeling (FI), Introverted Intuition (NI), and Extraverted Thinking (TE) onto Said Nursî's anthropology in the Risale-i Nur — offers a precise framework for understanding what genuine preparation requires. Because each faculty plays a distinct role in sacred reception, each requires its own form of preparation. Together, the four forms of readiness constitute what it means to arrive as a complete and oriented vessel.</p>
+
+    <div class="pull-quote">
+      <p>Preparation is not the work you do before the sacred space opens. It is the first movement of the opening itself — the gradual turning of the vessel toward the light, so that when the light arrives, the mirror is already oriented to receive it.</p>
     </div>
-  </div>
 
-  <span class="section-label">Second Preparation</span>
-  <h2>Preparing the Heart</h2>
+    <p>But before the four faculties, one principle must be stated that governs everything beneath it.</p>
 
-  <p>FI is the faculty of moral and sacred discernment — the interior instrument that reads the resonance of what is real versus what is performed, what carries genuine worth versus what merely appears to. Because FI reads through the quality of the interior surface, its preparation is about polishing that surface: removing the film of unacknowledged compromise, unprocessed emotion, and nafs-interference that reduces its reflective capacity.</p>
+    <div class="section-break">· · ·</div>
 
-  <h3>Interior inventory — knowing what you carry</h3>
-  <p>Before entering a sacred space, the honest question is: where am I actually arriving from? Not where I wish I were arriving from — but where I actually am. What has the week been? What is unresolved, still vibrating with anxiety, resentment, or grief? FI preparation requires this honest interior inventory — not to resolve everything before arriving, but to know what you are carrying so that it does not operate invisibly. The person who arrives pretending to be in a state they are not in has already introduced a layer of performance between themselves and genuine reception.</p>
+    <span class="section-label">The Core Principle</span>
+    <h2>Preparation Is Already the Beginning</h2>
 
-  <h3>Tawba — the polishing of the mirror</h3>
-  <p>Genuine tawba — not the performance of repentance but the actual interior act of honestly acknowledging what has been false, hollow, or wrong in recent days — is perhaps the single most powerful FI preparation. Every unacknowledged compromise of integrity, every moment of riya, every hollow word spoken leaves a film on the interior surface that reduces its reflective capacity. Tawba removes the film. Not through self-punishment but through honest acknowledgment followed by genuine reorientation. The heart that has made real tawba arrives with a different quality of interior clarity than the heart that has been carrying its compromises unexamined.</p>
+    <p>Preparation is not a checklist completed before the real thing begins. It is the gradual reorientation of the entire person toward a quality of receptivity that the sacred moment requires. You are not preparing <em>for</em> hudhur. You are already beginning to enter it.</p>
 
-  <h3>Setting a genuine niyyah</h3>
-  <p>Not a formal statement but a real interior act. What am I actually here for? Not what sounds spiritual — but what is genuinely true? The niyyah spoken without being felt is a form of the very performance that blocks reception. The niyyah that is genuinely felt — even if it is something as simple as <em>I am here because I am hungry for something real</em> — is the beginning of genuine orientation. FI's role in preparation is to ensure the heart arrives honestly oriented toward what is real rather than toward what looks good.</p>
+    <p>This means the preparation and the experience are on a continuum — not separated by a threshold. The person who arrives having genuinely prepared is already partially present. The person who arrives unprepared will spend the first hours of the experience simply decelerating — burning off the accumulated noise of ordinary life before they can begin to receive anything.</p>
 
-  <div class="practice-grid">
-    <div class="practice-card">
-      <div class="practice-num">1</div>
-      <div class="practice-content">
-        <h4>Evening before</h4>
-        <p>Sit quietly for 10 minutes and ask honestly: what am I carrying right now? Write it if that helps. You do not need to resolve it — only to see it clearly and name it.</p>
-        <span class="term-tag">Muhasaba — honest self-examination</span>
+    <p>The quality of what you receive is therefore determined not at the moment of arrival but in the hours and days that precede it. This is both a sobering and a liberating truth: sobering because it means the spiritual life cannot be approached casually, as though the sacred is available on demand regardless of how you have been living. Liberating because it means the preparation itself is already a form of presence — already a beginning of what you are preparing for.</p>
+
+    <div class="section-break">· · ·</div>
+
+    <!-- SE -->
+    <div class="faculty-banner">
+      <div class="faculty-label">SE</div>
+      <div class="faculty-desc">
+        <h3>Extraverted Sensing — Nazar · Isti'dad</h3>
+        <p>The vessel's physical and perceptual readiness. Preparing the body so the soul can fully dwell and manifest through it.</p>
       </div>
     </div>
-    <div class="practice-card">
-      <div class="practice-num">2</div>
-      <div class="practice-content">
-        <h4>Before sleep</h4>
-        <p>Make tawba — genuine, specific, unhurried. Not a formula but an honest acknowledgment of what has been compromised in recent days, followed by a real turning.</p>
-        <span class="term-tag">Tawba — returning; the polishing of the interior mirror</span>
+
+    <span class="section-label">First Preparation</span>
+    <h2>Preparing the Body and the Gaze</h2>
+
+    <p>SE is the faculty that governs the body's receptive capacity — its attentiveness, its physical integrity, its availability to the subtle. Because SE is the foundation upon which everything else rests, its preparation is the most basic and the most commonly neglected.</p>
+
+    <h3>Lower the noise floor</h3>
+    <p>The body carries the residue of how it has been living. A body that has been sleep-deprived, overfed with stimulation, or saturated with screens arrives with reduced receptive capacity — not as a moral failure but as a perceptual reality. SE preparation therefore begins in the days before the sacred gathering: sleep taken seriously, food chosen for nourishment rather than distraction, screen exposure deliberately reduced. This is not asceticism. It is engineering. You are lowering the noise floor of the body so that subtler signals can be received.</p>
+
+    <h3>Sensory fasting</h3>
+    <p>In the 24 hours before entering the sacred space, deliberately reduce sensory input. Less music, less news, fewer conversations that are not genuinely necessary. Not because these things are harmful in themselves, but because they fill the perceptual space that preparation requires to be gradually emptied. The ear saturated with noise all day cannot suddenly hear the subtle. The eye that has been scrolling cannot suddenly attend to the quality of light on a wall. Sensory fasting creates the interior quiet that genuine reception requires.</p>
+
+    <h3>Ghusl — the ritual bath as re-inscription</h3>
+    <p>The full ritual bath before a sacred gathering is not merely a legal requirement in Islamic practice. It is one of the most profound SE preparation practices available to us. The complete immersion of the body in water, performed with genuine intention, is a physical re-inscription of the entire vessel — a bodily statement that what is coming requires a different quality of presence than what has preceded it. The clean body arriving in clean clothes communicates to the entire person, at a pre-verbal level, that something real is about to begin.</p>
+
+    <h3>Arriving before you arrive</h3>
+    <p>The person who arrives rushed, slightly late, still mentally in the previous context, has not yet crossed the interior threshold. Arriving early — early enough to sit quietly in the space before others arrive, to let the body settle, to feel the atmosphere of the place — is one of the simplest and most powerful SE preparations available. The space speaks. But you have to be still long enough to hear it.</p>
+
+    <div class="practice-grid">
+      <div class="practice-card">
+        <div class="practice-num">1</div>
+        <div class="practice-content">
+          <h4>Two nights before</h4>
+          <p>Protect your sleep. Go to bed earlier than usual. Reduce screen exposure after Maghrib. The body needs actual rest, not managed exhaustion.</p>
+          <span class="term-tag">Isti'dad — preparedness, readiness of the vessel</span>
+        </div>
+      </div>
+      <div class="practice-card">
+        <div class="practice-num">2</div>
+        <div class="practice-content">
+          <h4>The day before</h4>
+          <p>Begin sensory fasting. Reduce social media, news, and unnecessary consumption. Eat simply. Spend at least 20 minutes outside in unhurried attention to creation.</p>
+          <span class="term-tag">Nazar — the wakeful, attentive gaze</span>
+        </div>
+      </div>
+      <div class="practice-card">
+        <div class="practice-num">3</div>
+        <div class="practice-content">
+          <h4>Morning of</h4>
+          <p>Perform ghusl with genuine intention. Wear clean, simple clothes. Eat lightly. Arrive at the space at least 15 minutes early and sit in silence before the gathering begins.</p>
+          <span class="term-tag">Tahara — purification as a physical and spiritual act</span>
+        </div>
       </div>
     </div>
-    <div class="practice-card">
-      <div class="practice-num">3</div>
-      <div class="practice-content">
-        <h4>Morning of</h4>
-        <p>Before leaving for the gathering, set your niyyah in specific, honest language. Not "I want to be spiritual" but whatever is actually true: I am tired and I want to be renewed. I have been distracted and I want to return. Name what is genuinely there.</p>
-        <span class="term-tag">İhlâs — sincerity; the refusal of performance before the sacred</span>
+
+    <!-- FI -->
+    <div class="faculty-banner">
+      <div class="faculty-label">FI</div>
+      <div class="faculty-desc">
+        <h3>Introverted Feeling — Fıtrat · İhlâs · Zevk</h3>
+        <p>The heart's orientation. Polishing the interior mirror so it can receive rather than project.</p>
       </div>
     </div>
-  </div>
 
-  <!-- NI -->
-  <div class="faculty-banner">
-    <div class="faculty-label">NI</div>
-    <div class="faculty-desc">
-      <h3>Introverted Intuition — Tefekkür · Vahdet</h3>
-      <p>The depth that receives pattern. Priming the interior for penetration beyond the surface of what will be encountered.</p>
-    </div>
-  </div>
+    <span class="section-label">Second Preparation</span>
+    <h2>Preparing the Heart</h2>
 
-  <span class="section-label">Third Preparation</span>
-  <h2>Preparing the Depth</h2>
+    <p>FI is the faculty of moral and sacred discernment — the interior instrument that reads the resonance of what is real versus what is performed, what carries genuine worth versus what merely appears to. Because FI reads through the quality of the interior surface, its preparation is about polishing that surface: removing the film of unacknowledged compromise, unprocessed emotion, and nafs-interference that reduces its reflective capacity.</p>
 
-  <p>NI is the faculty that perceives pattern and meaning beneath the surface — the function that moves from individual moments of sacred encounter toward the unified understanding of what they collectively reveal. Its preparation is about creating interior depth and availability: clearing the clutter of half-processed information so that genuine penetration becomes possible when the sacred moment arrives.</p>
+    <h3>Interior inventory — knowing what you carry</h3>
+    <p>Before entering a sacred space, the honest question is: where am I actually arriving from? Not where I wish I were arriving from — but where I actually am. What has the week been? What is unresolved, still vibrating with anxiety, resentment, or grief? FI preparation requires this honest interior inventory — not to resolve everything before arriving, but to know what you are carrying so that it does not operate invisibly. The person who arrives pretending to be in a state they are not in has already introduced a layer of performance between themselves and genuine reception.</p>
 
-  <h3>Slow reading — bringing provisions</h3>
-  <p>NI preparation involves bringing relevant depth to the threshold of the experience. Reading slowly — a passage of Qur'an attended to rather than completed, a selection from the Risale-i Nur, a poem that carries genuine weight — in the days before the gathering, not to acquire information but to allow the text to deposit something in the interior. The person who arrives having recently sat with genuine depth has a different interior availability than the person who arrives having only consumed surface content. The reading is not background preparation; it is the beginning of the experience itself.</p>
+    <h3>Tawba — the polishing of the mirror</h3>
+    <p>Genuine tawba — not the performance of repentance but the actual interior act of honestly acknowledging what has been false, hollow, or wrong in recent days — is perhaps the single most powerful FI preparation. Every unacknowledged compromise of integrity, every moment of riya, every hollow word spoken leaves a film on the interior surface that reduces its reflective capacity. Tawba removes the film. Not through self-punishment but through honest acknowledgment followed by genuine reorientation. The heart that has made real tawba arrives with a different quality of interior clarity than the heart that has been carrying its compromises unexamined.</p>
 
-  <h3>The question held in suspension</h3>
-  <p>NI preparation also involves identifying — consciously if possible — the question you are genuinely carrying into the space. Not an intellectual question to be answered but an existential one present in the background of recent experience. What is genuinely unresolved in me right now? What am I actually seeking, beneath the social reasons for attending? Holding this question consciously, without forcing an answer, allows NI to remain oriented during the experience — alert to the moment when something touches the question from an unexpected direction. Sacred spaces rarely answer the questions we bring explicitly. They answer the ones we have been carrying unknowingly.</p>
+    <h3>Setting a genuine niyyah</h3>
+    <p>Not a formal statement but a real interior act. What am I actually here for? Not what sounds spiritual — but what is genuinely true? The niyyah spoken without being felt is a form of the very performance that blocks reception. The niyyah that is genuinely felt — even if it is something as simple as <em>I am here because I am hungry for something real</em> — is the beginning of genuine orientation. FI's role in preparation is to ensure the heart arrives honestly oriented toward what is real rather than toward what looks good.</p>
 
-  <h3>Reducing intellectual noise</h3>
-  <p>NI is easily cluttered by the accumulation of half-processed ideas, arguments, and analytical content. In the days before a sacred gathering, deliberately reducing intellectual consumption — fewer podcasts, less analytical reading, less news — creates interior space in which NI's native capacity for depth perception can reassert itself. The intuition that has been drowned in analysis cannot suddenly access depth on demand.</p>
-
-  <div class="practice-grid">
-    <div class="practice-card">
-      <div class="practice-num">1</div>
-      <div class="practice-content">
-        <h4>Two to three days before</h4>
-        <p>Read one passage of the Qur'an or a sacred text slowly — unhurried, with pauses. Read it again the following day. Allow it to work in you without forcing comprehension.</p>
-        <span class="term-tag">Tefekkür — contemplation that penetrates beneath multiplicity</span>
+    <div class="practice-grid">
+      <div class="practice-card">
+        <div class="practice-num">1</div>
+        <div class="practice-content">
+          <h4>Evening before</h4>
+          <p>Sit quietly for 10 minutes and ask honestly: what am I carrying right now? Write it if that helps. You do not need to resolve it — only to see it clearly and name it.</p>
+          <span class="term-tag">Muhasaba — honest self-examination</span>
+        </div>
+      </div>
+      <div class="practice-card">
+        <div class="practice-num">2</div>
+        <div class="practice-content">
+          <h4>Before sleep</h4>
+          <p>Make tawba — genuine, specific, unhurried. Not a formula but an honest acknowledgment of what has been compromised in recent days, followed by a real turning.</p>
+          <span class="term-tag">Tawba — returning; the polishing of the interior mirror</span>
+        </div>
+      </div>
+      <div class="practice-card">
+        <div class="practice-num">3</div>
+        <div class="practice-content">
+          <h4>Morning of</h4>
+          <p>Before leaving for the gathering, set your niyyah in specific, honest language. Not "I want to be spiritual" but whatever is actually true: I am tired and I want to be renewed. I have been distracted and I want to return. Name what is genuinely there.</p>
+          <span class="term-tag">İhlâs — sincerity; the refusal of performance before the sacred</span>
+        </div>
       </div>
     </div>
-    <div class="practice-card">
-      <div class="practice-num">2</div>
-      <div class="practice-content">
-        <h4>The night before</h4>
-        <p>Write one sentence: the question you are actually carrying into this gathering. Not what you hope to receive — but what you are genuinely seeking. Keep it private. Carry it consciously.</p>
-        <span class="term-tag">The held question — NI's orientation beneath the surface</span>
+
+    <!-- NI -->
+    <div class="faculty-banner">
+      <div class="faculty-label">NI</div>
+      <div class="faculty-desc">
+        <h3>Introverted Intuition — Tefekkür · Vahdet</h3>
+        <p>The depth that receives pattern. Priming the interior for penetration beyond the surface of what will be encountered.</p>
       </div>
     </div>
-    <div class="practice-card">
-      <div class="practice-num">3</div>
-      <div class="practice-content">
-        <h4>Day before and morning of</h4>
-        <p>Reduce analytical consumption. No news, minimal podcasts, no argumentative reading. Give the interior space to settle toward its own depth rather than filling it with incoming content.</p>
-        <span class="term-tag">Farag — interior spaciousness; emptying to receive</span>
+
+    <span class="section-label">Third Preparation</span>
+    <h2>Preparing the Depth</h2>
+
+    <p>NI is the faculty that perceives pattern and meaning beneath the surface — the function that moves from individual moments of sacred encounter toward the unified understanding of what they collectively reveal. Its preparation is about creating interior depth and availability: clearing the clutter of half-processed information so that genuine penetration becomes possible when the sacred moment arrives.</p>
+
+    <h3>Slow reading — bringing provisions</h3>
+    <p>NI preparation involves bringing relevant depth to the threshold of the experience. Reading slowly — a passage of Qur'an attended to rather than completed, a selection from the Risale-i Nur, a poem that carries genuine weight — in the days before the gathering, not to acquire information but to allow the text to deposit something in the interior. The person who arrives having recently sat with genuine depth has a different interior availability than the person who arrives having only consumed surface content. The reading is not background preparation; it is the beginning of the experience itself.</p>
+
+    <h3>The question held in suspension</h3>
+    <p>NI preparation also involves identifying — consciously if possible — the question you are genuinely carrying into the space. Not an intellectual question to be answered but an existential one present in the background of recent experience. What is genuinely unresolved in me right now? What am I actually seeking, beneath the social reasons for attending? Holding this question consciously, without forcing an answer, allows NI to remain oriented during the experience — alert to the moment when something touches the question from an unexpected direction. Sacred spaces rarely answer the questions we bring explicitly. They answer the ones we have been carrying unknowingly.</p>
+
+    <h3>Reducing intellectual noise</h3>
+    <p>NI is easily cluttered by the accumulation of half-processed ideas, arguments, and analytical content. In the days before a sacred gathering, deliberately reducing intellectual consumption — fewer podcasts, less analytical reading, less news — creates interior space in which NI's native capacity for depth perception can reassert itself. The intuition that has been drowned in analysis cannot suddenly access depth on demand.</p>
+
+    <div class="practice-grid">
+      <div class="practice-card">
+        <div class="practice-num">1</div>
+        <div class="practice-content">
+          <h4>Two to three days before</h4>
+          <p>Read one passage of the Qur'an or a sacred text slowly — unhurried, with pauses. Read it again the following day. Allow it to work in you without forcing comprehension.</p>
+          <span class="term-tag">Tefekkür — contemplation that penetrates beneath multiplicity</span>
+        </div>
+      </div>
+      <div class="practice-card">
+        <div class="practice-num">2</div>
+        <div class="practice-content">
+          <h4>The night before</h4>
+          <p>Write one sentence: the question you are actually carrying into this gathering. Not what you hope to receive — but what you are genuinely seeking. Keep it private. Carry it consciously.</p>
+          <span class="term-tag">The held question — NI's orientation beneath the surface</span>
+        </div>
+      </div>
+      <div class="practice-card">
+        <div class="practice-num">3</div>
+        <div class="practice-content">
+          <h4>Day before and morning of</h4>
+          <p>Reduce analytical consumption. No news, minimal podcasts, no argumentative reading. Give the interior space to settle toward its own depth rather than filling it with incoming content.</p>
+          <span class="term-tag">Farag — interior spaciousness; emptying to receive</span>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- TE -->
-  <div class="faculty-banner">
-    <div class="faculty-label">TE</div>
-    <div class="faculty-desc">
-      <h3>Extraverted Thinking — Emanet · Istikame</h3>
-      <p>The structural commitment. Clearing the practical and surrendering the need for control so attention is genuinely free.</p>
-    </div>
-  </div>
-
-  <span class="section-label">Fourth Preparation</span>
-  <h2>Preparing the Will</h2>
-
-  <p>TE is the faculty of effective, structured action in the world — the function that builds, organizes, and protects. In the context of preparation, its role is twofold and paradoxical: to clear the practical ground so that the mind is genuinely free, and then to surrender the outcome-orientation that is TE's native disposition. The practical clearing is TE's gift to the experience. The surrender is TE's sacrifice for it.</p>
-
-  <h3>Clearing practical obligations</h3>
-  <p>One of TE's most important contributions to preparation is the most mundane: ensuring that the practical obligations of ordinary life are genuinely settled before entering the sacred space. Emails answered or consciously deferred. Arrangements made for those who depend on you. The people in your life informed and cared for. Not because these things are unspiritual, but because an unresolved practical obligation does not disappear when you enter a sacred space — it simply operates as a background hum of anxiety that divides attention and reduces receptive capacity. TE preparation is the clearing of the decks.</p>
-
-  <h3>Surrendering the outcome</h3>
-  <p>This is TE's deepest preparation challenge and its most important. TE's native orientation is toward structuring, directing, and optimizing outcomes. In a sacred space, this orientation must be genuinely surrendered — not performed as an act of spiritual humility, but actually let go. The person who arrives with a predetermined idea of what should happen, what they should feel, and how the experience should go has already closed the space where genuine surprise — which is often where the most important things arrive — might enter. TE preparation therefore includes the deliberate interior act of releasing outcome-orientation. I have prepared as well as I can. What comes now is not mine to control — only to receive.</p>
-
-  <h3>Making the commitment structurally real</h3>
-  <p>Finally, TE preparation involves making the commitment to the sacred space structurally real — not just internally decided but externally arranged. The phone left behind or genuinely switched off. The time protected from competing obligations. These external arrangements are not bureaucratic details. They are the structural expression of the interior commitment, and they communicate to the entire person — at the bodily and practical level — that what is coming genuinely matters.</p>
-
-  <div class="practice-grid">
-    <div class="practice-card">
-      <div class="practice-num">1</div>
-      <div class="practice-content">
-        <h4>Two days before</h4>
-        <p>Identify what practical obligations need to be settled before the gathering. Handle what can be handled. Consciously defer what cannot, with a specific plan for after. Empty the practical holding space.</p>
-        <span class="term-tag">Faraagh — freedom from preoccupation; structural clarity</span>
+    <!-- TE -->
+    <div class="faculty-banner">
+      <div class="faculty-label">TE</div>
+      <div class="faculty-desc">
+        <h3>Extraverted Thinking — Emanet · Istikame</h3>
+        <p>The structural commitment. Clearing the practical and surrendering the need for control so attention is genuinely free.</p>
       </div>
     </div>
-    <div class="practice-card">
-      <div class="practice-num">2</div>
-      <div class="practice-content">
-        <h4>Evening before</h4>
-        <p>Inform the people in your life that you will be unavailable. Arrange your phone: switch off notifications or leave it entirely. Make the commitment external and visible, not only internal.</p>
-        <span class="term-tag">Istikame — the sustained commitment expressed in structure</span>
+
+    <span class="section-label">Fourth Preparation</span>
+    <h2>Preparing the Will</h2>
+
+    <p>TE is the faculty of effective, structured action in the world — the function that builds, organizes, and protects. In the context of preparation, its role is twofold and paradoxical: to clear the practical ground so that the mind is genuinely free, and then to surrender the outcome-orientation that is TE's native disposition. The practical clearing is TE's gift to the experience. The surrender is TE's sacrifice for it.</p>
+
+    <h3>Clearing practical obligations</h3>
+    <p>One of TE's most important contributions to preparation is the most mundane: ensuring that the practical obligations of ordinary life are genuinely settled before entering the sacred space. Emails answered or consciously deferred. Arrangements made for those who depend on you. The people in your life informed and cared for. Not because these things are unspiritual, but because an unresolved practical obligation does not disappear when you enter a sacred space — it simply operates as a background hum of anxiety that divides attention and reduces receptive capacity. TE preparation is the clearing of the decks.</p>
+
+    <h3>Surrendering the outcome</h3>
+    <p>This is TE's deepest preparation challenge and its most important. TE's native orientation is toward structuring, directing, and optimizing outcomes. In a sacred space, this orientation must be genuinely surrendered — not performed as an act of spiritual humility, but actually let go. The person who arrives with a predetermined idea of what should happen, what they should feel, and how the experience should go has already closed the space where genuine surprise — which is often where the most important things arrive — might enter. TE preparation therefore includes the deliberate interior act of releasing outcome-orientation. I have prepared as well as I can. What comes now is not mine to control — only to receive.</p>
+
+    <h3>Making the commitment structurally real</h3>
+    <p>Finally, TE preparation involves making the commitment to the sacred space structurally real — not just internally decided but externally arranged. The phone left behind or genuinely switched off. The time protected from competing obligations. These external arrangements are not bureaucratic details. They are the structural expression of the interior commitment, and they communicate to the entire person — at the bodily and practical level — that what is coming genuinely matters.</p>
+
+    <div class="practice-grid">
+      <div class="practice-card">
+        <div class="practice-num">1</div>
+        <div class="practice-content">
+          <h4>Two days before</h4>
+          <p>Identify what practical obligations need to be settled before the gathering. Handle what can be handled. Consciously defer what cannot, with a specific plan for after. Empty the practical holding space.</p>
+          <span class="term-tag">Faraagh — freedom from preoccupation; structural clarity</span>
+        </div>
+      </div>
+      <div class="practice-card">
+        <div class="practice-num">2</div>
+        <div class="practice-content">
+          <h4>Evening before</h4>
+          <p>Inform the people in your life that you will be unavailable. Arrange your phone: switch off notifications or leave it entirely. Make the commitment external and visible, not only internal.</p>
+          <span class="term-tag">Istikame — the sustained commitment expressed in structure</span>
+        </div>
+      </div>
+      <div class="practice-card">
+        <div class="practice-num">3</div>
+        <div class="practice-content">
+          <h4>On arrival</h4>
+          <p>Before entering the gathering, perform one deliberate interior act: release your expectations of the day. Not by suppressing them but by naming them honestly and then consciously setting them down. What arrives is a gift, not a product.</p>
+          <span class="term-tag">Tawakkul — genuine surrender of outcome to the divine</span>
+        </div>
       </div>
     </div>
-    <div class="practice-card">
-      <div class="practice-num">3</div>
-      <div class="practice-content">
-        <h4>On arrival</h4>
-        <p>Before entering the gathering, perform one deliberate interior act: release your expectations of the day. Not by suppressing them but by naming them honestly and then consciously setting them down. What arrives is a gift, not a product.</p>
-        <span class="term-tag">Tawakkul — genuine surrender of outcome to the divine</span>
+
+    <div class="section-break">· · ·</div>
+
+    <span class="section-label">The Final Principle</span>
+    <h2>Arrive With Hunger, Not Ambition</h2>
+
+    <p>The most important preparation is also the simplest and the hardest: arriving with genuine hunger rather than spiritual ambition. Spiritual ambition — the desire to have impressive experiences, to feel elevated, to achieve a recognizable state of closeness to the divine — is perhaps the most reliable way to block what the sacred space has to offer. It is a form of the nafs dressed in spiritual clothing, and it produces exactly the performance-orientation that ihlâs requires us to abandon.</p>
+
+    <p>Genuine hunger is different. It is the honest acknowledgment that something in you is actually empty, actually seeking, actually in need of what only reality can provide. This hunger does not need to be dressed up or articulated elegantly. It does not need to sound spiritual. It simply needs to be real. The heart that arrives genuinely hungry will almost certainly be fed — because genuine hunger is itself already a form of the orientation toward the real that hudhur requires. And reality, in Nursî's understanding, is not indifferent to the creature that sincerely turns toward it.</p>
+
+    <p>The four preparations — of the body, the heart, the depth, and the will — are ultimately all in service of this single quality: the capacity to arrive genuinely open, genuinely present, genuinely available to what the sacred space has to offer rather than what you have decided in advance it should provide.</p>
+
+    <p>When all four faculties arrive prepared and oriented, something becomes possible that cannot be manufactured or demanded: the experience of being genuinely met by what is real. The vessel is clean. The mirror is polished. The question is held. The decks are cleared. And the hunger is honest.</p>
+
+    <p>What arrives in that condition is no longer your achievement. It is a gift. And receiving gifts requires nothing more — or less — than being genuinely there to receive them.</p>
+
+    <div class="closing-panel">
+      <span class="cp-kicker">Closing Thought</span>
+      <p>Preparation is not the work you do before the sacred space opens. It is the first movement of the opening itself — the gradual turning of the vessel toward the light, so that when the light arrives, the mirror is already oriented to receive it. The prepared person does not wait for the experience to begin. They are already, quietly, inside it.</p>
+    </div>
+
+  </article>
+
+  <footer class="article-footer">
+    <div class="footer-author">
+      <div class="footer-avatar">YB</div>
+      <div class="footer-author-text">
+        <strong>Yasir Bilgin</strong>
+        <span>Islamic Psychology · Theology · Spirituality</span>
       </div>
     </div>
-  </div>
-
-  <div class="section-break">· · ·</div>
-
-  <span class="section-label">The Final Principle</span>
-  <h2>Arrive With Hunger, Not Ambition</h2>
-
-  <p>The most important preparation is also the simplest and the hardest: arriving with genuine hunger rather than spiritual ambition. Spiritual ambition — the desire to have impressive experiences, to feel elevated, to achieve a recognizable state of closeness to the divine — is perhaps the most reliable way to block what the sacred space has to offer. It is a form of the nafs dressed in spiritual clothing, and it produces exactly the performance-orientation that ihlâs requires us to abandon.</p>
-
-  <p>Genuine hunger is different. It is the honest acknowledgment that something in you is actually empty, actually seeking, actually in need of what only reality can provide. This hunger does not need to be dressed up or articulated elegantly. It does not need to sound spiritual. It simply needs to be real. The heart that arrives genuinely hungry will almost certainly be fed — because genuine hunger is itself already a form of the orientation toward the real that hudhur requires. And reality, in Nursî's understanding, is not indifferent to the creature that sincerely turns toward it.</p>
-
-  <p>The four preparations — of the body, the heart, the depth, and the will — are ultimately all in service of this single quality: the capacity to arrive genuinely open, genuinely present, genuinely available to what the sacred space has to offer rather than what you have decided in advance it should provide.</p>
-
-  <p>When all four faculties arrive prepared and oriented, something becomes possible that cannot be manufactured or demanded: the experience of being genuinely met by what is real. The vessel is clean. The mirror is polished. The question is held. The decks are cleared. And the hunger is honest.</p>
-
-  <p>What arrives in that condition is no longer your achievement. It is a gift. And receiving gifts requires nothing more — or less — than being genuinely there to receive them.</p>
-
-  <div class="closing-panel">
-    <span class="cp-kicker">Closing Thought</span>
-    <p>Preparation is not the work you do before the sacred space opens. It is the first movement of the opening itself — the gradual turning of the vessel toward the light, so that when the light arrives, the mirror is already oriented to receive it. The prepared person does not wait for the experience to begin. They are already, quietly, inside it.</p>
-  </div>
-
-</article>
-
-<footer class="article-footer">
-  <div class="footer-author">
-    <div class="footer-avatar">YB</div>
-    <div class="footer-author-text">
-      <strong>Yasir Bilgin</strong>
-      <span>Islamic Psychology · Theology · Spirituality</span>
-    </div>
-  </div>
-  <p class="footer-note">Part of an ongoing series integrating cognitive function theory with classical Islamic theological anthropology.</p>
-</footer>
+    <p class="footer-note">Part of an ongoing series integrating cognitive function theory with classical Islamic theological anthropology.</p>
+  </footer>
 
 </body>
 </html>
