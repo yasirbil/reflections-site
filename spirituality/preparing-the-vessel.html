@@ -54,31 +54,14 @@
 
     @keyframes reveal { to { opacity: 1; } }
 
-    /* ④ Article sub-header (category + read time) — sticky BELOW the global nav */
-    .article-header {
-      position: sticky;
-      top: 62px;        /* ← exactly the nav.js bar height */
-      z-index: 50;      /* ← well below nav's z-index */
-      background: rgba(247,243,236,0.96);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.75rem 2rem;
-    }
-    .pub-name {
-      font-family: var(--display);
-      font-size: 0.68rem;
-      letter-spacing: 0.25em;
-      color: var(--ink-muted);
-    }
     .read-time {
       font-family: var(--sans);
       font-size: 0.72rem;
       color: var(--ink-muted);
       letter-spacing: 0.05em;
       font-weight: 300;
+      display: inline-block;
+      margin-top: 0.5rem;
     }
 
     /* HERO */
@@ -410,14 +393,9 @@
 </head>
 <body>
 
-  <!-- Article sub-header — sticky at top: 62px, below nav.js -->
-  <header class="article-header">
-    <span class="pub-name">Spirituality</span>
-    <span class="read-time">11 min read</span>
-  </header>
-
   <div class="hero">
-    <span class="kicker">Spiritual Practice · Sacred Presence · Preparation</span>
+    <span class="kicker">Spirituality · Spiritual Practice · Sacred Presence · Preparation</span>
+    <span class="read-time">11 min read</span>
     <h1>Preparing the <em>Vessel</em></h1>
     <p class="hero-sub">How to ready the body, heart, mind, and will before entering a sacred space — so that what wants to arrive can actually find you.</p>
     <div class="byline">
