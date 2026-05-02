@@ -11,8 +11,49 @@
   const SITEMAP   = SITE + '/sitemap.xml';
   const NAV_H     = 62;
   const MOBILE_BP = 768;
-  const CACHE_KEY = 'ynb_sitemap_v1';
-  const CACHE_TTL = 10 * 60 * 1000; // 10 minutes in ms
+  const CACHE_KEY = 'ynb_sitemap_v2';
+  const CACHE_TTL = 15 * 60 * 1000; // 15 minutes in ms
+
+  // Kick off the sitemap fetch immediately — runs in parallel with DOM setup
+  const _sitemapPromise = _startFetch();
+  function _startFetch() {
+    const cached = _getCached();
+    if (cached) {
+      // Serve from cache; silently refresh in background after a short delay
+      setTimeout(() => _fetchFresh(), 2000);
+      return Promise.resolve(cached);
+    }
+    return _fetchFresh();
+  }
+  function _getCached() {
+    try {
+      const raw = localStorage.getItem(CACHE_KEY);
+      if (!raw) return null;
+      const { ts, xml } = JSON.parse(raw);
+      if (Date.now() - ts < CACHE_TTL) return xml;
+    } catch (_) {}
+    return null;
+  }
+  function _setCache(xml) {
+    try { localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), xml })); } catch (_) {}
+  }
+  async function _fetchFresh() {
+    // Same-origin: use browser cache (no cache-busting) for speed
+    try {
+      const r = await fetch(SITEMAP);
+      if (r.ok) { const xml = await r.text(); _setCache(xml); return xml; }
+    } catch (_) {}
+    // Proxies as fallback (cross-origin subdomains)
+    try {
+      const r = await fetch('https://api.allorigins.win/get?url=' + encodeURIComponent(SITEMAP), { cache: 'no-cache' });
+      if (r.ok) { const j = await r.json(); if (j?.contents) { _setCache(j.contents); return j.contents; } }
+    } catch (_) {}
+    try {
+      const r = await fetch('https://corsproxy.io/?' + encodeURIComponent(SITEMAP), { cache: 'no-cache' });
+      if (r.ok) { const xml = await r.text(); _setCache(xml); return xml; }
+    } catch (_) {}
+    return null;
+  }
 
   /* ─────────────────────────────────────────────
      LANGUAGE MENU CONFIG
@@ -480,62 +521,9 @@ body { top: 0 !important; }
   }
 
   /* ─────────────────────────────────────────────
-     3. SITEMAP CACHE + FETCH
-     Strategy:
-       1. Serve from localStorage instantly (if fresh)
-       2. Always re-fetch in background to keep cache warm
-       3. First-ever visit: wait for fetch, then render
+     3. SITEMAP — resolved via _sitemapPromise
+     (fetch already started at script load time above)
   ───────────────────────────────────────────── */
-  function getCached() {
-    try {
-      const raw = localStorage.getItem(CACHE_KEY);
-      if (!raw) return null;
-      const { ts, xml } = JSON.parse(raw);
-      if (Date.now() - ts < CACHE_TTL) return xml;
-    } catch (_) {}
-    return null;
-  }
-
-  function setCache(xml) {
-    try {
-      localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), xml }));
-    } catch (_) {}
-  }
-
-  async function fetchFresh() {
-    // Try same-origin first (fastest, no CORS issues on own domain)
-    try {
-      const r = await fetch(SITEMAP, { cache: 'no-cache' });
-      if (r.ok) { const xml = await r.text(); setCache(xml); return xml; }
-    } catch (_) {}
-    // Proxy fallbacks
-    try {
-      const r = await fetch(
-        `https://api.allorigins.win/get?url=${encodeURIComponent(SITEMAP)}`,
-        { cache: 'no-cache' }
-      );
-      if (r.ok) { const j = await r.json(); if (j?.contents) { setCache(j.contents); return j.contents; } }
-    } catch (_) {}
-    try {
-      const r = await fetch(
-        `https://corsproxy.io/?${encodeURIComponent(SITEMAP)}`,
-        { cache: 'no-cache' }
-      );
-      if (r.ok) { const xml = await r.text(); setCache(xml); return xml; }
-    } catch (_) {}
-    return null;
-  }
-
-  async function getSitemap() {
-    const cached = getCached();
-    if (cached) {
-      // Return cache immediately, refresh in background
-      fetchFresh();
-      return cached;
-    }
-    // No cache — must wait for fetch
-    return await fetchFresh();
-  }
 
   /* ─────────────────────────────────────────────
      4. PARSE
@@ -803,7 +791,7 @@ body { top: 0 !important; }
   async function init() {
     const { list, drawer, skel } = injectNav();
     loadGoogleTranslate();
-    const xml = await getSitemap();   // instant if cached
+    const xml = await _sitemapPromise;  // already in flight since script load
     skel.remove();
     if (!xml) return;
     const cats = parseSitemap(xml);
