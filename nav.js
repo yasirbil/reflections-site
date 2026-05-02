@@ -11,6 +11,8 @@
   const SITEMAP   = SITE + '/sitemap.xml';
   const NAV_H     = 62;
   const MOBILE_BP = 768;
+  const CACHE_KEY = 'ynb_sitemap_v2';
+  const CACHE_TTL = 15 * 60 * 1000; // 15 minutes
 
   /* ─────────────────────────────────────────────
      LANGUAGE MENU CONFIG
@@ -535,26 +537,44 @@ body { top: 0 !important; }
   }
 
   /* ─────────────────────────────────────────────
-     3. FETCH
+     3. FETCH — with localStorage cache
   ───────────────────────────────────────────── */
+  function getCached() {
+    try {
+      const raw = localStorage.getItem(CACHE_KEY);
+      if (!raw) return null;
+      const { ts, xml } = JSON.parse(raw);
+      if (Date.now() - ts < CACHE_TTL) return xml;
+    } catch (_) {}
+    return null;
+  }
+  function setCache(xml) {
+    try { localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), xml })); } catch (_) {}
+  }
   async function fetchSitemap() {
+    const cached = getCached();
+    if (cached) {
+      // Serve instantly; refresh silently in background
+      fetch(SITEMAP).then(r => r.ok && r.text()).then(xml => xml && setCache(xml)).catch(() => {});
+      return cached;
+    }
     try {
       const r = await fetch(SITEMAP, { cache: 'no-cache' });
-      if (r.ok) return await r.text();
+      if (r.ok) { const xml = await r.text(); setCache(xml); return xml; }
     } catch (_) {}
     try {
       const r = await fetch(
         `https://api.allorigins.win/get?url=${encodeURIComponent(SITEMAP)}`,
         { cache: 'no-cache' }
       );
-      if (r.ok) { const j = await r.json(); if (j?.contents) return j.contents; }
+      if (r.ok) { const j = await r.json(); if (j?.contents) { setCache(j.contents); return j.contents; } }
     } catch (_) {}
     try {
       const r = await fetch(
         `https://corsproxy.io/?${encodeURIComponent(SITEMAP)}`,
         { cache: 'no-cache' }
       );
-      if (r.ok) return await r.text();
+      if (r.ok) { const xml = await r.text(); setCache(xml); return xml; }
     } catch (_) {}
     return null;
   }
@@ -594,31 +614,19 @@ body { top: 0 !important; }
      5. LANGUAGE MENU
   ───────────────────────────────────────────── */
   function getCurrentLang() {
-    // GT may rewrite cookie to /tr/tr — grab last segment only.
-    // Also handle zh-CN style codes with a hyphen.
     const m = document.cookie.match(/googtrans=\/[^/]+\/([^;,\s]+)/i);
     const code = m ? m[1] : 'en';
     return LANGUAGES.find(l => l.code === code) ? code : 'en';
   }
 
   function nukeGTCookies() {
-    const hostname = location.hostname;           // yasirbilgin.com
-    const bare     = hostname.replace(/^www\./, '').replace(/^[^.]+\./, ''); // yasirbilgin.com
-    const sub      = hostname;                    // yasirbilgin.com
+    const hostname = location.hostname;
+    const bare     = hostname.replace(/^www\./, '').replace(/^[^.]+\./, '');
+    const sub      = hostname;
     const exp      = 'expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0';
-
-    // Every realistic domain GT might have used to set the cookie
-    const domains = [
-      '',           // no domain attr
-      sub,          // yasirbilgin.com
-      '.'+ sub,     // .yasirbilgin.com
-      bare,         // yasirbilgin.com
-      '.'+ bare,    // .yasirbilgin.com
-    ];
-
+    const domains = ['', sub, '.'+ sub, bare, '.'+ bare];
     const paths     = ['/'];
     const sameSites = ['', '; SameSite=Lax', '; SameSite=None; Secure'];
-
     domains.forEach(d => {
       const dc = d ? 'domain='+ d +'; ' : '';
       paths.forEach(p => {
@@ -631,19 +639,15 @@ body { top: 0 !important; }
 
   function switchLanguage(code) {
     nukeGTCookies();
-
     if (code !== 'en') {
       const hostname = location.hostname;
       const bare     = hostname.replace(/^www\./, '').replace(/^[^.]+\./, '');
-      // Write on every domain variation with every SameSite variant
       [hostname, '.'+ hostname, bare, '.'+ bare].forEach(d => {
         document.cookie = 'googtrans=/en/'+ code +'; path=/; domain='+ d;
         document.cookie = 'googtrans=/en/'+ code +'; path=/; domain='+ d +'; SameSite=None; Secure';
       });
       document.cookie = 'googtrans=/en/'+ code +'; path=/';
     }
-
-    // Small wait to ensure cookie writes are committed, then navigate fresh
     setTimeout(() => {
       const url = location.href.split('#')[0];
       location.href = url;
@@ -655,19 +659,12 @@ body { top: 0 !important; }
     anchor.id = 'google_translate_element';
     anchor.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;overflow:hidden;';
     document.body.appendChild(anchor);
-
     window.googleTranslateElementInit = function () {
       new google.translate.TranslateElement(
-        {
-          pageLanguage: 'en',
-          autoDisplay: false,
-          // Suppress the floating GT toolbar entirely
-          gaTrack: false,
-        },
+        { pageLanguage: 'en', autoDisplay: false, gaTrack: false },
         'google_translate_element'
       );
     };
-
     const s = document.createElement('script');
     s.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
     s.async = true;
@@ -678,7 +675,6 @@ body { top: 0 !important; }
     const current = getCurrentLang();
     const currentLang = LANGUAGES.find(l => l.code === current) || LANGUAGES[0];
 
-    /* ── Desktop widget ── */
     const wrap = el('div', { className: 'ynb-lang-wrap' });
     wrap.setAttribute('aria-label', 'Language selector');
 
@@ -708,7 +704,6 @@ body { top: 0 !important; }
     btn.addEventListener('click', e => {
       e.stopPropagation();
       const isOpen = wrap.classList.contains('ynb-lang-open');
-      // Close any open nav dropdowns first
       document.dispatchEvent(new MouseEvent('click'));
       if (!isOpen) {
         wrap.classList.add('ynb-lang-open');
@@ -802,7 +797,7 @@ body { top: 0 !important; }
         });
 
         const footerDiv = el('div', { className: 'ynb-drop-footer' });
-        footerDiv.appendChild(el('a', { href: catUrl, textContent: `View all in ${label} →` }));
+        footerDiv.appendChild(el('a', { href: catUrl, textContent: `View all in ${label} \u2192` }));
 
         const drop = el('div', { className: 'ynb-dropdown', role: 'region' }, [colsDiv, footerDiv]);
         document.documentElement.appendChild(drop);
@@ -871,7 +866,7 @@ body { top: 0 !important; }
           })));
         });
 
-        sub.appendChild(el('a', { className: 'ynb-drawer-view-all', href: catUrl, textContent: `View all in ${label} →` }));
+        sub.appendChild(el('a', { className: 'ynb-drawer-view-all', href: catUrl, textContent: `View all in ${label} \u2192` }));
 
         trig.addEventListener('click', () => {
           const isOpen = item.classList.contains('ynb-drawer-open');
