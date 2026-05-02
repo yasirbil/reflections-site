@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  const SITE      = 'https://yasirbilgin.com';
+  const SITE      = 'https://www.yasirbilgin.com';
   const SITEMAP   = SITE + '/sitemap.xml';
   const NAV_H     = 62;
   const MOBILE_BP = 768;
@@ -564,25 +564,33 @@ body { top: 0 !important; }
     // 1. Serve from cache instantly if available
     const cached = getCached();
     if (cached) {
-      // Refresh in background — fully wrapped so nothing can throw
       setTimeout(() => {
         tryFetch(SITEMAP).then(xml => { if (xml) setCache(xml); }).catch(() => {});
       }, 1000);
       return cached;
     }
-    // 2. No cache — fetch now (works in incognito too, just no caching)
-    let xml = await tryFetch(SITEMAP, { cache: 'no-cache' });
-    if (xml) { setCache(xml); return xml; }
-    // 3. Proxy fallbacks
+    // 2. Try www and non-www — one will be same-origin depending on how page is served
+    const urls = [
+      'https://www.yasirbilgin.com/sitemap.xml',
+      'https://yasirbilgin.com/sitemap.xml',
+    ];
+    for (const url of urls) {
+      const xml = await tryFetch(url, { cache: 'no-cache' });
+      if (xml) { setCache(xml); return xml; }
+    }
+    // 3. Proxy fallbacks (cross-origin last resort)
     try {
       const r = await fetch(
-        `https://api.allorigins.win/get?url=${encodeURIComponent(SITEMAP)}`,
+        `https://api.allorigins.win/get?url=${encodeURIComponent('https://www.yasirbilgin.com/sitemap.xml')}`,
         { cache: 'no-cache' }
       );
       if (r.ok) { const j = await r.json(); if (j?.contents) { setCache(j.contents); return j.contents; } }
     } catch (_) {}
-    xml = await tryFetch(`https://corsproxy.io/?${encodeURIComponent(SITEMAP)}`, { cache: 'no-cache' });
-    if (xml) { setCache(xml); return xml; }
+    const xml2 = await tryFetch(
+      `https://corsproxy.io/?${encodeURIComponent('https://www.yasirbilgin.com/sitemap.xml')}`,
+      { cache: 'no-cache' }
+    );
+    if (xml2) { setCache(xml2); return xml2; }
     return null;
   }
 
