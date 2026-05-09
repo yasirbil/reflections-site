@@ -14,7 +14,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
 
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -31,6 +31,10 @@
   --accent-light: #e8f0ec;
   --radius-md: 10px;
   --radius-lg: 16px;
+  --fs-12: 0.75rem;
+  --fs-14: 0.875rem;
+  --fs-15: 0.9375rem;
+  --fs-17: 1.0625rem;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -41,7 +45,7 @@
     --border-strong: rgba(255,255,255,0.22);
     --text: #f0ede5;
     --text-muted: #908d85;
-    --text-faint: #5a5750;
+    --text-faint: #7a766e;
     --accent: #7fbf9e;
     --accent-light: rgba(127,191,158,0.10);
   }
@@ -69,7 +73,7 @@ body {
 }
 
 .hero-eyebrow {
-  font-size: 11px;
+  font-size: var(--fs-12);
   font-weight: 500;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -78,7 +82,7 @@ body {
 }
 
 .hero-sub {
-  font-size: 15px;
+  font-size: var(--fs-15);
   font-weight: 300;
   color: var(--text-muted);
   max-width: 700px;
@@ -96,7 +100,7 @@ body {
 
 .search-box-container {
   background: var(--surface);
-  border: 0.5px solid var(--border-strong);
+  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 1.25rem 1.5rem;
   margin-bottom: 1rem;
@@ -113,17 +117,18 @@ body {
   height: 44px;
   padding: 0 1rem;
   background: var(--bg);
-  border: 0.5px solid var(--border-strong);
+  border: 1px solid var(--border-strong);
   border-radius: var(--radius-md);
   color: var(--text);
   font-family: 'DM Sans', sans-serif;
-  font-size: 14.5px;
+  font-size: var(--fs-14);
   outline: none;
   transition: border-color 0.15s;
 }
 
 .search-input::placeholder { color: var(--text-faint); }
 .search-input:focus { border-color: var(--accent); }
+.search-input:focus-visible { box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 24%, transparent); }
 
 .search-btn {
   height: 44px;
@@ -133,7 +138,7 @@ body {
   border: none;
   border-radius: var(--radius-md);
   font-family: 'DM Sans', sans-serif;
-  font-size: 13.5px;
+  font-size: var(--fs-14);
   font-weight: 500;
   cursor: pointer;
   white-space: nowrap;
@@ -159,7 +164,7 @@ body {
 /* SEARCH DROPDOWN */
 .search-results {
   margin-top: 0.75rem;
-  border-top: 0.5px solid var(--border);
+  border-top: 1px solid var(--border);
   padding-top: 0.75rem;
   max-height: 340px;
   overflow-y: auto;
@@ -187,7 +192,7 @@ body {
 }
 
 .result-title {
-  font-size: 13.5px;
+  font-size: var(--fs-14);
   font-weight: 500;
   color: var(--text);
 }
@@ -199,12 +204,12 @@ body {
 }
 
 .result-path {
-  font-size: 11.5px;
+  font-size: var(--fs-12);
   color: var(--text-faint);
 }
 
 .search-status {
-  font-size: 12px;
+  font-size: var(--fs-12);
   color: var(--text-faint);
   padding: 0.4rem 0.75rem;
   text-align: center;
@@ -227,7 +232,7 @@ body {
 }
 
 .section-label {
-  font-size: 11px;
+  font-size: var(--fs-12);
   font-weight: 500;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -237,7 +242,7 @@ body {
 
 .section-line {
   flex: 1;
-  height: 0.5px;
+  height: 1px;
   background: var(--border);
 }
 
@@ -251,7 +256,7 @@ body {
 /* CARD */
 .card {
   background: var(--surface);
-  border: 0.5px solid var(--border);
+  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 1.25rem;
   text-decoration: none;
@@ -278,14 +283,14 @@ body {
 .card-icon { font-size: 26px; margin-bottom: 4px; position: relative; }
 
 .card-name {
-  font-size: 17px;
+  font-size: var(--fs-17);
   font-weight: 500;
   color: var(--text);
   position: relative;
 }
 
 .card-desc {
-  font-size: 14px;
+  font-size: var(--fs-14);
   color: var(--text-muted);
   line-height: 1.55;
   position: relative;
@@ -293,7 +298,7 @@ body {
 }
 
 .card-url {
-  font-size: 12.5px;
+  font-size: var(--fs-12);
   color: var(--text-faint);
   margin-top: 4px;
   position: relative;
@@ -315,11 +320,11 @@ body {
   gap: 7px;
   padding: 0.45rem 1rem;
   background: var(--surface);
-  border: 0.5px solid var(--border-strong);
+  border: 1px solid var(--border-strong);
   border-radius: 30px;
   text-decoration: none;
   color: var(--text-muted);
-  font-size: 12.5px;
+  font-size: var(--fs-12);
   font-weight: 500;
   transition: border-color 0.15s, color 0.15s, background 0.15s;
 }
@@ -342,9 +347,15 @@ body {
 .footer {
   text-align: center;
   padding: 2rem 1.5rem;
-  border-top: 0.5px solid var(--border);
+  border-top: 1px solid var(--border);
   font-size: 12px;
   color: var(--text-faint);
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 /* ANIMATION */
@@ -369,13 +380,23 @@ body {
   .search-row { flex-wrap: wrap; }
   .search-btn { width: 100%; justify-content: center; }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
 </style>
 </head>
 
 <body>
 
+<main>
 <section class="hero">
   <p class="hero-eyebrow">Knowledge · Reflection · Community</p>
+  <h1 style="font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 600; margin-bottom: 0.75rem;">Yasir Bilgin — Knowledge Hub</h1>
   <p class="hero-sub">Writings, reflections, and community resources in one place. More sections coming soon.</p>
 </section>
 
@@ -421,6 +442,7 @@ body {
 <footer class="footer">
   © Yasir Bilgin · yasirbilgin.com
 </footer>
+</main>
 
 <script>
 const BASE = 'https://yasirbilgin.com';
@@ -532,7 +554,7 @@ REFERENCES.forEach(r => {
   const a = document.createElement('a');
   a.className = 'ref-btn';
   a.href = r.url;
-  if (r.external) a.target = '_blank';
+  if (r.external) { a.target = '_blank'; a.rel = 'noopener noreferrer'; }
   a.innerHTML = `<span class="ref-btn-dot"></span>${r.icon} ${r.name}${r.external ? ' ↗' : ''}`;
   refGrid.appendChild(a);
 });
@@ -542,6 +564,7 @@ REFERENCES.forEach(r => {
 const searchInput   = document.getElementById('searchInput');
 const searchBtn     = document.getElementById('searchBtn');
 const searchResults = document.getElementById('searchResults');
+let activeIndex = -1;
 
 let sitemapPages = []; // { title, path, url }
 let sitemapLoaded = false;
@@ -623,6 +646,7 @@ function runSearch(q) {
   ).slice(0, 12);
 
   searchResults.classList.add('visible');
+  activeIndex = -1;
 
   if (!matches.length) {
     searchResults.innerHTML = '<span class="search-status">No pages found.</span>';
@@ -637,6 +661,15 @@ function runSearch(q) {
   `).join('');
 }
 
+function updateActiveResult(index) {
+  const items = Array.from(searchResults.querySelectorAll('.search-result-item'));
+  if (!items.length) return;
+  activeIndex = (index + items.length) % items.length;
+  items.forEach((el, i) => {
+    el.style.background = i === activeIndex ? 'var(--accent-light)' : '';
+  });
+}
+
 // Trigger search as user types (debounced)
 let debounceTimer;
 searchInput.addEventListener('input', function() {
@@ -649,6 +682,13 @@ searchInput.addEventListener('input', function() {
 // Also trigger on button click or Enter
 searchBtn.addEventListener('click', () => runSearch(searchInput.value.trim()));
 searchInput.addEventListener('keydown', function(e) {
+  if (e.key === 'ArrowDown') { e.preventDefault(); updateActiveResult(activeIndex + 1); }
+  if (e.key === 'ArrowUp') { e.preventDefault(); updateActiveResult(activeIndex - 1); }
+  if (e.key === 'Enter' && activeIndex >= 0) {
+    const items = searchResults.querySelectorAll('.search-result-item');
+    if (items[activeIndex]) window.location.href = items[activeIndex].href;
+    return;
+  }
   if (e.key === 'Enter') runSearch(this.value.trim());
   if (e.key === 'Escape') { searchResults.classList.remove('visible'); searchResults.innerHTML = ''; }
 });
