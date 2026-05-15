@@ -1231,7 +1231,7 @@ function buildSection(part, filteredChapters, query, tagMode) {
   if (part.partIntro) {
     const pi = document.createElement('div');
     pi.style.cssText = 'font-size:0.92rem;color:var(--ink-soft);line-height:1.7;padding:0 0 1.25rem;font-style:italic;border-bottom:1px solid var(--border);margin-bottom:1.25rem;';
-    pi.innerHTML = highlight(part.partIntro, query);
+    pi.textContent = part.partIntro;
     section.appendChild(pi);
   }
   filteredChapters.forEach(ch => {
@@ -1249,7 +1249,7 @@ function buildSection(part, filteredChapters, query, tagMode) {
     if (ch.intro) {
       const introEl = document.createElement('div');
       introEl.className = 'chapter-intro';
-      introEl.innerHTML = highlight(ch.intro, query);
+      introEl.textContent = ch.intro;
       list.appendChild(introEl);
     }
     topics.forEach(topic => {
@@ -1268,7 +1268,6 @@ function buildSection(part, filteredChapters, query, tagMode) {
         cd.innerHTML = topic.content;
         item.appendChild(cd);
         th.addEventListener('click', () => item.classList.toggle('open'));
-        if (query && topic.content.replace(/<[^>]+>/g,'').toLowerCase().includes(query.toLowerCase())) item.classList.add('open');
       } else {
         const ph = document.createElement('div');
         ph.className = 'topic-placeholder';
@@ -1295,18 +1294,20 @@ function render(filterPart, query) {
 
   DATA.forEach(part => {
     if (filterPart !== 'all' && part.part !== filterPart) return;
+
+    const partTitleMatch = q && part.title.toLowerCase().includes(q);
+
     const filteredChapters = part.chapters.map(ch => {
+      const chapterTitleMatch = q && ch.title.toLowerCase().includes(q);
       const filteredTopics = ch.topics.filter(topic => {
         if (!q) return true;
-        return topic.title.toLowerCase().includes(q)
-          || (topic.content && topic.content.replace(/<[^>]+>/g,'').toLowerCase().includes(q))
-          || ch.title.toLowerCase().includes(q)
-          || (ch.intro && ch.intro.toLowerCase().includes(q))
-          || (part.partIntro && part.partIntro.toLowerCase().includes(q));
+        // Heading-only search: part title, chapter title, or topic title
+        return partTitleMatch || chapterTitleMatch || topic.title.toLowerCase().includes(q);
       });
       if (q && filteredTopics.length === 0) return null;
       return { ...ch, filteredTopics: q ? filteredTopics : ch.topics };
     }).filter(Boolean);
+
     if (!filteredChapters.length) return;
     anyVisible = true;
     filteredChapters.forEach(ch => totalTopics += (ch.filteredTopics || ch.topics).length);
