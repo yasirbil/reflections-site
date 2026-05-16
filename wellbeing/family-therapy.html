@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Family Therapy — Complete Clinical Guide</title>
-
 <!-- ✅ REQUIRED: Global nav -->
 <script src="https://yasirbilgin.com/nav.js"></script> 
 <link rel="icon" type="image/x-icon"   href="/favicon/favicon.ico">
@@ -12,7 +11,6 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
 <link rel="apple-touch-icon" sizes="180x180"    href="/favicon/apple-touch-icon.png">
 <link rel="manifest" href="/favicon/site.webmanifest">
-
 <style>
 /* ── Reset & base ─────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -27664,6 +27662,10 @@ Ethics helps the therapist protect safety and dignity.
 <button id="back-to-top" onclick="scrollToTop()" title="Back to top">↑</button>
 
 <script>
+// ── Disable browser scroll restoration so page always loads at top ────────
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+window.scrollTo(0, 0);
+
 // ── State ──────────────────────────────────────────────────────────────────
 let activePart = 1;
 let activeFilters = new Set();
@@ -27680,6 +27682,10 @@ document.querySelectorAll('.nav-tag-cb').forEach(cb => {
 
 // ── Init ──────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
+  // Always start at the very top
+  window.scrollTo(0, 0);
+  document.getElementById('content-area').scrollTop = 0;
+  document.getElementById('sidebar').scrollTop = 0;
   showPart(1);
 });
 
