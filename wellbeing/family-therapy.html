@@ -693,6 +693,8 @@ mark { background: #ffe88a; border-radius: 2px; padding: 0 1px; }
   <div id="filter-chips"></div>
   <button class="filter-action-btn" onclick="clearAllFilters()">Clear all</button>
   <span id="filter-result-count" style="margin-left:auto; color:#3a6040;"></span>
+  <button class="filter-action-btn" onclick="expandMatched()" title="Expand all matched sections">⊞ Expand all</button>
+  <button class="filter-action-btn" onclick="collapseMatched()" title="Collapse all matched sections">⊟ Collapse all</button>
 </div>
 
 <!-- ── MAIN LAYOUT ───────────────────────────────────── -->
@@ -25667,10 +25669,17 @@ function removeFilter(tag) {
 function clearAllFilters() {
   document.querySelectorAll('.nav-tag-cb:checked').forEach(cb => cb.checked = false);
   activeFilters.clear();
-  // Collapse all sections back to default
   document.querySelectorAll('.section').forEach(s => collapseSection(s));
   applyFilter();
   clearSearch();
+}
+
+function expandMatched() {
+  document.querySelectorAll('.section.filter-match').forEach(s => expandSection(s));
+}
+
+function collapseMatched() {
+  document.querySelectorAll('.section.filter-match').forEach(s => collapseSection(s));
 }
 
 // ── Nav group toggle ──────────────────────────────────────────────────────
