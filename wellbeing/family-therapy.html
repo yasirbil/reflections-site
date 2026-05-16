@@ -25377,17 +25377,14 @@ document.addEventListener('DOMContentLoaded', () => {
 function showPart(n) {
   if (activeFilters.size > 0 || searchQuery) return; // filters/search take over
   activePart = n;
+  // Show only the target part
   document.querySelectorAll('.part-section').forEach(el => el.classList.remove('visible'));
   const target = document.getElementById(`part-${n}`);
-  if (target) {
-    target.classList.add('visible');
-    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-  document.querySelectorAll('.top-menu-item').forEach(el => {
-    el.classList.toggle('active', parseInt(el.dataset.part) === n);
-  });
-  // Scroll content to top
-  document.getElementById('content-area').scrollTop = 0;
+  if (target) target.classList.add('visible');
+  // Scroll to the very top of the content area — no scrollIntoView which overshoots
+  const ca = document.getElementById('content-area');
+  ca.scrollTop = 0;
+  window.scrollTo(0, 0);
   updateMenuActive(n);
 }
 
