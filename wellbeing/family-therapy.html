@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Family Therapy — Complete Clinical Guide</title>
+
 <!-- ✅ REQUIRED: Global nav -->
 <script src="https://yasirbilgin.com/nav.js"></script> 
 <link rel="icon" type="image/x-icon"   href="/favicon/favicon.ico">
@@ -11,6 +12,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
 <link rel="apple-touch-icon" sizes="180x180"    href="/favicon/apple-touch-icon.png">
 <link rel="manifest" href="/favicon/site.webmanifest">
+
 <style>
 /* ── Reset & base ─────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -540,25 +542,32 @@ mark { background: #ffe88a; border-radius: 2px; padding: 0 1px; }
   position: fixed;
   bottom: 28px;
   right: 28px;
-  z-index: 500;
+  z-index: 9999;
   background: #1a3a4a;
   color: #e8d5a0;
-  border: none;
+  border: 2px solid #4a9090;
   border-radius: 50%;
-  width: 44px;
-  height: 44px;
-  font-size: 1.1rem;
+  width: 48px;
+  height: 48px;
+  font-size: 1.2rem;
   cursor: pointer;
-  box-shadow: 0 3px 12px rgba(0,0,0,.35);
+  box-shadow: 0 4px 16px rgba(0,0,0,.45);
   opacity: 0;
   pointer-events: none;
-  transition: opacity .25s, background .15s;
+  transition: opacity .3s, background .15s, transform .15s;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-family: inherit;
 }
-#back-to-top.visible { opacity: 1; pointer-events: auto; }
-#back-to-top:hover { background: #2c6070; }
+#back-to-top.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+#back-to-top:hover {
+  background: #2c6070;
+  transform: scale(1.1);
+}
 
 /* ── Filter banner ────────────────────────────────────── */
 #filter-banner {
@@ -27934,41 +27943,48 @@ const scbPart    = document.getElementById('scb-part-label');
 const scbSection = document.getElementById('scb-section-label');
 const backToTop  = document.getElementById('back-to-top');
 
-const PART_TITLES = {1: "Foundations of Family Therapy", 2: "Major Theories & Schools", 3: "Assessment & Case Conceptualization", 4: "Core Clinical Skills", 5: "Populations & Problems", 6: "Culture, Society & Diversity", 7: "Ethics, Law & Professional Practice", 8: "Practice Methods & Session Design", 9: "Core Clinical Skills (Extended)", 10: "Advanced & Emerging Topics", 11: "Case Studies & Applied Learning", 12: "Teaching, Training & Mastery", 13: "Appendices"};
+function getScrollY() {
+  // Prefer content-area scroll; fall back to window scroll (when site nav takes over layout)
+  return contentArea.scrollTop > 0 ? contentArea.scrollTop : window.scrollY;
+}
 
-contentArea.addEventListener('scroll', () => {
-  const scrollY = contentArea.scrollTop;
+function onScroll() {
+  const scrollY = getScrollY();
 
-  // Show/hide floating back-to-top button
-  backToTop.classList.toggle('visible', scrollY > 320);
+  // Show back-to-top after just 150px
+  backToTop.classList.toggle('visible', scrollY > 150);
 
-  // Find topmost visible section heading
-  const allSections = contentArea.querySelectorAll('.section');
+  // Update context bar with current section
+  const allSections = document.querySelectorAll('.section');
   let topSection = null;
   for (const sec of allSections) {
     const rect = sec.getBoundingClientRect();
-    // getBoundingClientRect is relative to viewport; adjust for content-area offset
-    const caRect = contentArea.getBoundingClientRect();
-    const relTop = rect.top - caRect.top;
-    if (relTop <= 60) {
+    if (rect.top <= 80) {
       topSection = sec;
     } else {
       break;
     }
   }
-
   if (topSection) {
     const partNum = parseInt(topSection.closest('.part-section')?.dataset.part || activePart);
     const heading = topSection.dataset.heading || '';
-    // Capitalise first letter
     const headingDisplay = heading.charAt(0).toUpperCase() + heading.slice(1);
     scbPart.textContent    = PART_SHORT[partNum] || `Part ${partNum}`;
     scbSection.textContent = headingDisplay;
   }
-});
+}
+
+// Listen on both surfaces
+contentArea.addEventListener('scroll', onScroll, { passive: true });
+window.addEventListener('scroll', onScroll, { passive: true });
 
 function scrollToTop() {
-  contentArea.scrollTo({ top: 0, behavior: 'smooth' });
+  // Scroll whichever surface is actually scrolling
+  if (contentArea.scrollTop > 0) {
+    contentArea.scrollTo({ top: 0, behavior: 'smooth' });
+  } else {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 }
 
 // ── Close search panel when clicking outside ──────────────────────────────
