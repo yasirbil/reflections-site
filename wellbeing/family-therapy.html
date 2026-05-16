@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Family Therapy — Complete Clinical Guide</title>
 
-<!-- ① Global nav — always first -->
-  <script src="https://yasirbilgin.com/nav.js"></script> 
+<!-- ✅ REQUIRED: Global nav -->
+<script src="https://yasirbilgin.com/nav.js"></script> 
 <link rel="icon" type="image/x-icon"   href="/favicon/favicon.ico">
 <link rel="icon" type="image/svg+xml"  href="/favicon/favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
@@ -417,10 +417,16 @@ body.show-all-mode .part-section {
 }
 
 /* ── Highlighted search match ────────────────────────── */
+/* search-no-match intentionally has NO opacity/pointer-events change —
+   the dropdown handles navigation; the page stays fully readable */
 .section.search-match { background: #fff8e8; border-left: 3px solid #e8a820; }
-.section.search-no-match { opacity: .25; pointer-events: none; }
 .section.filter-no-match { display: none !important; }
-.section.filter-match { background: #f0f8f4; border-left: 3px solid #4a9090; }
+.section.filter-match {
+  background: #f0f8f4;
+  border-left: 3px solid #4a9090;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
 
 /* ── Search results panel ────────────────────────────── */
 #search-results-panel {
@@ -27637,6 +27643,8 @@ function runSearch(val) {
     list.innerHTML = '';
     count.textContent = '';
     modeLabel.textContent = '';
+    // Clear search highlight classes from all sections
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('search-match','search-no-match'));
     if (activeFilters.size === 0) {
       document.body.classList.remove('show-all-mode');
       showPart(activePart);
@@ -27646,10 +27654,8 @@ function runSearch(val) {
     return;
   }
 
-  document.body.classList.add('show-all-mode');
-  document.querySelectorAll('.part-section').forEach(el => el.classList.add('visible'));
-
-  // Collect matching sections
+  // Collect matching sections — no fading applied to non-matches;
+  // the dropdown is the navigation surface, the page stays fully readable
   const sections = document.querySelectorAll('.section');
   const matches = [];
   sections.forEach(sec => {
@@ -27657,10 +27663,8 @@ function runSearch(val) {
     if (heading.includes(searchQuery)) {
       matches.push(sec);
       sec.classList.add('search-match');
-      sec.classList.remove('search-no-match');
     } else {
       sec.classList.remove('search-match');
-      sec.classList.add('search-no-match');
     }
   });
 
@@ -27772,6 +27776,8 @@ function applyFilter() {
 
     let matchCount = 0;
     document.querySelectorAll('.section').forEach(sec => {
+      // Always clear search state so opacity doesn't bleed into filter results
+      sec.classList.remove('search-match', 'search-no-match');
       const tagStr = sec.dataset.tags || '';
       const secTags = tagStr.split(' ').filter(Boolean);
       const matches = [...activeFilters].some(f => secTags.includes(f));
