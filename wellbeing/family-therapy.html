@@ -4,6 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Family Therapy — Complete Clinical Guide</title>
+<!-- ✅ REQUIRED: Global nav -->
+<script src="https://yasirbilgin.com/nav.js"></script> 
+<link rel="icon" type="image/x-icon"   href="/favicon/favicon.ico">
+<link rel="icon" type="image/svg+xml"  href="/favicon/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+<link rel="apple-touch-icon" sizes="180x180"    href="/favicon/apple-touch-icon.png">
+<link rel="manifest" href="/favicon/site.webmanifest">
 <style>
 /* ── Reset & base ─────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -485,6 +492,74 @@ mark { background: #ffe88a; border-radius: 2px; padding: 0 1px; }
   margin-top: 2px;
 }
 
+/* ── Sticky scroll-context bar ────────────────────────── */
+#scroll-context-bar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: #1a3a4a;
+  color: #e8d5a0;
+  padding: 7px 48px;
+  font-size: .78rem;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 2px 6px rgba(0,0,0,.25);
+  border-bottom: 1px solid #2c6070;
+  min-height: 34px;
+}
+#scroll-context-bar .scb-part {
+  font-weight: bold;
+  color: #7ecfcf;
+  white-space: nowrap;
+}
+#scroll-context-bar .scb-section {
+  color: #c8dde0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+#scroll-context-bar .scb-top-btn {
+  background: #2c6070;
+  border: none;
+  color: #e8d5a0;
+  border-radius: 12px;
+  padding: 3px 12px;
+  font-size: .72rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .15s;
+  font-family: inherit;
+  flex-shrink: 0;
+}
+#scroll-context-bar .scb-top-btn:hover { background: #4a8090; }
+
+/* ── Floating back-to-top button ──────────────────────── */
+#back-to-top {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 500;
+  background: #1a3a4a;
+  color: #e8d5a0;
+  border: none;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  box-shadow: 0 3px 12px rgba(0,0,0,.35);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s, background .15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#back-to-top.visible { opacity: 1; pointer-events: auto; }
+#back-to-top:hover { background: #2c6070; }
+
 /* ── Filter banner ────────────────────────────────────── */
 #filter-banner {
   display: none;
@@ -816,6 +891,12 @@ mark { background: #ffe88a; border-radius: 2px; padding: 0 1px; }
 
   <!-- CONTENT AREA -->
   <div id="content-area">
+    <!-- Sticky context bar: shows current part + section + back-to-top -->
+    <div id="scroll-context-bar">
+      <span class="scb-part" id="scb-part-label">Part I</span>
+      <span class="scb-section" id="scb-section-label">Foundations of Family Therapy</span>
+      <button class="scb-top-btn" onclick="scrollToTop()">↑ Top</button>
+    </div>
     <article class="part-section" id="part-1" data-part="1">
 <div class="section level-1" id="p1-part-i-foundations-of-family-therapy" data-tags="culture-diversity" data-heading="part i — foundations of family therapy" data-expanded="false">
   <h1 class="sec-heading" onclick="toggleSection(this.parentElement)" tabindex="0" role="button" aria-expanded="false">
@@ -27570,6 +27651,9 @@ Ethics helps the therapist protect safety and dignity.
 
 </div><!-- #main-layout -->
 
+<!-- Floating back-to-top -->
+<button id="back-to-top" onclick="scrollToTop()" title="Back to top">↑</button>
+
 <script>
 // ── State ──────────────────────────────────────────────────────────────────
 let activePart = 1;
@@ -27844,11 +27928,48 @@ function collapseAllGroups() {
   document.querySelectorAll('.nav-group-toggle').forEach(b => b.setAttribute('aria-expanded','false'));
 }
 
-// ── Highlight active part on scroll ──────────────────────────────────────
+// ── Scroll tracking: context bar + back-to-top ───────────────────────────
 const contentArea = document.getElementById('content-area');
+const scbPart    = document.getElementById('scb-part-label');
+const scbSection = document.getElementById('scb-section-label');
+const backToTop  = document.getElementById('back-to-top');
+
+const PART_TITLES = {1: "Foundations of Family Therapy", 2: "Major Theories & Schools", 3: "Assessment & Case Conceptualization", 4: "Core Clinical Skills", 5: "Populations & Problems", 6: "Culture, Society & Diversity", 7: "Ethics, Law & Professional Practice", 8: "Practice Methods & Session Design", 9: "Core Clinical Skills (Extended)", 10: "Advanced & Emerging Topics", 11: "Case Studies & Applied Learning", 12: "Teaching, Training & Mastery", 13: "Appendices"};
+
 contentArea.addEventListener('scroll', () => {
-  if (document.body.classList.contains('show-all-mode')) return;
+  const scrollY = contentArea.scrollTop;
+
+  // Show/hide floating back-to-top button
+  backToTop.classList.toggle('visible', scrollY > 320);
+
+  // Find topmost visible section heading
+  const allSections = contentArea.querySelectorAll('.section');
+  let topSection = null;
+  for (const sec of allSections) {
+    const rect = sec.getBoundingClientRect();
+    // getBoundingClientRect is relative to viewport; adjust for content-area offset
+    const caRect = contentArea.getBoundingClientRect();
+    const relTop = rect.top - caRect.top;
+    if (relTop <= 60) {
+      topSection = sec;
+    } else {
+      break;
+    }
+  }
+
+  if (topSection) {
+    const partNum = parseInt(topSection.closest('.part-section')?.dataset.part || activePart);
+    const heading = topSection.dataset.heading || '';
+    // Capitalise first letter
+    const headingDisplay = heading.charAt(0).toUpperCase() + heading.slice(1);
+    scbPart.textContent    = PART_SHORT[partNum] || `Part ${partNum}`;
+    scbSection.textContent = headingDisplay;
+  }
 });
+
+function scrollToTop() {
+  contentArea.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
 // ── Close search panel when clicking outside ──────────────────────────────
 document.addEventListener('click', (e) => {
