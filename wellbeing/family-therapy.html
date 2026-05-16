@@ -4,15 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Family Therapy — Complete Clinical Guide</title>
-
-<!-- ✅ REQUIRED: Global nav -->
-<script src="https://yasirbilgin.com/nav.js"></script> 
-<link rel="icon" type="image/x-icon"   href="/favicon/favicon.ico">
-<link rel="icon" type="image/svg+xml"  href="/favicon/favicon.svg">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
-<link rel="apple-touch-icon" sizes="180x180"    href="/favicon/apple-touch-icon.png">
-<link rel="manifest" href="/favicon/site.webmanifest">
-
 <style>
 /* ── Reset & base ─────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -27698,14 +27689,31 @@ function runSearch(val) {
 
 function jumpTo(id) {
   const el = document.getElementById(id);
-  if (el) {
-    // Auto-expand the section when jumping to it
-    if (el.dataset.expanded === 'false') expandSection(el);
-    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    el.style.transition = 'background .5s';
-    el.style.background = '#fffbe6';
-    setTimeout(() => { el.style.background = ''; }, 2000);
+  if (!el) return;
+
+  // Make the containing part visible first
+  const partEl = el.closest('.part-section');
+  if (partEl) {
+    // Hide all parts, show only this one
+    document.querySelectorAll('.part-section').forEach(p => p.classList.remove('visible'));
+    partEl.classList.add('visible');
+    // Update the active part tracker and top menu
+    const partNum = parseInt(partEl.dataset.part);
+    activePart = partNum;
+    updateMenuActive(partNum);
   }
+
+  // Expand the section so content is visible
+  if (el.dataset.expanded === 'false') expandSection(el);
+
+  // Use setTimeout to let the DOM paint before scrolling
+  setTimeout(() => {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    el.style.transition = 'background .6s';
+    el.style.background = '#fffbe6';
+    setTimeout(() => { el.style.background = ''; }, 2200);
+  }, 60);
+
   document.getElementById('search-results-panel').classList.remove('visible');
 }
 
